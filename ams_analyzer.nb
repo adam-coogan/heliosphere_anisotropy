@@ -1,0 +1,503 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     17972,        494]
+NotebookOptionsPosition[     16270,        443]
+NotebookOutlinePosition[     16625,        459]
+CellTagsIndexPosition[     16582,        456]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+   RowBox[{"Analysis", " ", "specific", " ", "to", " ", "AMS"}], "-", "02"}], 
+  " ", "*)"}]], "Input",
+ CellChangeTimes->{{3.6319927941987534`*^9, 3.631992804677623*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{"AMS", "-", 
+   RowBox[{"02", " ", "bin", " ", "data"}]}], " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.631995990981381*^9, 3.631996002805646*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"amsE", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"10.73", "+", "11.54"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"11.54", "+", "12.39"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"12.39", "+", "13.27"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"13.27", "+", "14.19"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"14.19", "+", "15.15"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"15.15", "+", "16.15"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"16.15", "+", "17.18"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"17.18", "+", "18.25"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"18.25", "+", "19.37"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"19.37", "+", "20.54"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"20.54", "+", "21.76"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"21.76", "+", "23.07"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"23.07", "+", "24.45"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"24.45", "+", "25.87"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"25.87", "+", "27.34"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"27.34", "+", "28.87"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"28.87", "+", "30.45"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"30.45", "+", "32.10"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"32.10", "+", "33.80"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"33.80", "+", "35.57"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"35.57", "+", "37.40"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"37.40", "+", "40.00"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"40.00", "+", "43.39"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"43.39", "+", "47.01"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"47.01", "+", "50.87"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"50.87", "+", "54.98"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"54.98", "+", "59.36"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"59.36", "+", "64.03"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"64.03", "+", "69.00"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"69.00", "+", "74.30"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"74.30", "+", "80.00"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"80.00", "+", "86.00"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"86.00", "+", "92.50"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"92.50", "+", "100.0"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"100.0", "+", "115.1"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"115.1", "+", "132.1"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"132.1", "+", "151.5"}], ")"}], "/", "2"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"151.5", "+", "173.5"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"173.5", "+", "206.0"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"206.0", "+", "260.0"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"260.0", "+", "350.0"}], ")"}], "/", "2"}], ",", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"350.0", "+", "500.0"}], ")"}], "/", "2"}]}], "}"}]}], 
+  ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.63191547983547*^9, 3.6319155807210407`*^9}, {
+   3.6319800099581223`*^9, 3.6319802363396597`*^9}, 3.6319927887747917`*^9, 
+   3.631996002805745*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"poscounts", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "9504", ",", "7846", ",", "7646", ",", "6457", ",", "5704", ",", "5419", 
+     ",", "4689", ",", "4016", ",", "3906", ",", "3777", ",", "3244", ",", 
+     "2910", ",", "2813", ",", "2631", ",", "2397", ",", "2325", ",", "2040", 
+     ",", "1706", ",", "1530", ",", "1496", ",", "1327", ",", "1607", ",", 
+     "1616", ",", "1401", ",", "1116", ",", "1041", ",", "837", ",", "710", 
+     ",", "644", ",", "606", ",", "450", ",", "381", ",", "398", ",", "358", 
+     ",", "524", ",", "365", ",", "271", ",", "228", ",", "225", ",", "178", 
+     ",", "135", ",", "72"}], "}"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.631980318284731*^9, 3.631980325253529*^9}, {
+   3.631980372799306*^9, 3.631980432127082*^9}, {3.631980765673877*^9, 
+   3.631980796745668*^9}, {3.631991882902237*^9, 3.631991888333045*^9}, 
+   3.631992788774844*^9, 3.63199600280582*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"posfrac", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.0532", ",", "0.0546", ",", "0.0553", ",", "0.0552", ",", "0.0558", ",",
+      "0.0570", ",", "0.0585", ",", "0.0601", ",", "0.0596", ",", "0.0625", 
+     ",", "0.0617", ",", "0.0640", ",", "0.0655", ",", "0.0652", ",", 
+     "0.0662", ",", "0.0704", ",", "0.0717", ",", "0.0719", ",", "0.0721", 
+     ",", "0.0766", ",", "0.0732", ",", "0.0781", ",", "0.0806", ",", 
+     "0.0872", ",", "0.0840", ",", "0.0887", ",", "0.0921", ",", "0.0933", 
+     ",", "0.0974", ",", "0.1069", ",", "0.0963", ",", "0.1034", ",", 
+     "0.1207", ",", "0.1169", ",", "0.1205", ",", "0.1110", ",", "0.1327", 
+     ",", "0.1374", ",", "0.1521", ",", "0.1550", ",", "0.1590", ",", 
+     "0.1471"}], "}"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.6319807987281647`*^9, 3.6319808840556297`*^9}, 
+   3.631992788774893*^9, 3.6319960028058968`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"totalcounts", "=", 
+   RowBox[{"poscounts", "/", "posfrac"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.63199216658784*^9, 3.631992171487053*^9}, {
+   3.631992487836143*^9, 3.631992490476122*^9}, 3.631992788774938*^9, 
+   3.631996002805973*^9}]
+}, Closed]],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+   RowBox[{"**", 
+    RowBox[{
+    "*", " ", "Run", " ", "MC", " ", "for", " ", "each", " ", "AMS"}]}], "-", 
+   
+   RowBox[{"02", " ", "high"}], "-", 
+   RowBox[{
+   "energy", " ", "bin", " ", "midpoint", " ", "and", " ", "save", " ", 
+    "angle", " ", 
+    RowBox[{"data", "."}]}]}], " ", "****)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.63191539558916*^9, 3.6319154392513247`*^9}, 
+   3.631992788774733*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"samples", "=", "100"}], ";"}]], "Input",
+ CellChangeTimes->{{3.631996008534718*^9, 3.631996010381098*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"anglesamples", "=", 
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"#1", ",", 
+        RowBox[{"angleMC", "[", 
+         RowBox[{"#1", ",", "samples"}], "]"}]}], "}"}], "&"}], ",", "amsE"}],
+     "]"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.6319929065815*^9, 3.631992949643675*^9}, {
+   3.6319931904816732`*^9, 3.631993268302314*^9}, 3.631995954063592*^9, {
+   3.63199601177275*^9, 3.631996012533536*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+   RowBox[{"**", " ", "Plot"}], " ", "the", " ", "results"}], " ", 
+  "***)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.631912574087413*^9, 3.631912578359661*^9}, 
+   3.631913070022162*^9, {3.631995833855541*^9, 3.631995837307703*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"avgangles", "=", 
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Mean", "[", 
+       RowBox[{
+        RowBox[{"#", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], "[", 
+        RowBox[{"[", 
+         RowBox[{"All", ",", "3"}], "]"}], "]"}], "]"}], "&"}], ",", 
+     "anglesamples"}], "]"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.63191483043836*^9, 3.631914846590579*^9}, 
+   3.631992782127985*^9, {3.6319957678893137`*^9, 3.631995794912231*^9}, 
+   3.6319958259757223`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", 
+  RowBox[{
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{"amsE", ",", 
+      RowBox[{"avgangles", "*", 
+       RowBox[{"180", "/", "\[Pi]"}]}]}], "}"}], "]"}], ",", 
+   RowBox[{
+   "PlotLabel", "\[Rule]", 
+    "\"\<Average deviation angle as a function of observed momentum\>\""}], 
+   ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<\!\(\*SubscriptBox[\(p\), \(0\)]\) (geV)\>\"", ",", 
+      "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(src, \*OverscriptBox[\(p\), \(\
+\[Rule]\)]\)]\) (degrees)\>\""}], "}"}]}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.631995817348566*^9, 3.631995963782268*^9}, {
+  3.6319960789649878`*^9, 3.631996080755465*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, 
+   {RGBColor[0.24720000000000014`, 0.24, 0.6], PointBox[CompressedData["
+1:eJxTTMoPSmViYGDQAmIQ3fo6cIecq5pDqNwt/puiEQ7r3B9WibxTd9i4jP+i
+6NJwB82Y/kNfV2g65O+V+bPtf4jDNw2gQKm2w/fTsWY1AREO1xcX2HKF6zqs
+5t1yskg7yuEMCPjoOzQabzi0jzHCgQukYJWBQ9biPt680DCI+u2GDtv17/+Y
+axzuMOHQV42Y80YO+5eWVZl/CnYQATngi7GDf3+B0OH6UIc0EFAzdbh/4c+v
++p5QiHlZZg4pjl+ZduQGO4C09x8yd3D7u7siMCMA4l4NSwdvk1sPnT8HOVSD
+DJxl5eB+sSFbvSAYwpeycSg6pirToxMB9Z+tQ8e9hAW99uEQ+9zsHY4+eHXb
+rSnUYdZMIKh0cMjeurmN52mYgwcweNaFOzr4aB7zSPjtDwkvOycHtgebjBP8
+AyHqI50dDkUdPaR2MARi/g0Xh21WXTvNk6DyM90cVEI7fv5M93LYIQeMgQoP
+h7e9FQ+/nPCF2F/m5aDhqZOQ9NoHEt5TfRy0GC87ndcOhJrn5zCHOyCnNcYP
+wl8Q4FAV0l3qp+INMf9loMPrZZrX5ro5Q/iewQ7lj67PlzF0c2AAgQMhDiel
+G6T/ivpD+AFhDpPSzZ5/SHWC8AUiHN6qu526tNfSwRgEHkc5aIn1amwQtoa4
+71mcw1mlrdk95rYQ83cmOsi2iC/QMTSDmpfisOPE6ZlNeywg/B3pDkfEOm6e
+VjaE8BVyHfaFJq53zpGE2lfsEHCda/6lKwoQ/oQqh4825byPlRUdAMw0Gms=
+
+     "]]}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesLabel->{
+    FormBox[
+    "\"\\!\\(\\*SubscriptBox[\\(p\\), \\(0\\)]\\) (geV)\"", TraditionalForm], 
+    
+    FormBox[
+    "\"\\!\\(\\*SubscriptBox[\\(\[Theta]\\), \\(src, \
+\\*OverscriptBox[\\(p\\), \\(\[Rule]\\)]\\)]\\) (degrees)\"", 
+     TraditionalForm]},
+  AxesOrigin->{0, 0},
+  ImageSize->Large,
+  Method->{},
+  PlotLabel->FormBox[
+   "\"Average deviation angle as a function of momentum\"", TraditionalForm],
+  PlotRange->{{0, 242.3025}, {0, 104.67888109763469`}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{4.84605, 4.84605}, {2.0935776219526936`, 
+   2.0935776219526936`}}]], "Output",
+ CellChangeTimes->{{3.631995957560546*^9, 3.631995964296282*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{"Other", " ", "plotting", " ", "tools"}], " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.631996056612009*^9, 3.6319960660033493`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"DensityHistogram", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Drop", "[", 
+     RowBox[{"mcangles", ",", 
+      RowBox[{"{", "}"}], ",", 
+      RowBox[{"{", "2", "}"}]}], "]"}], "*", 
+    RowBox[{"180", "/", "\[Pi]"}]}], ",", 
+   RowBox[{"PlotLabel", "\[Rule]", 
+    RowBox[{"\"\<Angle between observed momentum and source (p=\>\"", "<>", 
+     RowBox[{"ToString", "[", "p0", "]"}], "<>", "\"\< GeV)\>\""}]}], ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(obs\)]\) (degrees)\>\"", ",", 
+      "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(src, \*OverscriptBox[\(p\), \(\
+\[Rule]\)]\)]\) (degrees)\>\""}], "}"}]}], ",", 
+   RowBox[{"ColorFunction", "\[Rule]", "\"\<SolarColors\>\""}], ",", 
+   RowBox[{"ChartLegends", "\[Rule]", 
+    RowBox[{"Placed", "[", 
+     RowBox[{"Automatic", ",", "Right"}], "]"}]}]}], "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.631911988631116*^9, 3.631911999954094*^9}, {
+   3.631912044538536*^9, 3.631912052393669*^9}, {3.631912082705078*^9, 
+   3.631912083720463*^9}, {3.631912351861231*^9, 3.63191246088284*^9}, {
+   3.631912494481604*^9, 3.63191249614612*^9}, {3.631912534314995*^9, 
+   3.6319125659531193`*^9}, {3.631912612169174*^9, 3.631912612871127*^9}, {
+   3.6319126706486063`*^9, 3.631912672606717*^9}, {3.63191273799078*^9, 
+   3.631912747823984*^9}, {3.631912937109488*^9, 3.63191294291485*^9}, {
+   3.631912990242086*^9, 3.6319130106493073`*^9}, 3.6319130700222178`*^9, {
+   3.6319132377446327`*^9, 3.6319132615483027`*^9}, 3.631996066003399*^9}],
+
+Cell[BoxData[
+ RowBox[{"DensityHistogram", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Drop", "[", 
+     RowBox[{"mcangles", ",", 
+      RowBox[{"{", "}"}], ",", 
+      RowBox[{"{", "1", "}"}]}], "]"}], "*", 
+    RowBox[{"180", "/", "\[Pi]"}]}], ",", 
+   RowBox[{
+   "PlotLabel", "\[Rule]", 
+    "\"\<Angle between observed momentum and source (p=100 GeV)\>\""}], ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<\!\(\*SubscriptBox[\(\[Phi]\), \(obs\)]\) (degrees)\>\"", ",", 
+      "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(src, \*OverscriptBox[\(p\), \(\
+\[Rule]\)]\)]\) (degrees)\>\""}], "}"}]}], ",", 
+   RowBox[{"ColorFunction", "\[Rule]", "\"\<SolarColors\>\""}], ",", 
+   RowBox[{"ChartLegends", "\[Rule]", 
+    RowBox[{"Placed", "[", 
+     RowBox[{"Automatic", ",", "Right"}], "]"}]}]}], "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.6319126007854013`*^9, 3.6319126090471153`*^9}, 
+   3.631913070022345*^9, 3.631996066003438*^9}],
+
+Cell[BoxData[
+ RowBox[{"Histogram", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"mcangles", "[", 
+     RowBox[{"[", 
+      RowBox[{"All", ",", "3"}], "]"}], "]"}], "*", 
+    RowBox[{"180", "/", "\[Pi]"}]}], ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{
+    "{", "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(src, \*OverscriptBox[\(p\), \
+\(\[Rule]\)]\)]\) (degrees)\>\"", "}"}]}], ",", 
+   RowBox[{
+   "PlotLabel", "\[Rule]", 
+    "\"\<Angle between observed momentum and source (p=100 GeV)\>\""}]}], 
+  "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.631911432075266*^9, 3.631911537346693*^9}, {
+   3.631911579554234*^9, 3.631911641865054*^9}, {3.6319125922392607`*^9, 
+   3.631912592335832*^9}, 3.63191307002239*^9, 3.631913162199716*^9, {
+   3.6319132177186193`*^9, 3.6319132235022306`*^9}, 3.6319960660034733`*^9}]
+}, Closed]]
+},
+WindowSize->{1440, 852},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 217, 5, 28, "Input"],
+Cell[CellGroupData[{
+Cell[799, 29, 245, 5, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[1047, 36, 4513, 136, 114, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[5563, 174, 992, 17, 46, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[6558, 193, 964, 17, 63, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[7525, 212, 331, 7, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}]
+}, Closed]],
+Cell[7871, 222, 499, 14, 22, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[8373, 238, 141, 3, 28, "Input"],
+Cell[8517, 243, 536, 14, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[CellGroupData[{
+Cell[9078, 261, 321, 7, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[9402, 270, 582, 16, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10021, 291, 787, 20, 69, "Input"],
+Cell[10811, 313, 1666, 37, 374, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12514, 355, 230, 4, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[12747, 361, 1625, 31, 70, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[14375, 394, 1014, 24, 69, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[15392, 420, 862, 20, 42, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}]
+}, Closed]]
+}
+]
+*)
+
+(* End of internal cache information *)
