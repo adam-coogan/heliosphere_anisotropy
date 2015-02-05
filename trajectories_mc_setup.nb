@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     19926,        506]
-NotebookOptionsPosition[     18097,        454]
-NotebookOutlinePosition[     18452,        470]
-CellTagsIndexPosition[     18409,        467]
+NotebookDataLength[     20071,        508]
+NotebookOptionsPosition[     18242,        456]
+NotebookOutlinePosition[     18597,        472]
+CellTagsIndexPosition[     18554,        469]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -49,10 +49,10 @@ Cell[BoxData[
 Cell[BoxData[{
  RowBox[{
   RowBox[{"tmin", "=", 
-   RowBox[{"-", "100000"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"-", "125000"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"tmax", "=", 
-   RowBox[{"-", "40000"}]}], ";"}]}], "Input",
+   RowBox[{"-", "25000"}]}], ";"}]}], "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.},
  CellChangeTimes->{{3.6316513377252483`*^9, 3.631651389841468*^9}, {
    3.6316514655541286`*^9, 3.63165151502555*^9}, {3.631653945175189*^9, 
@@ -84,7 +84,9 @@ Cell[BoxData[{
    3.631911188521701*^9}, {3.6319113049924707`*^9, 3.631911310311573*^9}, {
    3.6319114065011473`*^9, 3.631911424060375*^9}, {3.631993048785365*^9, 
    3.631993048883658*^9}, {3.631993108352707*^9, 3.631993109032687*^9}, {
-   3.631993144704946*^9, 3.631993146472795*^9}}],
+   3.631993144704946*^9, 3.631993146472795*^9}, {3.632073778765654*^9, 
+   3.63207378122008*^9}, {3.632074318474731*^9, 3.632074318554164*^9}, {
+   3.632089025342267*^9, 3.632089028781603*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -296,7 +298,7 @@ Cell[BoxData[
    3.631909535550338*^9}, {3.631909565813603*^9, 3.631909579501176*^9}, {
    3.6319109625255003`*^9, 3.631910991596121*^9}, {3.631911076085005*^9, 
    3.631911082715816*^9}, 3.631911382310337*^9, 3.631911424060704*^9}]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -473,39 +475,39 @@ Cell[557, 20, 336, 7, 28, "Input"],
 Cell[CellGroupData[{
 Cell[918, 31, 804, 15, 46, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[1725, 48, 2499, 38, 46, "Input",
+Cell[1725, 48, 2644, 40, 46, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[4227, 88, 3313, 90, 109, "Input",
+Cell[4372, 90, 3313, 90, 109, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[7543, 180, 326, 6, 28, "Input",
+Cell[7688, 182, 326, 6, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[7872, 188, 917, 22, 28, "Input",
+Cell[8017, 190, 917, 22, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[8792, 212, 401, 8, 28, "Input",
+Cell[8937, 214, 401, 8, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[9196, 222, 954, 25, 44, "Input",
+Cell[9341, 224, 954, 25, 44, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[10153, 249, 656, 17, 28, "Input",
+Cell[10298, 251, 656, 17, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[10812, 268, 1227, 29, 28, "Input",
+Cell[10957, 270, 1227, 29, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}]
-}, Closed]],
+}, Open  ]],
 Cell[CellGroupData[{
-Cell[12076, 302, 417, 9, 22, "Input",
+Cell[12221, 304, 417, 9, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[12496, 313, 1475, 35, 28, "Input",
+Cell[12641, 315, 1475, 35, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[14008, 353, 250, 5, 28, "Input",
+Cell[14153, 355, 250, 5, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[14261, 360, 1603, 31, 70, "Input",
+Cell[14406, 362, 1603, 31, 70, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[15867, 393, 992, 24, 69, "Input",
+Cell[16012, 395, 992, 24, 69, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[16862, 419, 838, 20, 42, "Input",
+Cell[17007, 421, 838, 20, 42, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[17703, 441, 378, 10, 28, "Input",
+Cell[17848, 443, 378, 10, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}]
 }, Closed]]
 }
