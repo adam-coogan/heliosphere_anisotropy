@@ -1,0 +1,12 @@
+ds,5,Timestep (s)
+lambda0,0,Constant in parallel mean free path/kpar (AU)
+rig0,0.0000000000223,Rigidity constant in kpar 1 GV * 2.23*10^-11 T*AU/GV = 2.23*10^-11 T*AU
+b0,0.00000000354,Reference value for B (T).  Gives |B| ~ 5 nT at Earth.
+r0,1.0,Distance of Earth from the Sun (AU)
+vsw,0.000002674,Solar wind velocity, 400 km/s * 6.685*10^-9 AU/km = 2.674*10^-6 AU/s
+rHP,140.0,Distance to heliopause (AU)
+omega,0.000002904,Sun's equatorial angular velocity (rad/s)
+rSun,0.005,Radius of sun (AU)
+diffFact,0,Factor relating kpar to kperp 
+electron,true,Particle charge sign
+agt0,true,Polarity of solar cycle

@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     97772,       1780]
+NotebookDataLength[     97774,       1780]
 NotebookOptionsPosition[     97014,       1754]
-NotebookOutlinePosition[     97369,       1770]
-CellTagsIndexPosition[     97326,       1767]
+NotebookOutlinePosition[     97371,       1770]
+CellTagsIndexPosition[     97328,       1767]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1752,8 +1752,8 @@ sPmGNn4eBxW26+hyoeg8zvwoqK4G98TTQVWU0PNoH/zf7+x8gdVS0gOmNf/5
    3.632085696830553*^9, 3.632085703045821*^9}, 3.632085741662916*^9, 
    3.632085785080624*^9}]
 },
-WindowSize->{1440, 852},
-WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowSize->{1017, 856},
+WindowMargins->{{-22, Automatic}, {Automatic, 0}},
 FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
 2013)",
 StyleDefinitions->"Default.nb"
@@ -1774,11 +1774,11 @@ Cell[579, 22, 754, 14, 46, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10005.}],
 Cell[1336, 38, 3826, 80, 216, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10005.}],
-Cell[5165, 120, 3115, 85, 109, "Input",
+Cell[5165, 120, 3115, 85, 135, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10005.}],
-Cell[8283, 207, 579, 12, 28, "Input",
+Cell[8283, 207, 579, 12, 46, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10005.}],
-Cell[8865, 221, 6892, 175, 148, "Input",
+Cell[8865, 221, 6892, 175, 233, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10005.}]
 }, Open  ]],
 Cell[15772, 399, 81238, 1353, 903, "Output"]

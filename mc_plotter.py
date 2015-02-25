@@ -65,6 +65,7 @@ def plotavgdev(samples, degs = True):
     #plt.gcf().set_size_inches(6.0, 4.0)
     #plt.gcf().savefig('final/tau_limits/' + theory + '_tau.pdf', bbox_inches='tight')
 
+### Main
 if __name__ == "__main__":
     samplepath = 'mc_data/'
     samples = getdata(samplepath)
