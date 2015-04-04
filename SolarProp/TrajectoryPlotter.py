@@ -74,7 +74,7 @@ trajAx.plot(np.cos(np.linspace(0, 2 * np.pi, nOrbitPoints)),
 trajAx.plot(xt, yt, zt, 'b', label = 'Trajectory (E_0 = ' + str(points[0].e) + ')')
 
 # Set limits to plot out to heliopause in all directions
-params['rHP'] = 10
+params['rHP'] = 100
 trajAx.set_xlim(-params['rHP'], params['rHP'])
 trajAx.set_ylim(-params['rHP'], params['rHP'])
 trajAx.set_zlim(-params['rHP'], params['rHP'])

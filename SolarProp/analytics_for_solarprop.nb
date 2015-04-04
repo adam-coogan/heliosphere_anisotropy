@@ -1,0 +1,2770 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[    102728,       2761]
+NotebookOptionsPosition[     98902,       2668]
+NotebookOutlinePosition[     99257,       2684]
+CellTagsIndexPosition[     99214,       2681]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+  "Components", " ", "of", " ", "the", " ", "diffusion", " ", "tensor"}], " ",
+   "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.636989164084878*^9, 3.636989191900372*^9}, {
+  3.636989483021574*^9, 3.636989486693459*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\[CapitalPsi]", "=", 
+   RowBox[{"ArcTan", "[", 
+    RowBox[{"-", 
+     FractionBox[
+      RowBox[{"B\[Phi]", "[", 
+       RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}], 
+      RowBox[{"Br", "[", 
+       RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}]]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Zeta]", "=", 
+   RowBox[{"ArcTan", "[", "0", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"coeffSubs", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"k2", "\[Rule]", 
+      RowBox[{"KPERP", "*", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         RowBox[{"r", "/", "r0"}]}], ")"}]}]}], ",", 
+     RowBox[{"k3", "\[Rule]", 
+      RowBox[{"KPERP", "*", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         RowBox[{"r", "/", "r0"}]}], ")"}]}]}], ",", 
+     RowBox[{"ka", "\[Rule]", "0"}], ",", 
+     RowBox[{"kpar", "\[Rule]", 
+      RowBox[{"KPAR", "*", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         RowBox[{"r", "/", "r0"}]}], ")"}]}]}]}], "}"}]}], ";"}]}], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.6369877519153233`*^9, 3.636987810169793*^9}, {
+   3.636987898088225*^9, 3.636987898320812*^9}, 3.6369879358727827`*^9, {
+   3.636987967119442*^9, 3.636987970230919*^9}, 3.6369891919004374`*^9, {
+   3.637000277426269*^9, 3.637000304849592*^9}, {3.637000354730411*^9, 
+   3.637000383554779*^9}, {3.637074916422469*^9, 3.637074923483862*^9}, {
+   3.637092056401043*^9, 3.637092064747056*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"krr", "=", 
+  RowBox[{"FullSimplify", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"k2", " ", 
+       SuperscriptBox[
+        RowBox[{"Sin", "[", "\[Zeta]", "]"}], "2"]}], "+", 
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"Cos", "[", "\[Zeta]", "]"}], "2"], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"kpar", " ", 
+          SuperscriptBox[
+           RowBox[{"Cos", "[", "\[CapitalPsi]", "]"}], "2"]}], "+", 
+         RowBox[{"k3", " ", 
+          SuperscriptBox[
+           RowBox[{"Sin", "[", "\[CapitalPsi]", "]"}], "2"]}]}], ")"}]}]}], 
+     ")"}], "//.", "coeffSubs"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"k\[Theta]\[Theta]", "=", 
+  RowBox[{"FullSimplify", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"k2", " ", 
+       SuperscriptBox[
+        RowBox[{"Cos", "[", "\[Zeta]", "]"}], "2"]}], "+", 
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"Sin", "[", "\[Zeta]", "]"}], "2"], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"kpar", " ", 
+          SuperscriptBox[
+           RowBox[{"Cos", "[", "\[CapitalPsi]", "]"}], "2"]}], "+", 
+         RowBox[{"k3", " ", 
+          SuperscriptBox[
+           RowBox[{"Sin", "[", "\[CapitalPsi]", "]"}], "2"]}]}], ")"}]}]}], 
+     ")"}], "//.", "coeffSubs"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"k\[Phi]\[Phi]", "=", 
+  RowBox[{"FullSimplify", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"kpar", " ", 
+       SuperscriptBox[
+        RowBox[{"Sin", "[", "\[CapitalPsi]", "]"}], "2"]}], "+", 
+      RowBox[{"k3", " ", 
+       SuperscriptBox[
+        RowBox[{"Cos", "[", "\[CapitalPsi]", "]"}], "2"]}]}], ")"}], "//.", 
+    "coeffSubs"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"kr\[Theta]", "=", 
+  RowBox[{"FullSimplify", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"Sin", "[", "\[Zeta]", "]"}], 
+      RowBox[{"Cos", "[", "\[Zeta]", "]"}], "*", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"kpar", " ", 
+         SuperscriptBox[
+          RowBox[{"Cos", "[", "\[CapitalPsi]", "]"}], "2"]}], "+", 
+        RowBox[{"k3", " ", 
+         SuperscriptBox[
+          RowBox[{"Sin", "[", "\[CapitalPsi]", "]"}], "2"]}], "-", "k2"}], 
+       ")"}]}], ")"}], "//.", "coeffSubs"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"kr\[Phi]", "=", 
+  RowBox[{"FullSimplify", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"-", 
+       RowBox[{"(", 
+        RowBox[{"kpar", "-", "k3"}], ")"}]}], 
+      RowBox[{"Sin", "[", "\[CapitalPsi]", "]"}], 
+      RowBox[{"Cos", "[", "\[CapitalPsi]", "]"}], 
+      RowBox[{"Cos", "[", "\[Zeta]", "]"}]}], ")"}], "//.", "coeffSubs"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"k\[Theta]\[Phi]", "=", 
+  RowBox[{"FullSimplify", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"-", 
+       RowBox[{"(", 
+        RowBox[{"kpar", "-", "k3"}], ")"}]}], 
+      RowBox[{"Sin", "[", "\[CapitalPsi]", "]"}], 
+      RowBox[{"Cos", "[", "\[CapitalPsi]", "]"}], 
+      RowBox[{"Sin", "[", "\[Zeta]", "]"}]}], ")"}], "//.", "coeffSubs"}], 
+   "]"}]}]}], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.6369879109063053`*^9, 3.636988169358407*^9}, {
+   3.636988295292911*^9, 3.636988478402001*^9}, {3.6369885148558702`*^9, 
+   3.636988520401519*^9}, 3.63698919190049*^9}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{"Magnetic", " ", "field"}], " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636989532452717*^9, 3.636989538971801*^9}, 
+   3.637000225332233*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"h", "[", 
+    RowBox[{"\[Theta]_", ",", "\[Theta]p_"}], "]"}], ":=", 
+   RowBox[{"Piecewise", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"1", ",", 
+        RowBox[{"\[Theta]", "<", "\[Theta]p"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", 
+        RowBox[{"\[Theta]", "\[Equal]", "\[Theta]p"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"-", "1"}], ",", 
+        RowBox[{"\[Theta]", ">", "\[Theta]p"}]}], "}"}]}], "}"}], "]"}]}], 
+  ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.6369896069306*^9, 3.636989669961516*^9}, 
+   3.637000225332292*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[Theta]p", "=", 
+   RowBox[{"\[Pi]", "/", "2"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.6369896860765676`*^9, 3.6369896889932127`*^9}, 
+   3.6370002253323393`*^9}],
+
+Cell[BoxData[
+ RowBox[{"Clear", "[", "\[Theta]p", "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.6369899095607023`*^9, 3.636989911949284*^9}, 
+   3.637000225332384*^9}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Br", "[", 
+    RowBox[{"r_", ",", "\[Theta]_", ",", "\[Phi]_"}], "]"}], ":=", 
+   RowBox[{"Ac", "*", "B0", "*", 
+    SuperscriptBox[
+     RowBox[{"(", 
+      FractionBox["r0", "r"], ")"}], "2"], 
+    RowBox[{"h", "[", 
+     RowBox[{"\[Theta]", ",", "\[Theta]p"}], "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"B\[Phi]", "[", 
+    RowBox[{"r_", ",", "\[Theta]_", ",", "\[Phi]_"}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{"-", "Ac"}], "*", "B0", "*", 
+    SuperscriptBox[
+     RowBox[{"(", 
+      FractionBox["r0", "r"], ")"}], "2"], 
+    RowBox[{"h", "[", 
+     RowBox[{"\[Theta]", ",", "\[Theta]p"}], "]"}], 
+    FractionBox[
+     RowBox[{"\[CapitalOmega]", " ", "r", " ", 
+      RowBox[{"Sin", "[", "\[Theta]", "]"}]}], "Vsw"]}]}], ";"}]}], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636989475310419*^9, 3.636989477492652*^9}, {
+   3.636989552691757*^9, 3.636989604563574*^9}, {3.636989703601585*^9, 
+   3.6369897327704687`*^9}, 3.63700022533243*^9, {3.63700044580844*^9, 
+   3.637000461040102*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"B", "[", 
+   RowBox[{"r_", ",", "\[Theta]_", ",", "\[Phi]_"}], "]"}], ":=", 
+  RowBox[{"FullSimplify", "[", 
+   RowBox[{"Sqrt", "[", 
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"Br", "[", 
+       RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}], "2"], "+", 
+     SuperscriptBox[
+      RowBox[{"B\[Phi]", "[", 
+       RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}], "2"]}], "]"}], 
+   "]"}]}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636990017142465*^9, 3.636990062651855*^9}, 
+   3.637000225332481*^9}],
+
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{"Curl", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Br", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}], "/", 
+       RowBox[{"B", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}]}], ",", "0", ",", 
+      RowBox[{
+       RowBox[{"B\[Phi]", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}], "/", 
+       RowBox[{"B", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}]}]}], "}"}], ",", 
+    
+    RowBox[{"{", 
+     RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "}"}], ",", 
+    "\"\<Spherical\>\""}], "]"}], "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.6369898441670437`*^9, 3.636989868150577*^9}, {
+   3.636990073220847*^9, 3.636990113585354*^9}, 3.6370002253325253`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TagBox[GridBox[{
+      {"\[Piecewise]", GridBox[{
+         {"Indeterminate", 
+          RowBox[{" ", 
+           RowBox[{"\[Theta]", "\[Equal]", 
+            RowBox[{"\[Pi]", "/", "2"}]}]}]},
+         {
+          RowBox[{
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{
+              SuperscriptBox["Ac", "3"], " ", 
+              SuperscriptBox["B0", "3"], " ", 
+              SuperscriptBox["r0", "6"], " ", "\[CapitalOmega]", "  ", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"2", " ", 
+                 SuperscriptBox["Vsw", "2"]}], "+", 
+                RowBox[{
+                 SuperscriptBox["r", "2"], " ", 
+                 SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                 SuperscriptBox[
+                  RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+             RowBox[{
+              SuperscriptBox["r", "6"], " ", 
+              SuperscriptBox["Vsw", "3"], " ", 
+              SuperscriptBox[
+               RowBox[{"(", 
+                FractionBox[
+                 RowBox[{
+                  SuperscriptBox["Ac", "2"], " ", 
+                  SuperscriptBox["B0", "2"], " ", 
+                  SuperscriptBox["r0", "4"], " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                 
+                 RowBox[{
+                  SuperscriptBox["r", "4"], " ", 
+                  SuperscriptBox["Vsw", "2"]}]], ")"}], 
+               RowBox[{"3", "/", "2"}]]}]]}], 
+           RowBox[{"Cos", "[", "\[Theta]", "]"}]}], 
+          RowBox[{" ", 
+           RowBox[{"\[Theta]", "<", 
+            RowBox[{"\[Pi]", "/", "2"}]}]}]},
+         {
+          RowBox[{
+           FractionBox[
+            RowBox[{
+             SuperscriptBox["Ac", "3"], " ", 
+             SuperscriptBox["B0", "3"], " ", 
+             SuperscriptBox["r0", "6"], " ", "\[CapitalOmega]", "  ", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"2", " ", 
+                SuperscriptBox["Vsw", "2"]}], "+", 
+               RowBox[{
+                SuperscriptBox["r", "2"], " ", 
+                SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                SuperscriptBox[
+                 RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+            RowBox[{
+             SuperscriptBox["r", "6"], " ", 
+             SuperscriptBox["Vsw", "3"], " ", 
+             SuperscriptBox[
+              RowBox[{"(", 
+               FractionBox[
+                RowBox[{
+                 SuperscriptBox["Ac", "2"], " ", 
+                 SuperscriptBox["B0", "2"], " ", 
+                 SuperscriptBox["r0", "4"], " ", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   SuperscriptBox["Vsw", "2"], "+", 
+                   RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                
+                RowBox[{
+                 SuperscriptBox["r", "4"], " ", 
+                 SuperscriptBox["Vsw", "2"]}]], ")"}], 
+              RowBox[{"3", "/", "2"}]]}]], 
+           RowBox[{"Cos", "[", "\[Theta]", "]"}]}], 
+          RowBox[{"\[Theta]", ">", 
+           RowBox[{"\[Pi]", "/", "2"}]}]}
+        },
+        AllowedDimensions->{2, Automatic},
+        Editable->True,
+        GridBoxAlignment->{
+         "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}},
+           "RowsIndexed" -> {}},
+        GridBoxSpacings->{"Columns" -> {
+            Offset[0.27999999999999997`], {
+             Offset[0.84]}, 
+            Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {
+            Offset[0.2], {
+             Offset[0.4]}, 
+            Offset[0.2]}, "RowsIndexed" -> {}},
+        Selectable->True]}
+     },
+     GridBoxAlignment->{
+      "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+       "RowsIndexed" -> {}},
+     GridBoxItemSize->{
+      "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+       "RowsIndexed" -> {}},
+     GridBoxSpacings->{"Columns" -> {
+         Offset[0.27999999999999997`], {
+          Offset[0.35]}, 
+         Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+         Offset[0.2], {
+          Offset[0.4]}, 
+         Offset[0.2]}, "RowsIndexed" -> {}}],
+    "Piecewise",
+    DeleteWithContents->True,
+    Editable->False,
+    SelectWithContents->True,
+    Selectable->False], ",", 
+   TagBox[GridBox[{
+      {"\[Piecewise]", GridBox[{
+         {"Indeterminate", 
+          RowBox[{"\[Theta]", "\[Equal]", 
+           RowBox[{"\[Pi]", "/", "2"}]}]},
+         {
+          RowBox[{
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{
+              SuperscriptBox["Ac", "3"], " ", 
+              SuperscriptBox["B0", "3"], " ", 
+              SuperscriptBox["r0", "6"], " ", "\[CapitalOmega]", "  ", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"2", " ", 
+                 SuperscriptBox["Vsw", "2"]}], "+", 
+                RowBox[{
+                 SuperscriptBox["r", "2"], " ", 
+                 SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                 SuperscriptBox[
+                  RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+             RowBox[{
+              SuperscriptBox["r", "6"], " ", 
+              SuperscriptBox["Vsw", "3"], " ", 
+              SuperscriptBox[
+               RowBox[{"(", 
+                FractionBox[
+                 RowBox[{
+                  SuperscriptBox["Ac", "2"], " ", 
+                  SuperscriptBox["B0", "2"], " ", 
+                  SuperscriptBox["r0", "4"], " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                 
+                 RowBox[{
+                  SuperscriptBox["r", "4"], " ", 
+                  SuperscriptBox["Vsw", "2"]}]], ")"}], 
+               RowBox[{"3", "/", "2"}]]}]]}], 
+           RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+          RowBox[{"\[Theta]", ">", 
+           RowBox[{"\[Pi]", "/", "2"}]}]},
+         {
+          RowBox[{
+           FractionBox[
+            RowBox[{
+             SuperscriptBox["Ac", "3"], " ", 
+             SuperscriptBox["B0", "3"], " ", 
+             SuperscriptBox["r0", "6"], " ", "\[CapitalOmega]", "  ", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"2", " ", 
+                SuperscriptBox["Vsw", "2"]}], "+", 
+               RowBox[{
+                SuperscriptBox["r", "2"], " ", 
+                SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                SuperscriptBox[
+                 RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+            RowBox[{
+             SuperscriptBox["r", "6"], " ", 
+             SuperscriptBox["Vsw", "3"], " ", 
+             SuperscriptBox[
+              RowBox[{"(", 
+               FractionBox[
+                RowBox[{
+                 SuperscriptBox["Ac", "2"], " ", 
+                 SuperscriptBox["B0", "2"], " ", 
+                 SuperscriptBox["r0", "4"], " ", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   SuperscriptBox["Vsw", "2"], "+", 
+                   RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                
+                RowBox[{
+                 SuperscriptBox["r", "4"], " ", 
+                 SuperscriptBox["Vsw", "2"]}]], ")"}], 
+              RowBox[{"3", "/", "2"}]]}]], 
+           RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+          RowBox[{"\[Theta]", "<", 
+           RowBox[{"\[Pi]", "/", "2"}]}]}
+        },
+        AllowedDimensions->{2, Automatic},
+        Editable->True,
+        GridBoxAlignment->{
+         "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}},
+           "RowsIndexed" -> {}},
+        GridBoxSpacings->{"Columns" -> {
+            Offset[0.27999999999999997`], {
+             Offset[0.84]}, 
+            Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {
+            Offset[0.2], {
+             Offset[0.4]}, 
+            Offset[0.2]}, "RowsIndexed" -> {}},
+        Selectable->True]}
+     },
+     GridBoxAlignment->{
+      "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+       "RowsIndexed" -> {}},
+     GridBoxItemSize->{
+      "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+       "RowsIndexed" -> {}},
+     GridBoxSpacings->{"Columns" -> {
+         Offset[0.27999999999999997`], {
+          Offset[0.35]}, 
+         Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+         Offset[0.2], {
+          Offset[0.4]}, 
+         Offset[0.2]}, "RowsIndexed" -> {}}],
+    "Piecewise",
+    DeleteWithContents->True,
+    Editable->False,
+    SelectWithContents->True,
+    Selectable->False], ",", 
+   TagBox[GridBox[{
+      {"\[Piecewise]", GridBox[{
+         {"Indeterminate", 
+          RowBox[{"\[Theta]", "\[Equal]", 
+           RowBox[{"\[Pi]", "/", "2"}]}]},
+         {
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"Ac", " ", "B0", " ", 
+             SuperscriptBox["r0", "2"], " ", 
+             SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+             RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+             RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+            RowBox[{
+             SqrtBox[
+              FractionBox[
+               RowBox[{
+                SuperscriptBox["Ac", "2"], " ", 
+                SuperscriptBox["B0", "2"], " ", 
+                SuperscriptBox["r0", "4"], " ", 
+                RowBox[{"(", 
+                 RowBox[{
+                  SuperscriptBox["Vsw", "2"], "+", 
+                  RowBox[{
+                   SuperscriptBox["r", "2"], " ", 
+                   SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                   SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+               
+               RowBox[{
+                SuperscriptBox["r", "4"], " ", 
+                SuperscriptBox["Vsw", "2"]}]]], " ", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"r", " ", 
+                SuperscriptBox["Vsw", "2"]}], "+", 
+               RowBox[{
+                SuperscriptBox["r", "3"], " ", 
+                SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                SuperscriptBox[
+                 RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}]]}], 
+          
+          RowBox[{"\[Theta]", ">", 
+           RowBox[{"\[Pi]", "/", "2"}]}]},
+         {
+          FractionBox[
+           RowBox[{"Ac", " ", "B0", " ", 
+            SuperscriptBox["r0", "2"], " ", 
+            SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+            RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+            RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+           RowBox[{
+            SqrtBox[
+             FractionBox[
+              RowBox[{
+               SuperscriptBox["Ac", "2"], " ", 
+               SuperscriptBox["B0", "2"], " ", 
+               SuperscriptBox["r0", "4"], " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 SuperscriptBox["Vsw", "2"], "+", 
+                 RowBox[{
+                  SuperscriptBox["r", "2"], " ", 
+                  SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                  SuperscriptBox[
+                   RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+              RowBox[{
+               SuperscriptBox["r", "4"], " ", 
+               SuperscriptBox["Vsw", "2"]}]]], " ", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"r", " ", 
+               SuperscriptBox["Vsw", "2"]}], "+", 
+              RowBox[{
+               SuperscriptBox["r", "3"], " ", 
+               SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+               SuperscriptBox[
+                RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}]], 
+          RowBox[{"\[Theta]", "<", 
+           RowBox[{"\[Pi]", "/", "2"}]}]}
+        },
+        AllowedDimensions->{2, Automatic},
+        Editable->True,
+        GridBoxAlignment->{
+         "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}},
+           "RowsIndexed" -> {}},
+        GridBoxSpacings->{"Columns" -> {
+            Offset[0.27999999999999997`], {
+             Offset[0.84]}, 
+            Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {
+            Offset[0.2], {
+             Offset[0.4]}, 
+            Offset[0.2]}, "RowsIndexed" -> {}},
+        Selectable->True]}
+     },
+     GridBoxAlignment->{
+      "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+       "RowsIndexed" -> {}},
+     GridBoxItemSize->{
+      "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+       "RowsIndexed" -> {}},
+     GridBoxSpacings->{"Columns" -> {
+         Offset[0.27999999999999997`], {
+          Offset[0.35]}, 
+         Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+         Offset[0.2], {
+          Offset[0.4]}, 
+         Offset[0.2]}, "RowsIndexed" -> {}}],
+    "Piecewise",
+    DeleteWithContents->True,
+    Editable->False,
+    SelectWithContents->True,
+    Selectable->False]}], "}"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636990689952239*^9, 3.636990739561412*^9}, {
+   3.636990807798471*^9, 3.636990819195517*^9}, 3.6370002253325853`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Curl", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Br", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}], "/", 
+       RowBox[{"B", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}]}], ",", "0", ",", 
+      RowBox[{
+       RowBox[{"B\[Phi]", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}], "/", 
+       RowBox[{"B", "[", 
+        RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "]"}]}]}], "}"}], ",", 
+    
+    RowBox[{"{", 
+     RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]"}], "}"}], ",", 
+    "\"\<Spherical\>\""}], "]"}], "//", "Expand"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636998556986628*^9, 3.636998558311884*^9}, 
+   3.637000225332636*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"-", 
+     FractionBox[
+      RowBox[{"2", " ", "Ac", " ", "B0", " ", 
+       SuperscriptBox["r0", "2"], " ", "\[CapitalOmega]", " ", 
+       RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {"1", 
+               RowBox[{"\[Theta]", "<", 
+                FractionBox["\[Pi]", "2"]}]},
+              {"0", 
+               RowBox[{"\[Theta]", "\[Equal]", 
+                FractionBox["\[Pi]", "2"]}]},
+              {
+               RowBox[{"-", "1"}], 
+               RowBox[{"\[Theta]", ">", 
+                FractionBox["\[Pi]", "2"]}]},
+              {"0", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}]}], 
+      RowBox[{
+       SuperscriptBox["r", "2"], " ", "Vsw", " ", 
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {
+               SqrtBox[
+                FractionBox[
+                 RowBox[{
+                  SuperscriptBox["Ac", "2"], " ", 
+                  SuperscriptBox["B0", "2"], " ", 
+                  SuperscriptBox["r0", "4"], " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                 
+                 RowBox[{
+                  SuperscriptBox["r", "4"], " ", 
+                  SuperscriptBox["Vsw", "2"]}]]], 
+               RowBox[{
+                RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+              {"0", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}]}]]}], "-", 
+    FractionBox[
+     RowBox[{"Ac", " ", "B0", " ", 
+      SuperscriptBox["r0", "2"], " ", "\[CapitalOmega]", " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {"0", 
+              RowBox[{
+               RowBox[{"\[Theta]", "<", 
+                FractionBox["\[Pi]", "2"]}], "||", 
+               RowBox[{"\[Theta]", ">", 
+                FractionBox["\[Pi]", "2"]}]}]},
+             {"Indeterminate", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}], " ", 
+      RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+     RowBox[{
+      SuperscriptBox["r", "2"], " ", "Vsw", " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {
+              SqrtBox[
+               FractionBox[
+                RowBox[{
+                 SuperscriptBox["Ac", "2"], " ", 
+                 SuperscriptBox["B0", "2"], " ", 
+                 SuperscriptBox["r0", "4"], " ", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   SuperscriptBox["Vsw", "2"], "+", 
+                   RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                
+                RowBox[{
+                 SuperscriptBox["r", "4"], " ", 
+                 SuperscriptBox["Vsw", "2"]}]]], 
+              RowBox[{
+               RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}]}]], "+", 
+    FractionBox[
+     RowBox[{"Ac", " ", "B0", " ", 
+      SuperscriptBox["r0", "2"], " ", "\[CapitalOmega]", " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {
+              FractionBox[
+               RowBox[{
+                SuperscriptBox["Ac", "2"], " ", 
+                SuperscriptBox["B0", "2"], " ", 
+                SuperscriptBox["r0", "4"], " ", 
+                SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+                RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+               RowBox[{
+                SuperscriptBox["r", "2"], " ", 
+                SuperscriptBox["Vsw", "2"], " ", 
+                SqrtBox[
+                 FractionBox[
+                  RowBox[{
+                   SuperscriptBox["Ac", "2"], " ", 
+                   SuperscriptBox["B0", "2"], " ", 
+                   SuperscriptBox["r0", "4"], " ", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                  
+                  RowBox[{
+                   SuperscriptBox["r", "4"], " ", 
+                   SuperscriptBox["Vsw", "2"]}]]]}]], 
+              RowBox[{"\[Theta]", "\[NotEqual]", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}], " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {"1", 
+              RowBox[{"\[Theta]", "<", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              RowBox[{"\[Theta]", "\[Equal]", 
+               FractionBox["\[Pi]", "2"]}]},
+             {
+              RowBox[{"-", "1"}], 
+              RowBox[{"\[Theta]", ">", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}], " ", 
+      RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+     RowBox[{
+      SuperscriptBox["r", "2"], " ", "Vsw", " ", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {
+               SqrtBox[
+                FractionBox[
+                 RowBox[{
+                  SuperscriptBox["Ac", "2"], " ", 
+                  SuperscriptBox["B0", "2"], " ", 
+                  SuperscriptBox["r0", "4"], " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                 
+                 RowBox[{
+                  SuperscriptBox["r", "4"], " ", 
+                  SuperscriptBox["Vsw", "2"]}]]], 
+               RowBox[{
+                RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+              {"0", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}], "2"]}]]}], ",", 
+   RowBox[{"-", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"Ac", " ", "B0", " ", 
+       SuperscriptBox["r0", "2"], " ", "\[CapitalOmega]", " ", 
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {
+               FractionBox[
+                RowBox[{
+                 FractionBox[
+                  RowBox[{"2", " ", 
+                   SuperscriptBox["Ac", "2"], " ", 
+                   SuperscriptBox["B0", "2"], " ", 
+                   SuperscriptBox["r0", "4"], " ", 
+                   SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                   SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}], 
+                  RowBox[{
+                   SuperscriptBox["r", "3"], " ", 
+                   SuperscriptBox["Vsw", "2"]}]], "-", 
+                 FractionBox[
+                  RowBox[{"4", " ", 
+                   SuperscriptBox["Ac", "2"], " ", 
+                   SuperscriptBox["B0", "2"], " ", 
+                   SuperscriptBox["r0", "4"], " ", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                  
+                  RowBox[{
+                   SuperscriptBox["r", "5"], " ", 
+                   SuperscriptBox["Vsw", "2"]}]]}], 
+                RowBox[{"2", " ", 
+                 SqrtBox[
+                  FractionBox[
+                   RowBox[{
+                    SuperscriptBox["Ac", "2"], " ", 
+                    SuperscriptBox["B0", "2"], " ", 
+                    SuperscriptBox["r0", "4"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                   
+                   RowBox[{
+                    SuperscriptBox["r", "4"], " ", 
+                    SuperscriptBox["Vsw", "2"]}]]]}]], 
+               RowBox[{"\[Theta]", "\[NotEqual]", 
+                FractionBox["\[Pi]", "2"]}]},
+              {"0", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}], " ", 
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {"1", 
+               RowBox[{"\[Theta]", "<", 
+                FractionBox["\[Pi]", "2"]}]},
+              {"0", 
+               RowBox[{"\[Theta]", "\[Equal]", 
+                FractionBox["\[Pi]", "2"]}]},
+              {
+               RowBox[{"-", "1"}], 
+               RowBox[{"\[Theta]", ">", 
+                FractionBox["\[Pi]", "2"]}]},
+              {"0", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}], " ", 
+       RowBox[{"Sin", "[", "\[Theta]", "]"}]}], ")"}], "/", 
+     RowBox[{"(", 
+      RowBox[{"r", " ", "Vsw", " ", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         TagBox[GridBox[{
+            {"\[Piecewise]", GridBox[{
+               {
+                SqrtBox[
+                 FractionBox[
+                  RowBox[{
+                   SuperscriptBox["Ac", "2"], " ", 
+                   SuperscriptBox["B0", "2"], " ", 
+                   SuperscriptBox["r0", "4"], " ", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                  
+                  RowBox[{
+                   SuperscriptBox["r", "4"], " ", 
+                   SuperscriptBox["Vsw", "2"]}]]], 
+                RowBox[{
+                 RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+               {"0", 
+                TagBox["True",
+                 "PiecewiseDefault",
+                 AutoDelete->True]}
+              },
+              AllowedDimensions->{2, Automatic},
+              Editable->True,
+              
+              GridBoxAlignment->{
+               "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+                "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+              
+              GridBoxItemSize->{
+               "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+                "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+              GridBoxSpacings->{"Columns" -> {
+                  Offset[0.27999999999999997`], {
+                   Offset[0.84]}, 
+                  Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+                "Rows" -> {
+                  Offset[0.2], {
+                   Offset[0.4]}, 
+                  Offset[0.2]}, "RowsIndexed" -> {}},
+              Selectable->True]}
+           },
+           
+           GridBoxAlignment->{
+            "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+             "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+           
+           GridBoxItemSize->{
+            "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+             "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+           GridBoxSpacings->{"Columns" -> {
+               Offset[0.27999999999999997`], {
+                Offset[0.35]}, 
+               Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+               Offset[0.2], {
+                Offset[0.4]}, 
+               Offset[0.2]}, "RowsIndexed" -> {}}],
+          "Piecewise",
+          DeleteWithContents->True,
+          Editable->False,
+          SelectWithContents->True,
+          Selectable->False], ")"}], "2"]}], ")"}]}]}], ",", 
+   RowBox[{
+    RowBox[{"-", 
+     FractionBox[
+      RowBox[{"Ac", " ", "B0", " ", 
+       SuperscriptBox["r0", "2"], " ", 
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {"0", 
+               RowBox[{
+                RowBox[{"\[Theta]", "<", 
+                 FractionBox["\[Pi]", "2"]}], "||", 
+                RowBox[{"\[Theta]", ">", 
+                 FractionBox["\[Pi]", "2"]}]}]},
+              {"Indeterminate", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}]}], 
+      RowBox[{
+       SuperscriptBox["r", "3"], " ", 
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {
+               SqrtBox[
+                FractionBox[
+                 RowBox[{
+                  SuperscriptBox["Ac", "2"], " ", 
+                  SuperscriptBox["B0", "2"], " ", 
+                  SuperscriptBox["r0", "4"], " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                 
+                 RowBox[{
+                  SuperscriptBox["r", "4"], " ", 
+                  SuperscriptBox["Vsw", "2"]}]]], 
+               RowBox[{
+                RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+              {"0", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}]}]]}], "+", 
+    FractionBox[
+     RowBox[{"Ac", " ", "B0", " ", 
+      SuperscriptBox["r0", "2"], " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {
+              FractionBox[
+               RowBox[{
+                SuperscriptBox["Ac", "2"], " ", 
+                SuperscriptBox["B0", "2"], " ", 
+                SuperscriptBox["r0", "4"], " ", 
+                SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+                RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+               RowBox[{
+                SuperscriptBox["r", "2"], " ", 
+                SuperscriptBox["Vsw", "2"], " ", 
+                SqrtBox[
+                 FractionBox[
+                  RowBox[{
+                   SuperscriptBox["Ac", "2"], " ", 
+                   SuperscriptBox["B0", "2"], " ", 
+                   SuperscriptBox["r0", "4"], " ", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                  
+                  RowBox[{
+                   SuperscriptBox["r", "4"], " ", 
+                   SuperscriptBox["Vsw", "2"]}]]]}]], 
+              RowBox[{"\[Theta]", "\[NotEqual]", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}], " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {"1", 
+              RowBox[{"\[Theta]", "<", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              RowBox[{"\[Theta]", "\[Equal]", 
+               FractionBox["\[Pi]", "2"]}]},
+             {
+              RowBox[{"-", "1"}], 
+              RowBox[{"\[Theta]", ">", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}]}], 
+     RowBox[{
+      SuperscriptBox["r", "3"], " ", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        TagBox[GridBox[{
+           {"\[Piecewise]", GridBox[{
+              {
+               SqrtBox[
+                FractionBox[
+                 RowBox[{
+                  SuperscriptBox["Ac", "2"], " ", 
+                  SuperscriptBox["B0", "2"], " ", 
+                  SuperscriptBox["r0", "4"], " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                 
+                 RowBox[{
+                  SuperscriptBox["r", "4"], " ", 
+                  SuperscriptBox["Vsw", "2"]}]]], 
+               RowBox[{
+                RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+              {"0", 
+               TagBox["True",
+                "PiecewiseDefault",
+                AutoDelete->True]}
+             },
+             AllowedDimensions->{2, Automatic},
+             Editable->True,
+             
+             GridBoxAlignment->{
+              "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+             GridBoxSpacings->{"Columns" -> {
+                 Offset[0.27999999999999997`], {
+                  Offset[0.84]}, 
+                 Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+               "Rows" -> {
+                 Offset[0.2], {
+                  Offset[0.4]}, 
+                 Offset[0.2]}, "RowsIndexed" -> {}},
+             Selectable->True]}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.35]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}],
+         "Piecewise",
+         DeleteWithContents->True,
+         Editable->False,
+         SelectWithContents->True,
+         Selectable->False], ")"}], "2"]}]]}]}], "}"}]], "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{3.636998558785404*^9, 3.637000225332698*^9}],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", "r", " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636998600957992*^9, 3.636998603526737*^9}, 
+   3.637000225332749*^9}],
+
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{
+   RowBox[{"-", 
+    FractionBox[
+     RowBox[{"2", " ", "Ac", " ", "B0", " ", 
+      SuperscriptBox["r0", "2"], " ", "\[CapitalOmega]", " ", 
+      RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {"1", 
+              RowBox[{"\[Theta]", "<", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              RowBox[{"\[Theta]", "\[Equal]", 
+               FractionBox["\[Pi]", "2"]}]},
+             {
+              RowBox[{"-", "1"}], 
+              RowBox[{"\[Theta]", ">", 
+               FractionBox["\[Pi]", "2"]}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}]}], 
+     RowBox[{
+      SuperscriptBox["r", "2"], " ", "Vsw", " ", 
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {
+              SqrtBox[
+               FractionBox[
+                RowBox[{
+                 SuperscriptBox["Ac", "2"], " ", 
+                 SuperscriptBox["B0", "2"], " ", 
+                 SuperscriptBox["r0", "4"], " ", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   SuperscriptBox["Vsw", "2"], "+", 
+                   RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                
+                RowBox[{
+                 SuperscriptBox["r", "4"], " ", 
+                 SuperscriptBox["Vsw", "2"]}]]], 
+              RowBox[{
+               RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}]}]]}], "+", 
+   FractionBox[
+    RowBox[{"Ac", " ", "B0", " ", 
+     SuperscriptBox["r0", "2"], " ", "\[CapitalOmega]", " ", 
+     RowBox[{"(", 
+      TagBox[GridBox[{
+         {"\[Piecewise]", GridBox[{
+            {
+             FractionBox[
+              RowBox[{
+               SuperscriptBox["Ac", "2"], " ", 
+               SuperscriptBox["B0", "2"], " ", 
+               SuperscriptBox["r0", "4"], " ", 
+               SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+               RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+               RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+              RowBox[{
+               SuperscriptBox["r", "2"], " ", 
+               SuperscriptBox["Vsw", "2"], " ", 
+               SqrtBox[
+                FractionBox[
+                 RowBox[{
+                  SuperscriptBox["Ac", "2"], " ", 
+                  SuperscriptBox["B0", "2"], " ", 
+                  SuperscriptBox["r0", "4"], " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    SuperscriptBox["Vsw", "2"], "+", 
+                    RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                 
+                 RowBox[{
+                  SuperscriptBox["r", "4"], " ", 
+                  SuperscriptBox["Vsw", "2"]}]]]}]], 
+             RowBox[{"\[Theta]", "\[NotEqual]", 
+              FractionBox["\[Pi]", "2"]}]},
+            {"0", 
+             TagBox["True",
+              "PiecewiseDefault",
+              AutoDelete->True]}
+           },
+           AllowedDimensions->{2, Automatic},
+           Editable->True,
+           
+           GridBoxAlignment->{
+            "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+             "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+           
+           GridBoxItemSize->{
+            "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+             "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+           GridBoxSpacings->{"Columns" -> {
+               Offset[0.27999999999999997`], {
+                Offset[0.84]}, 
+               Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+               Offset[0.2], {
+                Offset[0.4]}, 
+               Offset[0.2]}, "RowsIndexed" -> {}},
+           Selectable->True]}
+        },
+        GridBoxAlignment->{
+         "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}},
+           "RowsIndexed" -> {}},
+        GridBoxSpacings->{"Columns" -> {
+            Offset[0.27999999999999997`], {
+             Offset[0.35]}, 
+            Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {
+            Offset[0.2], {
+             Offset[0.4]}, 
+            Offset[0.2]}, "RowsIndexed" -> {}}],
+       "Piecewise",
+       DeleteWithContents->True,
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ")"}], " ", 
+     RowBox[{"(", 
+      TagBox[GridBox[{
+         {"\[Piecewise]", GridBox[{
+            {"1", 
+             RowBox[{"\[Theta]", "<", 
+              FractionBox["\[Pi]", "2"]}]},
+            {"0", 
+             RowBox[{"\[Theta]", "\[Equal]", 
+              FractionBox["\[Pi]", "2"]}]},
+            {
+             RowBox[{"-", "1"}], 
+             RowBox[{"\[Theta]", ">", 
+              FractionBox["\[Pi]", "2"]}]},
+            {"0", 
+             TagBox["True",
+              "PiecewiseDefault",
+              AutoDelete->True]}
+           },
+           AllowedDimensions->{2, Automatic},
+           Editable->True,
+           
+           GridBoxAlignment->{
+            "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+             "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+           
+           GridBoxItemSize->{
+            "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+             "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+           GridBoxSpacings->{"Columns" -> {
+               Offset[0.27999999999999997`], {
+                Offset[0.84]}, 
+               Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+               Offset[0.2], {
+                Offset[0.4]}, 
+               Offset[0.2]}, "RowsIndexed" -> {}},
+           Selectable->True]}
+        },
+        GridBoxAlignment->{
+         "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}},
+           "RowsIndexed" -> {}},
+        GridBoxSpacings->{"Columns" -> {
+            Offset[0.27999999999999997`], {
+             Offset[0.35]}, 
+            Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, 
+          "Rows" -> {
+            Offset[0.2], {
+             Offset[0.4]}, 
+            Offset[0.2]}, "RowsIndexed" -> {}}],
+       "Piecewise",
+       DeleteWithContents->True,
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ")"}], " ", 
+     RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+    RowBox[{
+     SuperscriptBox["r", "2"], " ", "Vsw", " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       TagBox[GridBox[{
+          {"\[Piecewise]", GridBox[{
+             {
+              SqrtBox[
+               FractionBox[
+                RowBox[{
+                 SuperscriptBox["Ac", "2"], " ", 
+                 SuperscriptBox["B0", "2"], " ", 
+                 SuperscriptBox["r0", "4"], " ", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   SuperscriptBox["Vsw", "2"], "+", 
+                   RowBox[{
+                    SuperscriptBox["r", "2"], " ", 
+                    SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+                
+                RowBox[{
+                 SuperscriptBox["r", "4"], " ", 
+                 SuperscriptBox["Vsw", "2"]}]]], 
+              RowBox[{
+               RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+             {"0", 
+              TagBox["True",
+               "PiecewiseDefault",
+               AutoDelete->True]}
+            },
+            AllowedDimensions->{2, Automatic},
+            Editable->True,
+            
+            GridBoxAlignment->{
+             "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+              "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.84]}, 
+                Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[0.4]}, 
+                Offset[0.2]}, "RowsIndexed" -> {}},
+            Selectable->True]}
+         },
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.35]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}}],
+        "Piecewise",
+        DeleteWithContents->True,
+        Editable->False,
+        SelectWithContents->True,
+        Selectable->False], ")"}], "2"]}]]}], "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.63699859638827*^9, 3.63699861040374*^9}, 
+   3.637000225332793*^9}],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\[Piecewise]", GridBox[{
+       {"Indeterminate", 
+        RowBox[{
+         RowBox[{"2", " ", "\[Theta]"}], "\[Equal]", "\[Pi]"}]},
+       {
+        RowBox[{"-", 
+         FractionBox[
+          RowBox[{
+           SuperscriptBox["Ac", "3"], " ", 
+           SuperscriptBox["B0", "3"], " ", 
+           SuperscriptBox["r0", "6"], " ", "\[CapitalOmega]", " ", 
+           RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"2", " ", 
+              SuperscriptBox["Vsw", "2"]}], "+", 
+             RowBox[{
+              SuperscriptBox["r", "2"], " ", 
+              SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+              SuperscriptBox[
+               RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+          RowBox[{
+           SuperscriptBox["r", "6"], " ", 
+           SuperscriptBox["Vsw", "3"], " ", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             FractionBox[
+              RowBox[{
+               SuperscriptBox["Ac", "2"], " ", 
+               SuperscriptBox["B0", "2"], " ", 
+               SuperscriptBox["r0", "4"], " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 SuperscriptBox["Vsw", "2"], "+", 
+                 RowBox[{
+                  SuperscriptBox["r", "2"], " ", 
+                  SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                  SuperscriptBox[
+                   RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+              RowBox[{
+               SuperscriptBox["r", "4"], " ", 
+               SuperscriptBox["Vsw", "2"]}]], ")"}], 
+            RowBox[{"3", "/", "2"}]]}]]}], 
+        RowBox[{
+         RowBox[{"2", " ", "\[Theta]"}], "<", "\[Pi]"}]},
+       {
+        FractionBox[
+         RowBox[{
+          SuperscriptBox["Ac", "3"], " ", 
+          SuperscriptBox["B0", "3"], " ", 
+          SuperscriptBox["r0", "6"], " ", "\[CapitalOmega]", " ", 
+          RowBox[{"Cos", "[", "\[Theta]", "]"}], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"2", " ", 
+             SuperscriptBox["Vsw", "2"]}], "+", 
+            RowBox[{
+             SuperscriptBox["r", "2"], " ", 
+             SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+             SuperscriptBox[
+              RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+         RowBox[{
+          SuperscriptBox["r", "6"], " ", 
+          SuperscriptBox["Vsw", "3"], " ", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            FractionBox[
+             RowBox[{
+              SuperscriptBox["Ac", "2"], " ", 
+              SuperscriptBox["B0", "2"], " ", 
+              SuperscriptBox["r0", "4"], " ", 
+              RowBox[{"(", 
+               RowBox[{
+                SuperscriptBox["Vsw", "2"], "+", 
+                RowBox[{
+                 SuperscriptBox["r", "2"], " ", 
+                 SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                 SuperscriptBox[
+                  RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+             RowBox[{
+              SuperscriptBox["r", "4"], " ", 
+              SuperscriptBox["Vsw", "2"]}]], ")"}], 
+           RowBox[{"3", "/", "2"}]]}]], 
+        TagBox["True",
+         "PiecewiseDefault",
+         AutoDelete->True]}
+      },
+      AllowedDimensions->{2, Automatic},
+      Editable->True,
+      GridBoxAlignment->{
+       "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+        "RowsIndexed" -> {}},
+      GridBoxItemSize->{
+       "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+        "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.84]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}},
+      Selectable->True]}
+   },
+   GridBoxAlignment->{
+    "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+     "RowsIndexed" -> {}},
+   GridBoxItemSize->{
+    "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+     "RowsIndexed" -> {}},
+   GridBoxSpacings->{"Columns" -> {
+       Offset[0.27999999999999997`], {
+        Offset[0.35]}, 
+       Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+       Offset[0.2], {
+        Offset[0.4]}, 
+       Offset[0.2]}, "RowsIndexed" -> {}}],
+  "Piecewise",
+  DeleteWithContents->True,
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{3.636998611701887*^9, 3.637000225332843*^9}],
+
+Cell[BoxData[
+ RowBox[{"-", 
+  FractionBox[
+   RowBox[{"Ac", " ", "B0", " ", 
+    SuperscriptBox["r0", "2"], " ", "\[CapitalOmega]", " ", 
+    RowBox[{"(", 
+     TagBox[GridBox[{
+        {"\[Piecewise]", GridBox[{
+           {"0", 
+            RowBox[{
+             RowBox[{"\[Theta]", "<", 
+              FractionBox["\[Pi]", "2"]}], "||", 
+             RowBox[{"\[Theta]", ">", 
+              FractionBox["\[Pi]", "2"]}]}]},
+           {"Indeterminate", 
+            TagBox["True",
+             "PiecewiseDefault",
+             AutoDelete->True]}
+          },
+          AllowedDimensions->{2, Automatic},
+          Editable->True,
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.84]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}},
+          Selectable->True]}
+       },
+       GridBoxAlignment->{
+        "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}},
+          "RowsIndexed" -> {}},
+       GridBoxItemSize->{
+        "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+         "RowsIndexed" -> {}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.35]}, 
+           Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+           Offset[0.2], {
+            Offset[0.4]}, 
+           Offset[0.2]}, "RowsIndexed" -> {}}],
+      "Piecewise",
+      DeleteWithContents->True,
+      Editable->False,
+      SelectWithContents->True,
+      Selectable->False], ")"}], " ", 
+    RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+   RowBox[{
+    SuperscriptBox["r", "2"], " ", "Vsw", " ", 
+    RowBox[{"(", 
+     TagBox[GridBox[{
+        {"\[Piecewise]", GridBox[{
+           {
+            SqrtBox[
+             FractionBox[
+              RowBox[{
+               SuperscriptBox["Ac", "2"], " ", 
+               SuperscriptBox["B0", "2"], " ", 
+               SuperscriptBox["r0", "4"], " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 SuperscriptBox["Vsw", "2"], "+", 
+                 RowBox[{
+                  SuperscriptBox["r", "2"], " ", 
+                  SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+                  SuperscriptBox[
+                   RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]}], ")"}]}], 
+              RowBox[{
+               SuperscriptBox["r", "4"], " ", 
+               SuperscriptBox["Vsw", "2"]}]]], 
+            RowBox[{
+             RowBox[{"2", " ", "\[Theta]"}], "\[NotEqual]", "\[Pi]"}]},
+           {"0", 
+            TagBox["True",
+             "PiecewiseDefault",
+             AutoDelete->True]}
+          },
+          AllowedDimensions->{2, Automatic},
+          Editable->True,
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          
+          GridBoxItemSize->{
+           "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.84]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}},
+          Selectable->True]}
+       },
+       GridBoxAlignment->{
+        "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}},
+          "RowsIndexed" -> {}},
+       GridBoxItemSize->{
+        "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+         "RowsIndexed" -> {}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.35]}, 
+           Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+           Offset[0.2], {
+            Offset[0.4]}, 
+           Offset[0.2]}, "RowsIndexed" -> {}}],
+      "Piecewise",
+      DeleteWithContents->True,
+      Editable->False,
+      SelectWithContents->True,
+      Selectable->False], ")"}]}]]}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{3.637000225332891*^9}],
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{"Sin", "[", 
+   RowBox[{"ArcTan", "[", 
+    FractionBox[
+     RowBox[{"\[CapitalOmega]", " ", "r", " ", 
+      RowBox[{"Sin", "[", "\[Theta]", "]"}]}], "Vsw"], "]"}], "]"}], 
+  "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636998886973625*^9, 3.63699890525816*^9}, 
+   3.6370002253329353`*^9}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{"r", " ", "\[CapitalOmega]", " ", 
+   RowBox[{"Sin", "[", "\[Theta]", "]"}]}], 
+  RowBox[{"Vsw", " ", 
+   SqrtBox[
+    RowBox[{"1", "+", 
+     FractionBox[
+      RowBox[{
+       SuperscriptBox["r", "2"], " ", 
+       SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+       SuperscriptBox[
+        RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}], 
+      SuperscriptBox["Vsw", "2"]]}]]}]]], "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636998900575001*^9, 3.6369989057973537`*^9}, 
+   3.637000225332985*^9}],
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{"Cos", "[", 
+   RowBox[{"ArcTan", "[", 
+    FractionBox[
+     RowBox[{"\[CapitalOmega]", " ", "r", " ", 
+      RowBox[{"Sin", "[", "\[Theta]", "]"}]}], "Vsw"], "]"}], "]"}], 
+  "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{{3.636999234099822*^9, 3.636999234379711*^9}, 
+   3.637000225333033*^9}],
+
+Cell[BoxData[
+ FractionBox["1", 
+  SqrtBox[
+   RowBox[{"1", "+", 
+    FractionBox[
+     RowBox[{
+      SuperscriptBox["r", "2"], " ", 
+      SuperscriptBox["\[CapitalOmega]", "2"], " ", 
+      SuperscriptBox[
+       RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}], 
+     SuperscriptBox["Vsw", "2"]]}]]]], "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.},
+ CellChangeTimes->{3.636999234742729*^9, 3.6370002253330812`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+   RowBox[{"Derivatives", " ", "for", " ", "the", " ", 
+    RowBox[{"SDEs", ".", "  ", "Here"}]}], ",", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"KPAR", "/", "KPERP"}], " ", "take", " ", "r"}], "-", 
+    RowBox[{"dependence", " ", "into", " ", 
+     RowBox[{"account", "."}]}]}]}], " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.6370002361585608`*^9, 3.6370002449372787`*^9}, {
+   3.637006312493281*^9, 3.637006329236445*^9}, 3.637074603522277*^9}],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", "dr", " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.6370006169501266`*^9, 3.63700061863457*^9}, 
+   3.637074603523941*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   SuperscriptBox["r", "2"]], "*", 
+  RowBox[{"D", "[", 
+   RowBox[{
+    RowBox[{
+     SuperscriptBox["r", "2"], "krr"}], ",", "r"}], "]"}]}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637000247143733*^9, 3.6370002583616447`*^9}, 
+   3.6370004229451027`*^9, {3.63700063787538*^9, 3.637000638699019*^9}, 
+   3.637074603524111*^9}],
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{
+   FractionBox["1", 
+    SuperscriptBox["r", "2"]], 
+   RowBox[{"(", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"2", " ", "KPERP", " ", "r", " ", 
+       SuperscriptBox["\[Gamma]", "2"]}], 
+      RowBox[{" ", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         SuperscriptBox["\[Gamma]", "2"]}], ")"}]}]], "-", 
+     FractionBox[
+      RowBox[{"2", " ", "r", " ", 
+       SuperscriptBox["\[Gamma]", "2"], 
+       RowBox[{"(", 
+        RowBox[{"KPAR", " ", "+", 
+         RowBox[{"KPERP", " ", 
+          SuperscriptBox["\[Gamma]", "2"]}]}], ")"}]}], 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         SuperscriptBox["\[Gamma]", "2"]}], ")"}], "2"]], "+", 
+     FractionBox[
+      RowBox[{
+       SuperscriptBox["r", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{"KPAR", " ", "+", 
+         RowBox[{"KPERP", " ", 
+          SuperscriptBox["\[Gamma]", "2"]}]}], ")"}]}], 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"r", "+", "r0"}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         SuperscriptBox["\[Gamma]", "2"]}], ")"}]}]], "+", 
+     FractionBox[
+      RowBox[{"2", " ", "r", " ", 
+       RowBox[{"(", 
+        RowBox[{"KPAR", " ", "+", 
+         RowBox[{"KPERP", " ", 
+          SuperscriptBox["\[Gamma]", "2"]}]}], ")"}]}], 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        SuperscriptBox["\[Gamma]", "2"]}], ")"}]]}], ")"}]}], "]"}]], "Input",
+ 
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637000698032539*^9, 3.6370007027242317`*^9}, {
+   3.6370045021535053`*^9, 3.637004571623683*^9}, {3.6370046094873877`*^9, 
+   3.637004737787456*^9}, 3.637074603524284*^9}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{
+   RowBox[{"KPAR", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"2", " ", "r0"}], "+", 
+      RowBox[{"r", " ", 
+       RowBox[{"(", 
+        RowBox[{"3", "+", 
+         SuperscriptBox["\[Gamma]", "2"]}], ")"}]}]}], ")"}]}], "+", 
+   RowBox[{"KPERP", " ", 
+    SuperscriptBox["\[Gamma]", "2"], " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"2", " ", "r0", " ", 
+       RowBox[{"(", 
+        RowBox[{"2", "+", 
+         SuperscriptBox["\[Gamma]", "2"]}], ")"}]}], "+", 
+      RowBox[{"r", " ", 
+       RowBox[{"(", 
+        RowBox[{"5", "+", 
+         RowBox[{"3", " ", 
+          SuperscriptBox["\[Gamma]", "2"]}]}], ")"}]}]}], ")"}]}]}], 
+  RowBox[{"r", " ", 
+   RowBox[{"(", 
+    RowBox[{"r", "+", "r0"}], ")"}], " ", 
+   SuperscriptBox[
+    RowBox[{"(", 
+     RowBox[{"1", "+", 
+      SuperscriptBox["\[Gamma]", "2"]}], ")"}], "2"]}]]], "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{3.637004583198454*^9, 3.637004742179418*^9, 
+  3.637074603524458*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   RowBox[{"r", " ", 
+    RowBox[{"Sin", "[", "\[Theta]", "]"}]}]], 
+  RowBox[{"D", "[", 
+   RowBox[{"kr\[Phi]", ",", "\[Phi]"}], "]"}]}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637000623567484*^9, 3.637000658729835*^9}, 
+   3.6370746035247107`*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{3.6370006635250387`*^9, 3.637074603524843*^9}],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", "d\[Theta]", " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.63700623319888*^9, 3.637006237814558*^9}, 
+   3.637074603524979*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   RowBox[{
+    SuperscriptBox["r", "2"], 
+    RowBox[{"Sin", "[", "\[Theta]", "]"}]}]], 
+  RowBox[{"D", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Sin", "[", "\[Theta]", "]"}], "k\[Theta]\[Theta]"}], ",", 
+    "\[Theta]"}], "]"}]}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637006284922882*^9, 3.637006300405648*^9}, 
+   3.6370746035263443`*^9}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{"KPERP", "  ", 
+   RowBox[{"Cot", "[", "\[Theta]", "]"}]}], 
+  SuperscriptBox["r", "2"]]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637006333451427*^9, 3.637006335948197*^9}, 
+   3.637074603526494*^9}],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", "d\[Phi]", " ", "*)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637006514474442*^9, 3.637006517609467*^9}, 
+   3.637074603526613*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   RowBox[{
+    SuperscriptBox["r", "2"], 
+    SuperscriptBox[
+     RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]], 
+  RowBox[{"D", "[", 
+   RowBox[{"k\[Phi]\[Phi]", ",", "\[Phi]"}], "]"}]}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637006520524645*^9, 3.63700653304851*^9}, 
+   3.6370746035267477`*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{3.6370065335281982`*^9, 3.6370746035268784`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   RowBox[{
+    SuperscriptBox["r", "2"], 
+    RowBox[{"Sin", "[", "\[Theta]", "]"}]}]], 
+  RowBox[{"D", "[", 
+   RowBox[{
+    RowBox[{"r", " ", "kr\[Phi]"}], ",", "r"}], "]"}]}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.637006538695279*^9, 3.6370065514250298`*^9}, 
+   3.63707460352698*^9}],
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{
+   FractionBox["1", 
+    SuperscriptBox["r", "2"]], 
+   RowBox[{"Csc", "[", "\[Theta]", "]"}], " ", 
+   RowBox[{"(", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"2", " ", 
+       RowBox[{"(", 
+        RowBox[{"KPAR", "-", "KPERP"}], ")"}], " ", 
+       SuperscriptBox["\[Gamma]", "3"]}], 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         SuperscriptBox["\[Gamma]", "2"]}], ")"}], "2"]], "-", 
+     FractionBox[
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"KPAR", "-", "KPERP"}], ")"}], "r", " ", "\[Gamma]"}], 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"r", "+", "r0"}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         SuperscriptBox["\[Gamma]", "2"]}], ")"}]}]], "-", 
+     FractionBox[
+      RowBox[{"2", " ", 
+       RowBox[{"(", 
+        RowBox[{"KPAR", "-", "KPERP"}], ")"}], " ", "\[Gamma]"}], 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        SuperscriptBox["\[Gamma]", "2"]}], ")"}]]}], ")"}]}], "]"}]], "Input",
+ 
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.6370065617276173`*^9, 3.6370067221433363`*^9}, 
+   3.637074603527089*^9}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"KPERP", "-", "KPAR"}], ")"}], " ", "\[Gamma]", " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"2", " ", "r0"}], "+", 
+     RowBox[{"r", " ", 
+      RowBox[{"(", 
+       RowBox[{"3", "+", 
+        SuperscriptBox["\[Gamma]", "2"]}], ")"}]}]}], ")"}]}], 
+  RowBox[{
+   SuperscriptBox["r", "2"], " ", 
+   RowBox[{"(", 
+    RowBox[{"r", "+", "r0"}], ")"}], " ", 
+   SuperscriptBox[
+    RowBox[{"(", 
+     RowBox[{"1", "+", 
+      SuperscriptBox["\[Gamma]", "2"]}], ")"}], "2"], 
+   RowBox[{"Sin", "[", "\[Theta]", "]"}]}]]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.},
+ CellChangeTimes->{{3.6370068985094347`*^9, 3.637006902434428*^9}, 
+   3.637074603527247*^9}]
+}, Closed]]
+},
+WindowSize->{720, 852},
+WindowMargins->{{Automatic, 28}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 313, 7, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[895, 31, 1541, 40, 104, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[2439, 73, 3367, 96, 156, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[5843, 174, 240, 5, 22, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[6086, 181, 711, 21, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[6800, 204, 254, 6, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[7057, 212, 213, 4, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[7273, 218, 1119, 30, 88, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[8395, 250, 597, 16, 35, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[8995, 268, 878, 22, 46, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[9876, 292, 14745, 378, 461, InheritFromParent,
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[24624, 672, 822, 22, 46, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[25449, 696, 40479, 1042, 975, "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[65931, 1740, 206, 4, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[66140, 1746, 13055, 340, 346, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[79198, 2088, 4713, 125, 149, "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[83914, 2215, 4650, 125, 120, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[88567, 2342, 394, 10, 49, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[88964, 2354, 578, 16, 75, "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[89545, 2372, 393, 10, 49, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}],
+Cell[89941, 2384, 431, 12, 75, "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10001.}]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[90409, 2401, 548, 12, 46, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[90960, 2415, 208, 4, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[91171, 2421, 416, 11, 49, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[91590, 2434, 1724, 51, 142, InheritFromParent,
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[93317, 2487, 1043, 33, 59, "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[94363, 2522, 339, 9, 51, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[94705, 2533, 147, 2, 28, "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[94855, 2537, 213, 4, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[95071, 2543, 436, 13, 52, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[95510, 2558, 282, 7, 48, InheritFromParent,
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[95795, 2567, 212, 4, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[96010, 2573, 391, 11, 52, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[96404, 2586, 149, 2, 28, "Output",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[96556, 2590, 379, 11, 52, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[96938, 2603, 1199, 37, 90, InheritFromParent,
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}],
+Cell[98140, 2642, 746, 23, 60, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10002.}]
+}, Closed]]
+}
+]
+*)
+
+(* End of internal cache information *)

@@ -40,36 +40,36 @@ def plotavgdev(samples, degs = True):
     for p in samples:
         # Unzip the list of Samples to compute the average of theta_div
         avgs[p] = sum(zip(*samples[p])[3]) / len(samples[p])
-        errors[p] = numpy.std(zip(*samples[p])[3], ddof = 1) / len(samples[p])
+        # Compute 95% confidence interval
+        errors[p] = 1.96 * numpy.std(zip(*samples[p])[3], ddof = 1) / math.sqrt(len(samples[p]))
 
     fig = plt.figure()
     avgax = fig.add_subplot(1, 1, 1)
 
     for p in avgs:
-        avgax.scatter(p, avgs[p] * conversion)
+        avgax.scatter(p, avgs[p] * conversion, color = 'b', marker = '.')
         # Could compute errors, but they are smaller than the data points!!!
-        #avgax.errorbar(p, avgs[p] * conversion, yerr = errors[p] * conversion)
+        avgax.errorbar(p, avgs[p] * conversion, yerr = errors[p] * conversion, ecolor = 'b')
         print('p = ' + str(p) + ' GeV, theta_dev = ' + str(avgs[p] * conversion))
 
     # Make the graph look good
     avgax.set_xlim([10, 500])
-    avgax.set_ylim([0, 100])
+    avgax.set_ylim([0, 105])
     avgax.set_xscale("log")
-    avgax.set_xlabel(r'$p_{obs} (GeV)$')
-    avgax.set_ylabel(r'$\theta_{dev} ($' + ('degrees)' if degs else 'radians)'))
+    avgax.set_xlabel(r'$p_{obs}\ (GeV)$')
+    avgax.set_ylabel(r'$\theta_{dev}\ ($' + ('degrees)' if degs else 'radians)'))
     avgax.set_title(r'Average deviation angle as a function of observed momentum', fontsize='medium')
 
-    plt.show()
+    #plt.show()
 
     ## Resize and save
-    #plt.gcf().set_size_inches(6.0, 4.0)
-    #plt.gcf().savefig('final/tau_limits/' + theory + '_tau.pdf', bbox_inches='tight')
+    fig.set_size_inches(6.0, 4.0)
+    fig.savefig('plots/regular_deviation.pdf', bbox_inches='tight')
 
 ### Main
 if __name__ == "__main__":
     samplepath = 'mc_data/'
     samples = getdata(samplepath)
     plotavgdev(samples)
-
 
 

@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     20071,        508]
-NotebookOptionsPosition[     18242,        456]
-NotebookOutlinePosition[     18597,        472]
-CellTagsIndexPosition[     18554,        469]
+NotebookDataLength[     20139,        510]
+NotebookOptionsPosition[     18284,        457]
+NotebookOutlinePosition[     18665,        474]
+CellTagsIndexPosition[     18622,        471]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -22,10 +22,11 @@ Cell[BoxData[
  RowBox[{"(*", 
   RowBox[{
    RowBox[{"**", "**", " ", "Run"}], " ", 
-   RowBox[{"trajectories", ".", "nb"}], " ", "first", " ", "to", " ", "set", 
-   " ", "up", " ", "fields"}], " ", "*****)"}]], "Input",
+   RowBox[{"setup", ".", "nb"}], " ", "first", " ", "to", " ", "set", " ", 
+   "up", " ", "fields"}], " ", "*****)"}]], "Input",
  CellChangeTimes->{{3.631909632552018*^9, 3.631909641611918*^9}, {
-  3.6319114183728647`*^9, 3.631911420628001*^9}}],
+  3.6319114183728647`*^9, 3.631911420628001*^9}, {3.636480599866909*^9, 
+  3.636480601560171*^9}}],
 
 Cell[CellGroupData[{
 
@@ -454,6 +455,7 @@ Cell[BoxData[
    3.631992782127985*^9}]
 }, Closed]]
 },
+Evaluator->"heliosphere",
 WindowSize->{1440, 852},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
@@ -471,43 +473,43 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[557, 20, 336, 7, 28, "Input"],
+Cell[557, 20, 378, 8, 28, "Input"],
 Cell[CellGroupData[{
-Cell[918, 31, 804, 15, 46, "Input",
+Cell[960, 32, 804, 15, 46, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[1725, 48, 2644, 40, 46, "Input",
+Cell[1767, 49, 2644, 40, 46, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[4372, 90, 3313, 90, 109, "Input",
+Cell[4414, 91, 3313, 90, 109, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[7688, 182, 326, 6, 28, "Input",
+Cell[7730, 183, 326, 6, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[8017, 190, 917, 22, 28, "Input",
+Cell[8059, 191, 917, 22, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[8937, 214, 401, 8, 28, "Input",
+Cell[8979, 215, 401, 8, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[9341, 224, 954, 25, 44, "Input",
+Cell[9383, 225, 954, 25, 44, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[10298, 251, 656, 17, 28, "Input",
+Cell[10340, 252, 656, 17, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[10957, 270, 1227, 29, 28, "Input",
+Cell[10999, 271, 1227, 29, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[12221, 304, 417, 9, 28, "Input",
+Cell[12263, 305, 417, 9, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[12641, 315, 1475, 35, 28, "Input",
+Cell[12683, 316, 1475, 35, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[14153, 355, 250, 5, 28, "Input",
+Cell[14195, 356, 250, 5, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[14406, 362, 1603, 31, 70, "Input",
+Cell[14448, 363, 1603, 31, 70, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[16012, 395, 992, 24, 69, "Input",
+Cell[16054, 396, 992, 24, 69, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[17007, 421, 838, 20, 42, "Input",
+Cell[17049, 422, 838, 20, 42, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}],
-Cell[17848, 443, 378, 10, 28, "Input",
+Cell[17890, 444, 378, 10, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10002.}]
 }, Closed]]
 }

@@ -6,18 +6,18 @@
 
 int main(int argc, char* argv[]) {
 	if (argc == 2) {
-		PPTrajectory traj(1, 3.14159265359 / 2 * 1.01, 0, std::stod(argv[1]));
+		PPTrajectory traj(1, PPPoint::pi / 2.0, 0, std::stod(argv[1]), "wavy_params.csv");
 
-		std::cout << "Generating trajectory for particle with measured energy " << traj.getE0() << "..."
+		std::cout << "Generating trajectory for particle with measured energy " << traj.getE0() << " GeV..."
 			<< std::endl;
 
 		// Run the full simulation
 		traj.integrate(0);
 
-		std::cout << "Simulation complete!" << std::endl;
+		std::cout << "Done." << std::endl;
 
 		// Write results to XML
-		traj.writeToXML("runs/debug.xml");
+		traj.writeToXML("runs/debug_" + std::string(argv[1]) + ".xml");
 	} else {
 		// Should this print to std::cerr?
 		std::cout << "SolarProp error: must supply an argument specifying the pseudoparticle's initial energy"

@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     16528,        467]
-NotebookOptionsPosition[     15136,        423]
-NotebookOutlinePosition[     15490,        439]
-CellTagsIndexPosition[     15447,        436]
+NotebookDataLength[     16383,        450]
+NotebookOptionsPosition[     14963,        405]
+NotebookOutlinePosition[     15344,        422]
+CellTagsIndexPosition[     15301,        419]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -72,25 +72,20 @@ Cell[BoxData[
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{
-   RowBox[{"\[Alpha]", "=", "0.8726646259971648`"}], ";"}], " ", 
+  RowBox[{"\[Alpha]", "=", "0.8726646259971648`"}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{
     SuperscriptBox["50", "\[Degree]"], " ", "in", " ", "radians"}], " ", 
-   "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"r0", "=", "1"}], ";"}], " ", 
+   "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"r0", "=", "1"}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{"1", " ", 
-    RowBox[{"AU", ".", "  ", "Duh", "."}]}], " ", 
-   "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"\[CapitalOmega]", "=", 
-    RowBox[{"2.88", "\[Times]", 
-     SuperscriptBox["10", 
-      RowBox[{"-", "6"}]]}]}], ";"}], " ", 
+    RowBox[{"AU", ".", "  ", "Duh", "."}]}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"\[CapitalOmega]", "=", 
+   RowBox[{"2.88", "\[Times]", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "6"}]]}]}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{
     RowBox[{
@@ -102,54 +97,42 @@ Cell[BoxData[{
     "and", " ", "disagrees", " ", "by", " ", "a", " ", "bit", " ", "with", 
      " ", 
      RowBox[{"wikipedia", "/", 
-      RowBox[{"google", "."}]}]}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"\[Omega]", "=", 
-    RowBox[{"2.67", "\[Times]", 
-     SuperscriptBox["10", 
-      RowBox[{"-", "6"}]]}]}], ";"}], " ", 
+      RowBox[{"google", "."}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"\[Omega]", "=", 
+   RowBox[{"2.67", "\[Times]", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "6"}]]}]}], ";", " ", 
   RowBox[{"(*", " ", 
-   RowBox[{"AU", "/", "s"}], " ", "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"me", "=", 
-    RowBox[{
-     RowBox[{"(", 
-      RowBox[{"5.1", "\[Times]", 
-       SuperscriptBox["10", 
-        RowBox[{"-", "4"}]]}], ")"}], " ", "*", " ", "1.78", "\[Times]", 
-     SuperscriptBox["10", 
-      RowBox[{"-", "27"}]]}]}], ";"}], " ", 
+   RowBox[{"AU", "/", "s"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"me", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"5.1", "\[Times]", 
+      SuperscriptBox["10", 
+       RowBox[{"-", "4"}]]}], ")"}], " ", "*", " ", "1.78", "\[Times]", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "27"}]]}]}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{"Electron", " ", "mass", " ", "in", " ", 
-    RowBox[{"GeV", "."}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"A", "=", "1"}], ";"}], " ", 
-  RowBox[{"(*", " ", "Polarity", " ", "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"c", "=", 
-    RowBox[{"2", "\[Times]", 
-     SuperscriptBox["10", 
-      RowBox[{"-", "3"}]]}]}], ";"}], " ", 
-  RowBox[{"(*", " ", 
-   RowBox[{"AU", "/", "s"}], " ", "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"B0", "=", 
+    RowBox[{"GeV", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"A", "=", "1"}], ";", " ", 
+  RowBox[{"(*", " ", "Polarity", " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"c", "=", 
+   RowBox[{"2", "\[Times]", 
     SuperscriptBox["10", 
-     RowBox[{"-", "9.1"}]]}], ";"}], " ", 
+     RowBox[{"-", "3"}]]}]}], ";", " ", 
   RowBox[{"(*", " ", 
-   RowBox[{"In", " ", "Teslas"}], " ", "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"qe", "=", 
-    RowBox[{
-     RowBox[{"-", "1.60"}], "\[Times]", 
-     SuperscriptBox["10", 
-      RowBox[{"-", "19"}]]}]}], ";"}], " ", 
+   RowBox[{"AU", "/", "s"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"B0", "=", 
+   SuperscriptBox["10", 
+    RowBox[{"-", "9.1"}]]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"In", " ", "Teslas"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"qe", "=", 
+   RowBox[{
+    RowBox[{"-", "1.60"}], "\[Times]", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "19"}]]}]}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{
     RowBox[{"For", " ", "a", " ", "positron"}], ",", " ", 
@@ -158,8 +141,7 @@ Cell[BoxData[{
    RowBox[{
    "Mean", " ", "distances", " ", "of", " ", "planets", " ", "from", " ", 
     "the", " ", "sun", " ", "in", " ", 
-    RowBox[{"AU", "."}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
+    RowBox[{"AU", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
   RowBox[{"mercury", "=", "0.39"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"venus", "=", "0.72"}], ";"}], "\[IndentingNewLine]", 
@@ -174,8 +156,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"neptune", "=", "30.06"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"tshock", "=", "100"}], ";"}], " ", 
+  RowBox[{"tshock", "=", "100"}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{"Termination", " ", "shock", " ", 
     RowBox[{"radius", "."}]}], " ", "*)"}]}]}], "Input",
@@ -200,8 +181,9 @@ Cell[BoxData[{
    3.6316564050358667`*^9, 3.631656465632622*^9}, 3.631908204608225*^9, {
    3.631909482071381*^9, 3.631909488943227*^9}, {3.63207067468219*^9, 
    3.63207068184641*^9}, 3.632070751135942*^9, {3.632070784389817*^9, 
-   3.6320707876541767`*^9}}]
-}, Closed]],
+   3.6320707876541767`*^9}, {3.633900106164813*^9, 3.6339001137152157`*^9}, {
+   3.636482439867095*^9, 3.636482442512521*^9}}]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -421,8 +403,9 @@ Cell[BoxData[
    3.631653969246009*^9}}]
 }, Closed]]
 },
+Evaluator->"heliosphere",
 WindowSize->{740, 752},
-WindowMargins->{{4, Automatic}, {Automatic, 4}},
+WindowMargins->{{17, Automatic}, {Automatic, 0}},
 FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
 2013)",
 StyleDefinitions->"Default.nb"
@@ -448,25 +431,25 @@ Cell[1176, 40, 670, 18, 57, "Input",
 Cell[CellGroupData[{
 Cell[1883, 63, 286, 7, 22, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10003.}],
-Cell[2172, 72, 5107, 130, 353, "Input",
+Cell[2172, 72, 4934, 112, 353, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10003.}]
-}, Closed]],
+}, Open  ]],
 Cell[CellGroupData[{
-Cell[7316, 207, 252, 5, 22, "Input",
+Cell[7143, 189, 252, 5, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[7571, 214, 440, 13, 70, "Input",
+Cell[7398, 196, 440, 13, 70, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[8048, 232, 236, 4, 22, "Input",
+Cell[7875, 214, 236, 4, 22, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}],
-Cell[8287, 238, 644, 17, 48, "Input",
+Cell[8114, 220, 644, 17, 48, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}],
-Cell[8934, 257, 871, 24, 28, "Input",
+Cell[8761, 239, 871, 24, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}],
-Cell[9808, 283, 3241, 79, 111, "Input",
+Cell[9635, 265, 3241, 79, 204, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}],
-Cell[13052, 364, 2068, 56, 76, "Input",
+Cell[12879, 346, 2068, 56, 127, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}]
 }, Closed]]
 }
@@ -474,4 +457,3 @@ Cell[13052, 364, 2068, 56, 76, "Input",
 *)
 
 (* End of internal cache information *)
-

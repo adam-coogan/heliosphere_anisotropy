@@ -1,5 +1,5 @@
 ds,350.0,Timestep (s)
-lambda0,0.15,Constant in parallel mean free path/kpar (AU)
+lambda0,0.05,Constant in parallel mean free path (ie, kpar) (AU)
 rig0,0.0000000000223,Rigidity constant in kpar 1 GV * 2.23*10^-11 T*AU/GV = 2.23*10^-11 T*AU
 b0,0.00000000354,Reference value for B (T).  Gives |B| ~ 5 nT at Earth.
 r0,1.0,Distance of Earth from the Sun (AU)

@@ -4,8 +4,8 @@
 // Represents a point in a pseudoparticle's trajectory.  s is the backwards time -t.
 class PPPoint {
 	public:
-		PPPoint(double r0, double th0, double phi0, double e0, double s0)
-			: e(e0), s(s0) {
+		PPPoint(double r0, double th0, double phi0, double ei, double s0)
+			: e(ei), s(s0) {
 			setR(r0);
 			setTh(th0);
 			setPhi(phi0);
@@ -20,19 +20,18 @@ class PPPoint {
 		double getS() const { return s; };
 
 		PPPoint& setR(double r0) {
-			r = r0;
-
 			if (r < 0) {
 				setTh(PPPoint::pi - th);
 				setPhi(phi + PPPoint::pi);
+				r = -r0;
+			} else {
+				r = r0;
 			}
 
 			return *this;
 		};
 
 		PPPoint& setTh(double th0) {
-			th = th0;
-
 			if (th < 0) {
 				th = -th;
 				setPhi(phi + PPPoint::pi);
@@ -41,14 +40,14 @@ class PPPoint {
 					th = 2 * PPPoint::pi - th;
 				}
 				setPhi(phi + PPPoint::pi);
+			} else {
+				th = th0;
 			}
 
 			return *this;
 		};
 
 		PPPoint& setPhi(double phi0) {
-			phi = phi0;
-
 			if (phi < 0) {
 				while (phi < 0) {
 					phi += 2 * PPPoint::pi;
@@ -57,13 +56,15 @@ class PPPoint {
 				while (phi > 2 * PPPoint::pi) {
 					phi -= 2 * PPPoint::pi;
 				}
+			} else {
+				phi = phi0;
 			}
 
 			return *this;
 		};
 
-		PPPoint& setE(double e0) {
-			e = e0;
+		PPPoint& setE(double ei) {
+			e = ei;
 			return *this;
 		};
 

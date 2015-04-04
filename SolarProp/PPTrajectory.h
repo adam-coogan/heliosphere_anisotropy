@@ -14,10 +14,18 @@
 // TODO: check curlBoverB for singularities!												 2015-02-25 01:20
 // TODO: should be able to give angle at which the particle was detected at Earth.			 2015-02-25 01:11
 // TODO: have the particle start at Earth by default										 2015-02-25 14:14
+// TODO: make an integrator class that determines what method the trajectory uses.  Should be able to give it
+//		 the pseudoparticle integrator, the deterministic one I've implemented in Mathematica, or one that
+//		 calculates single particle trajectories including the random components, which is what I need to
+//		 find a way to implement.															 2015-03-06 16:45
 
 // Prints name and value of a variable p to the given stream
-#define DEBUG_PRINT_PARAM(stream, p)
-//(stream) << #p << " = " << (p) << std::endl;
+#define DEBUG_PRINT_PARAM(stream, p) \
+	// (stream) << #p << " = " << (p) << std::endl;
+#define DEBUG_PRINT(stream, str) \
+	// (stream) << (str)
+#define DEBUG_FLUSH(stream) \
+	// (stream) << std::endl
 
 #ifndef PPTRAJECTORY_H
 #define PPTRAJECTORY_H
@@ -126,6 +134,7 @@ class PPTrajectory {
 		SphericalVector curlBoverB;
 		// Diffusion tensor, k.  Depends on b.
 		SphericalTensor kTensor;
+		double kpar, kperp;
 		// Drift velocity
 		SphericalVector vdrift;
 		// True if relevant quantiy has been updated, false after moving to a new point until step is called
