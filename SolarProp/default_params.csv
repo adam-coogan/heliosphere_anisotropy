@@ -8,5 +8,7 @@ rHP,140.0,Distance to heliopause (AU)
 omega,0.000002904,Sun's equatorial angular velocity (rad/s)
 rSun,0.005,Radius of sun (AU)
 diffFact,0.01,Factor relating kpar to kperp
-electron,true,Particle charge sign
-agt0,true,Polarity of solar cycle
+posCharge,true,Particle charge sign
+m,0.000511,Mass of electron (GeV)
+e0,0.000511,Rest energy per nucleon for electron (GeV)
+agt0,false,Polarity of solar cycle

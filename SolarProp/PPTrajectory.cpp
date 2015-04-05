@@ -130,8 +130,6 @@ PPTrajectory& PPTrajectory::updateVdrift() {
 		vdrift.th = fs() * vdgcFact * (2 + gammaGC * gammaGC) * gammaGC;
 		vdrift.phi = fs() * (vdHCSphi + vdgcFact * gammaGC * gammaGC * costh / sinth);
 
-		std::cout << "vHCS = " << vdHCSr << ",\tvGCr = " << vdgcFact * (-gammaGC * costh / sinth) << std::endl;
-
 		updatedVdrift = true;
 	}
 
@@ -160,11 +158,6 @@ PPTrajectory& PPTrajectory::step() {
 		- params.getVsw()
 		- vdrift.r;
 
-	//std::cout << vdrift.r * params.getDs() << std::endl;
-	//std::cout << (kpar * (2 * params.getR0() + r * (3 + gammaGC * gammaGC)) + kperp * gammaGC * gammaGC
-	//	* (2 * params.getR0() * (2 + gammaGC * gammaGC) + r * (5 + 3 * gammaGC * gammaGC)))
-	//	/ (r * (r + params.getR0()) * pow(1 + gammaGC * gammaGC, 2)) << std::endl;
-
 	double dWrCdr = sqrt(2 * kTensor.rr - 2 * pow(kTensor.rphi, 2) / kTensor.phiphi);
 
 	double dWphiCdr = sqrt(2 / kTensor.phiphi) * kTensor.rphi;
@@ -180,7 +173,6 @@ PPTrajectory& PPTrajectory::step() {
 		- vdrift.phi / (r * sinth);
 
 	double dWphiCdphi = sqrt(2 * kTensor.phiphi) / (r * sinth);
-	//std::cout << "dWphiCdphi = " << dWphiCdphi << std::endl;
 	
 	// Coefficients in dE
 	double dsCdE = 2 * traj.back().getE() * params.getVsw() * gamma() / (3 * r);
@@ -190,12 +182,6 @@ PPTrajectory& PPTrajectory::step() {
 	double dWth = ndistro(generator) * sqrt(params.getDs()); 
 	double dWphi = ndistro(generator) * sqrt(params.getDs());
 
-	//std::cout << "dWphiCdphi = " << dWphiCdphi << std::endl;
-	//std::cout << "|dr|\t= " << fabs(dsCdr * params.getDs() + dWrCdr * dWr + dWphiCdr * dWphi) << std::endl;
-	//std::cout << "\t= " << dsCdr * params.getDs() << "\t" << dWrCdr * dWr << "\t" <<  dWphiCdr * dWphi << std::endl;
-	//std::cout << "|dth|  = " << fabs(dsCdth * params.getDs() + dWthCdth * dWth) << std::endl;
-	//std::cout << "|dphi| = " << fabs(dsCdphi * params.getDs() + dWphiCdphi * dWphi) << std::endl;
-	
 	// Move the particle to the new point
 	traj.push_back(PPPoint(r + dsCdr * params.getDs() + dWrCdr * dWr + dWphiCdr * dWphi,
 		traj.back().getTh() + dsCdth * params.getDs() + dWthCdth * dWth,
@@ -236,7 +222,6 @@ BoundaryHit PPTrajectory::integrate(int n) {
 			step();
 			i++;
 		}
-		std::cout << "t_exit = " << i * params.getDs() / 86400 << " days" << std::endl;
 	}
 	
 	return status;

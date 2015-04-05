@@ -4,20 +4,13 @@
  * Processes," by Strauss, Potgieter, Busching and Kopp, APJ 735:32 (13pp), 2011 July 10.
  */
 
-// TODO: print things to see how they look													 2015-02-20 10:32
 // TODO: invalidate if parameter file could not be found!!!									 2015-02-24 11:40
-// TODO: make debug functions?																 2015-02-25 00:22
-// TODO: figure out how to handle the poles...												 2015-02-25 01:02
-// TODO: when in the HCS, B will be zero, leading to singularity!!!							 2015-02-25 01:03
-//		 -Figured out how to handle this for kTensor.										 2015-02-25 01:10
-// TODO: check if v_drift has singularities anywhere...										 2015-02-25 01:09
-// TODO: check curlBoverB for singularities!												 2015-02-25 01:20
 // TODO: should be able to give angle at which the particle was detected at Earth.			 2015-02-25 01:11
-// TODO: have the particle start at Earth by default										 2015-02-25 14:14
 // TODO: make an integrator class that determines what method the trajectory uses.  Should be able to give it
 //		 the pseudoparticle integrator, the deterministic one I've implemented in Mathematica, or one that
 //		 calculates single particle trajectories including the random components, which is what I need to
 //		 find a way to implement.															 2015-03-06 16:45
+// TODO: NOT SURE THAT AC IS BEING TAKEN INTO ACCOUNT!!! >;[								 2015-04-05 13:23
 
 // Prints name and value of a variable p to the given stream
 #define DEBUG_PRINT_PARAM(stream, p) \
@@ -59,8 +52,7 @@ class PPTrajectory {
 		 *	gti: true if A_c (the sign of the solar cycle) is +1, false if it is -1.
 		 *	paramFileName (optional): file containing simulation parameters.
 		 */	
-		PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName
-				= "default_params.csv");
+		PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName);
 		~PPTrajectory() { };
 
 		/*
@@ -82,7 +74,6 @@ class PPTrajectory {
 		BoundaryHit getStatus() const { return status; };
 
 		/*
-		 * TODO: figure out how to put in the datetime attribute...							 2015-02-23 17:42
 		 * Returns current trajectory to a file as XML.  XML format:
 		 * <trajectory datetime=...>
 		 *		<params>
@@ -239,7 +230,6 @@ class PPTrajectory {
 		 */
 		PPTrajectory& updateKTensor();
 
-		// TODO: write this.																 2015-02-23 15:07
 		/*
 		 * Computes pitch-angle averaged guiding center drift velocity in spherical coordinates.  Updates
 		 * vdrift, which has units of AU/s.  This takes into account the gradient and curvature components as
