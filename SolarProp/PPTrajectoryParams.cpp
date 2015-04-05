@@ -1,7 +1,7 @@
 #include "PPTrajectoryParams.h"
 #include <iostream>
 
-std::ostringstream ParamNotFoundException::ss;
+std::ostringstream ParamException::ss;
 
 PPTrajectoryParams::PPTrajectoryParams(const std::string& paramFileName0) : paramFileName(paramFileName0) {
 	// Open the file
@@ -35,7 +35,7 @@ PPTrajectoryParams::PPTrajectoryParams(const std::string& paramFileName0) : para
 					params["qSign"] = -1;
 				} else {
 					// Else invalid CSV!  Throw exception.
-					throw InvalidParamException(name);
+					throw InvalidParamException(paramFileName, name);
 				}
 			} else if (name == "agt0") {
 				if (val == "true") {
@@ -44,7 +44,7 @@ PPTrajectoryParams::PPTrajectoryParams(const std::string& paramFileName0) : para
 					params["ac"] = -1;
 				} else {
 					// Else invalid CSV!  Throw exception.
-					throw InvalidParamException(name);
+					throw InvalidParamException(paramFileName, name);
 				}
 			} else {
 				// Store in parameter map
@@ -52,7 +52,7 @@ PPTrajectoryParams::PPTrajectoryParams(const std::string& paramFileName0) : para
 					params[name] = std::stod(val);
 				} catch (const std::invalid_argument& e) {
 					// Thrown if stod fails
-					throw InvalidParamException(name);
+					throw InvalidParamException(paramFileName, name);
 				}
 			}
 		}

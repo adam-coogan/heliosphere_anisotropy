@@ -1,8 +1,9 @@
 #include "PPTrajectory.h"
 
+#include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <iomanip>
+#include <thread>
 
 // TODO: make an executable for running MCs.  Should take number of threads and number of samples as
 //	arguments.  Should be able to control what information is written to XML: just initial and exit points?
@@ -18,6 +19,32 @@
  *		energy, observed particle energies, output type ("all" vs "exit") and integrator.
  *	argv[2] (optional): file specifying values of the heliospheric parameters.  Default is default_params.csv.
  */
+
+/*
+void runMCs(int numSims){
+	try {
+		// Particles start at Earth
+		PPTrajectory traj(1, PPPoint::pi / 2.0, 0, std::stod(argv[1]), paramFile);
+
+		std::cout << "Generating trajectory for particle with measured energy " << traj.getE0()
+			<< " GeV..." << std::endl;
+
+		// Run the full simulation
+		traj.integrate(0);
+
+		std::cout << "Done." << std::endl;
+
+		// Write results to XML
+		traj.writeToXML("runs/" + std::string(argv[1]) + "_GeV.xml");
+
+		return;
+	} catch (std::runtime_error& e) {
+		// Catch exceptions that occur when parameters are loaded
+		std::cout << e.what() << std::endl;
+	}
+}
+*/
+
 int main(int argc, char* argv[]) {
 	if (argc > 1 && argc <= 3) {
 		// Assume default parameter

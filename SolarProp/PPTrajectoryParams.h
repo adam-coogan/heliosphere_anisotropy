@@ -13,8 +13,6 @@
 #include <string>
 #include <vector>
 
-// TODO: make the exceptions in this file subclass some virtual class.						 2015-04-05 13:48
-
 class PPTrajectoryParams {
 	public:
 		// No default constructor.
@@ -54,45 +52,69 @@ class PPTrajectoryParams {
 		const std::string paramFileName;
 };
 
-class ParamFileNotFoundException : public std::runtime_error {
+class ParamException : public std::runtime_error {
 	public:
-		ParamFileNotFoundException(const std::string& paramFile) : runtime_error("SolarProp: parameter file "
-			 + paramFile + " could not be opened.") { };
+	   	ParamException(const std::string& paramFile) : runtime_error("Parameter file " + paramFile + ": ")
+			{ };
+
+	protected:
+		// Useful to have to avoid returning pointers to stack objects...
+		static std::ostringstream ss;
 };
 
-class ParamNotFoundException : public std::runtime_error {
+class ParamFileNotFoundException : public ParamException {
+	public:
+		ParamFileNotFoundException(const std::string& paramFile) : ParamException(paramFile) { };
+
+		const char* what() const noexcept {
+			ParamException::ss.str("");
+			ParamException::ss << ParamException::what() << "could not be opened";
+
+			return ss.str().c_str();
+		};
+};
+
+class ParamNotFoundException : public ParamException {
 	public:
 		ParamNotFoundException(const std::string& paramFile, const std::vector<std::string>& missingPars)
-			: runtime_error("SolarProp: parameter file " + paramFile + " is missing a parameter: "),
-			missingParams(missingPars){ };
+			: ParamException(paramFile), missingParams(missingPars){ };
 
 		const char* what() const noexcept {
 			// Clear ss
-			ss.str("");
+			ParamException::ss.str("");
+			ParamException::ss << ParamException::what();
 
 			// Put message and missing parameters into ss
-			ss << runtime_error::what();
+			ParamException::ss << "missing parameter(s): ";
 
 			for (auto mp = missingParams.begin(); mp != missingParams.end() - 1; mp++) {
-				ss << *mp << ", ";
+				ParamException::ss << *mp << ", ";
 			}
 
-			ss << *(missingParams.end() - 1);
+			ParamException::ss << *(missingParams.end() - 1);
 
 			// Avoid returning a pointer to data inside this exception as it lives on the stack
-			return ss.str().c_str();
+			return ParamException::ss.str().c_str();
 		};
 	
 	private:
 		const std::vector<std::string>& missingParams;
-
-		static std::ostringstream ss;
 };
 
-class InvalidParamException : public std::runtime_error {
+class InvalidParamException : public ParamException {
 	public:
-		InvalidParamException(const std::string& param) : runtime_error("SolarProp: parameter " + param
-			+ " is invalid.") { };
+		InvalidParamException(const std::string& paramFile, const std::string& par)
+			: ParamException(paramFile), param(par) { };
+
+		const char* what() const noexcept {
+			ParamException::ss.str("");
+			ParamException::ss << ParamException::what() << "parameter " << param << " is invalid";
+
+			return ParamException::ss.str().c_str();
+		};
+	
+	private:
+		const std::string& param;
 };
 
 #endif
