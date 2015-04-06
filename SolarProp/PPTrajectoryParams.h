@@ -13,17 +13,16 @@
 #include <string>
 #include <vector>
 
+// TODO: maybe this should just be a wrapper around a map???								 2015-04-06 10:20
+
 class PPTrajectoryParams {
 	public:
-		// No default constructor.
+		/*
+		 * Reads heliospheric parameters from a file.
+		 *	paramFileName0: the csv file containing the required parameters.  If any are missing or of the
+		 *		wrong form, a ParamException will be thrown.
+		 */
 		PPTrajectoryParams(const std::string& paramFileName0);
-		~PPTrajectoryParams() { };
-
-		// These parameters must be specified in the parameter file.
-		static std::vector<std::string> getRequiredParams() {
-			return {"ds", "lambda0", "rig0", "b0", "r0", "vsw", "rHP", "omega", "rSun", "diffFact", "qSign",
-				"m", "e0", "ac"};
-		};
 
 		// Only want getters.  Need to use at since [] doesn't have a const version.
 		double getDs() const { return params.at("ds"); };
@@ -50,6 +49,9 @@ class PPTrajectoryParams {
 
 		// Name of parameter file
 		const std::string paramFileName;
+
+		// Used to check whether required parameters are all specified in the parameter file
+		const static std::vector<std::string> requiredParams;
 };
 
 class ParamException : public std::runtime_error {
@@ -76,29 +78,48 @@ class ParamFileNotFoundException : public ParamException {
 
 class ParamNotFoundException : public ParamException {
 	public:
-		ParamNotFoundException(const std::string& paramFile, const std::vector<std::string>& missingPars)
-			: ParamException(paramFile), missingParams(missingPars){ };
+		ParamNotFoundException(const std::string& paramFile, const std::vector<std::string>& missingPars,
+				const std::vector<std::string>& extraPars)
+			: ParamException(paramFile), missingParams(missingPars), extraParams(extraPars) { };
 
 		const char* what() const noexcept {
 			// Clear ss
 			ParamException::ss.str("");
 			ParamException::ss << ParamException::what();
 
-			// Put message and missing parameters into ss
-			ParamException::ss << "missing parameter(s): ";
+			if (missingParams.size() != 0) {
+				// Put message and missing parameters into ss
+				ParamException::ss << "missing parameter(s): ";
 
-			for (auto mp = missingParams.begin(); mp != missingParams.end() - 1; mp++) {
-				ParamException::ss << *mp << ", ";
+				for (auto mp = missingParams.begin(); mp != missingParams.end() - 1; mp++) {
+					ParamException::ss << *mp << ", ";
+				}
+
+				ParamException::ss << *(missingParams.end() - 1) << ".  ";
 			}
 
-			ParamException::ss << *(missingParams.end() - 1);
+			if (extraParams.size() != 0) {
+				// Put message and extra parameters into ss
+				ParamException::ss << "extra parameter(s): ";
+
+				for (auto extra = extraParams.begin(); extra != extraParams.end() - 1; extra++) {
+					ParamException::ss << *extra << ", ";
+				}
+
+				ParamException::ss << *(extraParams.end() - 1);
+			}
+
 
 			// Avoid returning a pointer to data inside this exception as it lives on the stack
 			return ParamException::ss.str().c_str();
 		};
 	
 	private:
-		const std::vector<std::string>& missingParams;
+		// Any required parameters that were omitted from the parameter file
+		const std::vector<std::string> missingParams;
+
+		// Any parameters that were unnecessarily included in the parameter file
+		const std::vector<std::string> extraParams;
 };
 
 class InvalidParamException : public ParamException {
@@ -114,7 +135,7 @@ class InvalidParamException : public ParamException {
 		};
 	
 	private:
-		const std::string& param;
+		const std::string param;
 };
 
 #endif
