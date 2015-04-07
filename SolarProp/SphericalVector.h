@@ -4,9 +4,6 @@
 #include <cmath>
 #include <iostream>
 
-// TODO: do the checks that get done in PPPoint in here instead!!!  This will require changing the getters,
-// setters and all the code that calls them...
-
 // Vector in spherical coordinates
 struct SphericalVector {
 	SphericalVector(double r0, double th0, double phi0) : r(r0), th(th0), phi(phi0) { };

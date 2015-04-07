@@ -4,7 +4,15 @@ PPTrajectory::PPTrajectory(double ri, double thi, double phii, double ei, const 
 	: traj(1, PPPoint(ri, thi, phii, ei, 0)), status(BoundaryHit::None),
 	generator(std::chrono::system_clock::now().time_since_epoch().count()), ndistro(0.0, 1.0),
 	b(0, 0, 0), curlBoverB(0, 0, 0), kTensor(0, 0, 0, 0, 0, 0, 0, 0, 0), kpar(0), kperp(0),
-   	vdrift(0, 0, 0), updatedB(false), updatedVdrift(false), updatedKTensor(false), params(paramFileName) { }
+   	vdrift(0, 0, 0), updatedB(false), updatedVdrift(false), updatedKTensor(false), params(paramFileName) {
+	// Check whether the particle is starting in the heliosphere...
+	if (traj.back().getR() >= params.getRHP()) {
+		status = BoundaryHit::Heliopause;
+	} else if (traj.back().getR() <= params.getRSun()) {
+		// If the particle enters the sun
+		status = BoundaryHit::Sun;
+	}
+}
 
 // Correct																					 2015-04-02 11:47
 double PPTrajectory::vel() const {
@@ -190,6 +198,7 @@ PPTrajectory& PPTrajectory::step() {
 		traj.back().getS() + params.getDs()));
 	
 	// If the particle has reached or passed the heliopause
+	// TODO: put this in a getStatus() function!
 	if (traj.back().getR() >= params.getRHP()) {
 		status = BoundaryHit::Heliopause;
 	} else if (traj.back().getR() <= params.getRSun()) {

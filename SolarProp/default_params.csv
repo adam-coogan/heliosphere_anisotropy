@@ -28,8 +28,8 @@ rSun,0.005
 # Factor relating kpar to kperp
 diffFact,0.01
 
-# Particle charge sign
-posCharge,true
+# Particle charge sign.  Must be +1 or -1.
+qSign,1
 
 # Mass of electron (GeV)
 m,0.000511
@@ -37,5 +37,5 @@ m,0.000511
 # Rest energy per nucleon for electron (GeV)
 e0,0.000511
 
-# Polarity of solar cycle
-agt0,false
+# Sign indicating polarity of the solar cycle.  Must be +1 or -1.
+ac,1

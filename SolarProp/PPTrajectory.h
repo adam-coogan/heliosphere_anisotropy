@@ -24,7 +24,7 @@
 #define PPTRAJECTORY_H
 
 #include "PPPoint.h"
-#include "PPTrajectoryParams.h"
+#include "HelioParams.h"
 #include "SphericalVector.h"
 #include "SphericalTensor.h"
 
@@ -136,11 +136,9 @@ class PPTrajectory {
 		std::normal_distribution<double> ndistro;
 
 		// Parameter container class
-		const PPTrajectoryParams params;
+		const HelioParams params;
 
 		// Unchanging constants: speed of light and pi
-		// TODO: should these be in PPTrajectoryParams, since they depend on the units being used???
-		//																					 2015-02-24 11:26
 		constexpr static double cAUs = 0.0020039888; // c in AU/s
 		constexpr static double pi = 3.14159265359;
 
