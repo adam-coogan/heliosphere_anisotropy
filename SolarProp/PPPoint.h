@@ -1,11 +1,13 @@
 #ifndef	PPPOINT_H
 #define PPPOINT_H
 
+#include <iostream>
+
 // Represents a point in a pseudoparticle's trajectory.  s is the backwards time -t.
 class PPPoint {
 	public:
 		PPPoint(double r0, double th0, double phi0, double ei, double s0)
-			: e(ei), s(s0) {
+				: e(ei), s(s0) {
 			setR(r0);
 			setTh(th0);
 			setPhi(phi0);

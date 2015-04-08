@@ -6,7 +6,7 @@ OBJS=PPTrajectory.o SolarProp.o ParamExceptions.o
 SolarProp: $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o SolarProp
 
-SolarProp.o: SolarProp.cpp PPTrajectory.h
+SolarProp.o: SolarProp.cpp PPTrajectory.h RunConfig.h
 	$(CC) $(CFLAGS) SolarProp.cpp
 
 PPTrajectory.o: PPTrajectory.h PPTrajectory.cpp HelioParams.h
@@ -17,7 +17,9 @@ ParamExceptions.o: ParamExceptions.h ParamExceptions.cpp
 
 PPTrajectory.h: PPPoint.h SphericalTensor.h SphericalVector.h HelioParams.h
 
-HelioParams.h: ParamExceptions.h
+HelioParams.h: Params.h
+
+RunConfig.h: Params.h
 
 clean:
 	\rm *o

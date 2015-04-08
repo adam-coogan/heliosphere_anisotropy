@@ -1,5 +1,5 @@
-#ifndef PARAMEXCEPTIONS
-#define PARAMEXCEPTIONS 
+#ifndef PARAMEXCEPTIONS_H
+#define PARAMEXCEPTIONS_H
 
 #include <exception>
 #include <sstream>

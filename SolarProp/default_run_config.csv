@@ -1,16 +1,17 @@
 # Initial point in spherical coordinates from which the pseudoparticle will be integrated backwards in time
 ri,1.0
-thi,3.14159265359/2
+thi,1.57079632
 phii,0.0
 
 # Initial energies.  Multiple ones can be given.
-ei,0.1,1.0,10.0
+# TODO: implement this capability...
+eis,1
 
 # Number of threads to create for each initial energy.  Must be an integer greater than 0.
 threads_per_energy,2
 
 # Number of MC runs per thread.  Must be an integer greater than 0.
-runs_per_thread,3
+runs_per_thread,5
 
 # Specifies what data to write to the XML output file.
 #	"firstlast": only writes the initial and exit points.
@@ -18,6 +19,6 @@ runs_per_thread,3
 output_format,firstlast
 
 # Path specifying location at which output XML files will be created.
-output_dir,runs/test/
+output_dir,runs/test0/
 
 

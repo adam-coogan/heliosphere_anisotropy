@@ -5,11 +5,12 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <limits> // For converting doubles to strings
 #include <map>
 #include <sstream>
 #include <string>
 #include <vector>
+
+// TODO: important: use boost::program_options instead.
 
 template <class T>
 class Params {

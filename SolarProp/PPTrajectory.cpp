@@ -59,7 +59,6 @@ PPTrajectory& PPTrajectory::updateB() {
 	if (!updatedB) {
 		double r = traj.back().getR();
 		double sinth = sin(traj.back().getTh());
-		double costh = cos(traj.back().getTh());
 		double h = heaviside(traj.back().getTh(), getThp());
 
 		// Compute B
@@ -90,8 +89,7 @@ PPTrajectory& PPTrajectory::updateKTensor() {
 
 		// These should always be zero!!!
 		kTensor.rth = kTensor.thr = 0;
-		kTensor.phith = kTensor.thphi = 0;
-
+		kTensor.phith = kTensor.thphi = 0; 
 		updatedKTensor = true;
 	}
 
@@ -107,7 +105,6 @@ PPTrajectory& PPTrajectory::updateVdrift() {
 		double r = traj.back().getR();
 		double sinth = sin(traj.back().getTh());
 		double costh = cos(traj.back().getTh());
-		double phi = traj.back().getPhi();
 		double rig = rigidity();
 		// Larmor radius
 		double rL = rig / b.magnitude();
