@@ -1,0 +1,5 @@
+# Ignore build directory
+SolarProp/build/*
+
+# Ignore mac files
+.DS_Store

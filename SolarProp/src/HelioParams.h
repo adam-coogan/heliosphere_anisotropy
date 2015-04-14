@@ -9,15 +9,12 @@
 #include <string>
 #include <vector>
 
-// TODO: maybe this should just be a wrapper around a map???								 2015-04-06 10:20
-
 class HelioParams {
 	public:
 		/*
 		 * Reads heliospheric parameters from a file.
 		 *	paramFileName0: the csv file containing the required parameters.  If any are missing or of the
 		 *		wrong form, a ParamException will be thrown.
-		 *	TODO: check whether values are valid.
 		 *	TODO: important: catch missing parameter exceptions and rethrow!!!
 		 */
 		HelioParams(const std::string& pFileName) : params(pFileName, {"ds", "lambda0", "rig0", "b0", "r0",

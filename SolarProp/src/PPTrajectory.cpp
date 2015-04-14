@@ -1,10 +1,11 @@
 #include "PPTrajectory.h"
 
 PPTrajectory::PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName)
-	: traj(1, PPPoint(ri, thi, phii, ei, 0)), status(BoundaryHit::None),
+	: traj(1, PPPoint(ri, thi, phii, ei, 0)), status(BoundaryHit::None), b(0, 0, 0),
+	curlBoverB(0, 0, 0), kTensor(0, 0, 0, 0, 0, 0, 0, 0, 0), kpar(0), kperp(0),
+   	vdrift(0, 0, 0), updatedB(false), updatedVdrift(false), updatedKTensor(false),
 	generator(std::chrono::system_clock::now().time_since_epoch().count()), ndistro(0.0, 1.0),
-	b(0, 0, 0), curlBoverB(0, 0, 0), kTensor(0, 0, 0, 0, 0, 0, 0, 0, 0), kpar(0), kperp(0),
-   	vdrift(0, 0, 0), updatedB(false), updatedVdrift(false), updatedKTensor(false), params(paramFileName) {
+	params(paramFileName) {
 	// Check whether the particle is starting in the heliosphere...
 	if (traj.back().getR() >= params.getRHP()) {
 		status = BoundaryHit::Heliopause;
@@ -14,19 +15,16 @@ PPTrajectory::PPTrajectory(double ri, double thi, double phii, double ei, const 
 	}
 }
 
-// Correct																					 2015-04-02 11:47
 double PPTrajectory::vel() const {
 	return cAUs * sqrt(1 - pow(params.getM() / traj.back().getE(), 2));
 }
 
 // Returns rigidity in T*AU
-// Correct.  Though maybe the sign should change for electrons vs positrons?				 2015-04-02 11:42
 double PPTrajectory::rigidity() const {
 	// Conversion factor: 1 GV/c = 2.23*10^-11 T*AU
 	return 2.23 * pow(10, -11) * sqrt(pow(traj.back().getE(), 2) - pow(params.getM(), 2));
 }
 
-// Correct																					 2015-04-02 11:44
 double PPTrajectory::lambdaPar() const {
 	if (rigidity() >= params.getRig0()) {
 		return params.getLambda0() * (rigidity() / params.getRig0()) 
@@ -43,18 +41,15 @@ double PPTrajectory::lambdaPar() const {
 	*/
 }
 
-// Correct																					 2015-04-02 11:44
 double PPTrajectory::fs() const {
 	double wts2 = pow(rigidity() / params.getRig0(), 2);
 	return wts2 / (1 + wts2);
 }
 
-// Correct																					 2015-04-02 11:48
 double PPTrajectory::gamma() const {
 	return (traj.back().getE() + 2 * params.getE0()) / (traj.back().getE() + params.getE0());
 }
 
-// Correct.  Trying to calculate vgc as in the wavy paper, rather than using curlBoverB directly. 2015-04-02 14:33
 PPTrajectory& PPTrajectory::updateB() {
 	if (!updatedB) {
 		double r = traj.back().getR();
@@ -72,7 +67,6 @@ PPTrajectory& PPTrajectory::updateB() {
 	return *this;
 }
 
-// Correct																					 2015-04-02 11:38
 PPTrajectory& PPTrajectory::updateKTensor() {
 	if (!updatedKTensor) {
 		// Make sure the magnetic field has been updated!
@@ -96,7 +90,6 @@ PPTrajectory& PPTrajectory::updateKTensor() {
 	return *this;
 }
 
-// Correct.  Uses wavy paper's expression for vgc.											 2015-04-02 14:47
 PPTrajectory& PPTrajectory::updateVdrift() {
 	if (!updatedVdrift) {
 		// Make sure the magnetic field has been updated!
@@ -126,9 +119,9 @@ PPTrajectory& PPTrajectory::updateVdrift() {
 		}
 
 		// Compute v_d^gc factor
-		// I THINK the units work here, now...
-		double vdgcFact = 2 * params.getAc() * vel() * rig * r / (3 * params.getB0() * params.getR0()
-			* params.getQSign() * pow(1 + gammaGC * gammaGC, 2));
+		double vdgcFact = 2 * rig * params.getQSign() * vel() * params.getAc() * r
+			/ (3 * params.getB0() * pow(params.getR0(), 2) * pow(1 + gammaGC * gammaGC, 2));
+		vdgcFact *= heaviside(traj.back().getTh(), getThp());
 
 		// Incorporate the drift reduction factor and combine all components
 		vdrift.r = fs() * (vdHCSr + vdgcFact * (-gammaGC * costh / sinth));
@@ -141,7 +134,6 @@ PPTrajectory& PPTrajectory::updateVdrift() {
 	return *this;
 }
 
-// Correct																					 2015-04-02 16:47
 PPTrajectory& PPTrajectory::step() {
 	// Update all parameters
 	updateB();

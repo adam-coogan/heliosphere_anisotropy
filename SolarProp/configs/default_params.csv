@@ -29,7 +29,7 @@ rSun,0.005
 diffFact,0.01
 
 # Particle charge sign.  Must be +1 or -1.
-qSign,1
+qSign,-1
 
 # Mass of electron (GeV)
 m,0.000511
@@ -38,4 +38,4 @@ m,0.000511
 e0,0.000511
 
 # Sign indicating polarity of the solar cycle.  Must be +1 or -1.
-ac,1
+ac,-1

@@ -3,15 +3,14 @@ ri,1.0
 thi,1.57079632
 phii,0.0
 
-# Initial energies.  Multiple ones can be given.
-# TODO: implement this capability...
-eis,1
+# Initial energy
+eis,100
 
 # Number of threads to create for each initial energy.  Must be an integer greater than 0.
-threads_per_energy,2
+threads_per_energy,5
 
 # Number of MC runs per thread.  Must be an integer greater than 0.
-runs_per_thread,5
+runs_per_thread,1
 
 # Specifies what data to write to the XML output file.
 #	"firstlast": only writes the initial and exit points.
@@ -19,6 +18,4 @@ runs_per_thread,5
 output_format,firstlast
 
 # Path specifying location at which output XML files will be created.
-output_dir,runs/test0/
-
-
+output_dir,runs/100_GeV/alt0_e-/

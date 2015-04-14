@@ -1,27 +1,33 @@
 CC=clang++ -std=c++11
 CFLAGS=-c
 LFLAGS=
-OBJS=PPTrajectory.o SolarProp.o ParamExceptions.o
+OBJS=$(BUILDDIR)/PPTrajectory.o $(BUILDDIR)/SolarProp.o $(BUILDDIR)/ParamExceptions.o $(BUILDDIR)/SolarPropMC.o
+BINDIR=bin
+BUILDDIR=build
+SRCDIR=src
 
-SolarProp: $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o SolarProp
+$(BINDIR)/SolarProp: $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o $(BINDIR)/SolarProp
 
-SolarProp.o: SolarProp.cpp PPTrajectory.h RunConfig.h
-	$(CC) $(CFLAGS) SolarProp.cpp
+$(BUILDDIR)/SolarProp.o: $(SRCDIR)/SolarProp.cpp $(SRCDIR)/PPTrajectory.h $(SRCDIR)/RunConfig.h
+	$(CC) $(CFLAGS) $(SRCDIR)/SolarProp.cpp -o $@
 
-PPTrajectory.o: PPTrajectory.h PPTrajectory.cpp HelioParams.h
-	$(CC) $(CFLAGS) PPTrajectory.cpp
+$(BUILDDIR)/SolarPropMC.o: $(SRCDIR)/SolarProp.cpp $(SRCDIR)/PPTrajectory.h $(SRCDIR)/RunConfig.h
+	$(CC) $(CFLAGS) $(SRCDIR)/SolarPropMC.cpp -o $@
 
-ParamExceptions.o: ParamExceptions.h ParamExceptions.cpp
-	$(CC) $(CFLAGS) ParamExceptions.cpp
+$(BUILDDIR)/PPTrajectory.o: $(SRCDIR)/PPTrajectory.h $(SRCDIR)/PPTrajectory.cpp $(SRCDIR)/HelioParams.h
+	$(CC) $(CFLAGS) $(SRCDIR)/PPTrajectory.cpp -o $@
 
-PPTrajectory.h: PPPoint.h SphericalTensor.h SphericalVector.h HelioParams.h
+$(BUILDDIR)/ParamExceptions.o: $(SRCDIR)/ParamExceptions.h $(SRCDIR)/ParamExceptions.cpp
+	$(CC) $(CFLAGS) $(SRCDIR)/ParamExceptions.cpp -o $@
 
-HelioParams.h: Params.h
+$(SRCDIR)/PPTrajectory.h: $(SRCDIR)/PPPoint.h $(SRCDIR)/SphericalTensor.h $(SRCDIR)/SphericalVector.h $(SRCDIR)/HelioParams.h
 
-RunConfig.h: Params.h
+$(SRCDIR)/HelioParams.h: $(SRCDIR)/Params.h
+
+$(SRCDIR)/RunConfig.h: $(SRCDIR)/Params.h
 
 clean:
-	\rm *o
+	\rm $(BUILDDIR)/*o
 
 

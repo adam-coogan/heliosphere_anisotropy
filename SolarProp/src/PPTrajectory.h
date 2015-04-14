@@ -10,7 +10,6 @@
 //		 the pseudoparticle integrator, the deterministic one I've implemented in Mathematica, or one that
 //		 calculates single particle trajectories including the random components, which is what I need to
 //		 find a way to implement.															 2015-03-06 16:45
-// TODO: NOT SURE THAT AC IS BEING TAKEN INTO ACCOUNT!!! >;[								 2015-04-05 13:23
 
 // Prints name and value of a variable p to the given stream
 #define DEBUG_PRINT_PARAM(stream, p) \

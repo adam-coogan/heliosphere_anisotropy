@@ -21,7 +21,6 @@ class RunConfig {
 		 *		Note that ri can be < 0, thi can lie outside of [0, pi) and phii can lie outside of [0, 2pi).
 		 *		Such coordinates will be fixed when the trajectory is constructed.
 		 */
-		// TODO: how do I handle exceptions in these constructors???
 		RunConfig(const std::string& rcFileName) : startPoint(rcFileName, {"ri", "thi", "phii", "eis"}),
 				intParams(rcFileName, {"threads_per_energy", "runs_per_thread"}),
 				flags(rcFileName, {"output_format", "output_dir"}) {
@@ -47,7 +46,7 @@ class RunConfig {
 				throw ParamInvalidException(rcFileName, "eis");
 			} else {
 				// If all of these parameters are valid, read the energies
-				// TODO: do this correctly.
+				// TODO: read a list of energies
 				eis.push_back(startPoint["eis"]);
 			}
 		};
@@ -67,7 +66,7 @@ class RunConfig {
 		// All parameters come from the same file
 		const std::string& getRunParamFileName() const { return startPoint.getParamFileName(); };
 
-		// TODO: write ei to XML!
+		// TODO: write all eis to XML!
 		std::string toXML() const {
 			return "\t<run_configs>\n" + startPoint.toXML() + intParams.toXML() + flags.toXML()
 				+ "\t</params>\n";

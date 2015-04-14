@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-// TODO: important: use boost::program_options instead.
+// TODO: use boost::program_options instead?
 
 template <class T>
 class Params {
