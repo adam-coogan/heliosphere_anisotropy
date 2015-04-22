@@ -120,10 +120,18 @@ class Params {
 
 		/*
 		 * Gives a string listing the values of the parameters in this object.
+         * Arguments:
+         *  indents: specifies number of tabs to put in front of each line.
 		 * Returns:
 		 *	A string containing lines of the form <name>value</name> for each parameter.
 		 */
-		std::string toXML() const {
+		std::string toXML(int indents) const {
+            std::string tabs;
+
+            for (int i = 0; i < indents; i++) {
+                tabs += "\t";
+            }
+
 			// Full precision version of to_string
 			std::stringstream converter;
 			converter << std::setprecision(std::numeric_limits<double>::digits10);
@@ -133,7 +141,7 @@ class Params {
 			for (const auto& param : params) {
 				converter.str("");
 				converter << param.second;
-				xml += "\t\t<" + param.first + ">" + converter.str() + "</" + param.first + ">\n";
+				xml += tabs + "<" + param.first + ">" + converter.str() + "</" + param.first + ">\n";
 			}
 
 			return xml;

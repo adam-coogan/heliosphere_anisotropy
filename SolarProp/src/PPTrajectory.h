@@ -30,6 +30,7 @@
 #include <chrono> // For initializing the random number generator
 #include <cmath>
 #include <fstream>
+#include <iomanip>
 #include <limits>
 #include <random> // For the Wiener terms
 #include <sstream>
@@ -38,6 +39,8 @@
 
 // Enumerates possible statuses of PPTrajectory's integrator
 enum class BoundaryHit {Sun, Heliopause, None};
+
+enum class OutputFormat {All, FirstLast};
 
 // Represents a pseudoparticle trajectory.  The pseudoparticle has the ability to move itself forward in time.
 class PPTrajectory {
@@ -50,9 +53,11 @@ class PPTrajectory {
 		 *	electron: true if the particle is an electron, false if it is a positron.
 		 *	gti: true if A_c (the sign of the solar cycle) is +1, false if it is -1.
 		 *	paramFileName (optional): file containing simulation parameters.
+         * Throws:
+         *  Exceptions if paramFileName is invalid or the file is invalid.
 		 */	
-		PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName);
-		~PPTrajectory() { };
+		PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName,
+                const OutputFormat& oFormat);
 
 		/*
 		 * Steps the integration forward.  
@@ -136,6 +141,9 @@ class PPTrajectory {
 
 		// Parameter container class
 		const HelioParams params;
+
+        // Specifies the XML output type to create when toXML is called
+        OutputFormat outputFormat;
 
 		// Unchanging constants: speed of light and pi
 		constexpr static double cAUs = 0.0020039888; // c in AU/s
@@ -242,7 +250,7 @@ class PPTrajectory {
 		 *	A reference to a string containing this run's parameter values, formatted as attributes of an XML
 		 *	tag.
 		 */
-		std::string paramsToString() const;
+		std::string pointToString() const;
 };
 
 #endif

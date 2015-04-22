@@ -1,11 +1,11 @@
 #include "PPTrajectory.h"
 
-PPTrajectory::PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName)
-	: traj(1, PPPoint(ri, thi, phii, ei, 0)), status(BoundaryHit::None), b(0, 0, 0),
-	curlBoverB(0, 0, 0), kTensor(0, 0, 0, 0, 0, 0, 0, 0, 0), kpar(0), kperp(0),
-   	vdrift(0, 0, 0), updatedB(false), updatedVdrift(false), updatedKTensor(false),
+PPTrajectory::PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName,
+        const OutputFormat& oFormat) : traj(1, PPPoint(ri, thi, phii, ei, 0)), status(BoundaryHit::None),
+    b(0, 0, 0), curlBoverB(0, 0, 0), kTensor(0, 0, 0, 0, 0, 0, 0, 0, 0), kpar(0), kperp(0), vdrift(0, 0, 0),
+    updatedB(false), updatedVdrift(false), updatedKTensor(false),
 	generator(std::chrono::system_clock::now().time_since_epoch().count()), ndistro(0.0, 1.0),
-	params(paramFileName) {
+	params(paramFileName), outputFormat(oFormat) {
 	// Check whether the particle is starting in the heliosphere...
 	if (traj.back().getR() >= params.getRHP()) {
 		status = BoundaryHit::Heliopause;
@@ -244,39 +244,30 @@ std::string PPTrajectory::toXML() const {
 	std::string xml;
 
 	// Write simulation parameters
-	xml += "<trajectory>\n" + params.toXML();
+	xml += "<trajectory>\n" + params.toXML(1);
 	xml += "\t<points>\n";
 
 	// Full precision version of to_string
 	std::stringstream converter;
 	converter << std::setprecision(std::numeric_limits<double>::digits10);
 
-	// Create a reverse iterator
-	auto point = traj.rbegin();
-	double sMax = point->getS();
+    // Get backwards time at exit
+    double sMax = traj.back().getS();
+
+    if (outputFormat == OutputFormat::All) {
+        // Write all points
+        // Create a reverse iterator
+        auto point = traj.rbegin();
 	
-	// Put all the points in the stream
-	for (; point != traj.rend(); point++) {
-		converter.str("");
-		converter << point->getR();
-		xml += "\t\t<point>\n\t\t\t<r>" + converter.str() + "</r>\n";
-
-		converter.str("");
-		converter << point->getTh();
-		xml += "\t\t\t<th>" + converter.str() + "</th>\n";
-
-		converter.str("");
-		converter << point->getPhi();
-		xml += "\t\t\t<phi>" + converter.str() + "</phi>\n";
-
-		converter.str("");
-		converter << point->getE();
-		xml += "\t\t\t<e>" + converter.str() + "</e>\n";
-
-		converter.str("");
-		converter << sMax - point->getS();
-		xml += "\t\t\t<t>" + converter.str() + "</t>\n\t\t</point>\n";
-	}
+        // Put all the points in the stream
+        for (; point != traj.rend(); point++) {
+            xml += point->toXML(2, sMax);
+        }
+    } else if (outputFormat == OutputFormat::FirstLast) {
+        // Only record first and last points
+        xml += traj.back().toXML(2, sMax);
+        xml += traj.front().toXML(2, sMax);
+    }
 
 	xml += "\t</points>\n</trajectory>\n\n";
 

@@ -4,7 +4,7 @@ thi,1.57079632
 phii,0.0
 
 # Initial energy
-eis,100
+eis,0.1
 
 # Number of threads to create for each initial energy.  Must be an integer greater than 0.
 threads_per_energy,5
@@ -15,7 +15,7 @@ runs_per_thread,1
 # Specifies what data to write to the XML output file.
 #	"firstlast": only writes the initial and exit points.
 #	"all": writes the whole trajectory
-output_format,firstlast
+output_format,all
 
 # Path specifying location at which output XML files will be created.
-output_dir,runs/100_GeV/alt0_e-/
+output_dir,test/

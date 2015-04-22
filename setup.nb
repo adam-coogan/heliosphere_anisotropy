@@ -404,8 +404,8 @@ Cell[BoxData[
 }, Closed]]
 },
 Evaluator->"heliosphere",
-WindowSize->{740, 752},
-WindowMargins->{{17, Automatic}, {Automatic, 0}},
+WindowSize->{740, 552},
+WindowMargins->{{95, Automatic}, {Automatic, 0}},
 FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
 2013)",
 StyleDefinitions->"Default.nb"

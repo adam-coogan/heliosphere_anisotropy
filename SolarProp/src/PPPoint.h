@@ -1,7 +1,12 @@
 #ifndef	PPPOINT_H
 #define PPPOINT_H
 
+#include <iomanip>
 #include <iostream>
+#include <limits>
+#include <sstream>
+
+// TODO: make a .cpp file
 
 // Represents a point in a pseudoparticle's trajectory.  s is the backwards time -t.
 class PPPoint {
@@ -12,7 +17,6 @@ class PPPoint {
 			setTh(th0);
 			setPhi(phi0);
 		};
-		~PPPoint() { };
 
 		// Getters
 		double getR() const { return r; };
@@ -74,6 +78,48 @@ class PPPoint {
 			s = s0;
 			return *this;
 		};
+
+        /*
+         * Generates a string containing XML representing this PPPoint.
+         * Arguments:
+         *  indents: number of tabs to put in front of each line.
+         *  sMax: maximum value of backwards time.  sMax - s = t.
+         * Returns:
+         *  string with XML fields for each of this PPPoint's coordinates.
+         */
+        std::string toXML(int indents, const double& sMax = 0.0) const {
+            std::string tabs;
+
+            for (int i = 0; i < indents; i++) {
+                tabs += "\t";
+            }
+
+            // Full precision version of to_string.  Clear the stringstream, put each variable in, extract
+            // and concatenate with xml.
+            std::stringstream converter;
+            converter << std::setprecision(std::numeric_limits<double>::digits10);
+            // TODO: write a helper function...
+            converter << r;
+            std::string xml = tabs + "<point>\n" + tabs + "\t<r>" + converter.str() + "</r>\n";
+
+            converter.str("");
+            converter << th;
+            xml += tabs + "\t<th>" + converter.str() + "</th>\n";
+
+            converter.str("");
+            converter << phi;
+            xml += tabs + "\t<phi>" + converter.str() + "</phi>\n";
+
+            converter.str("");
+            converter << e;
+            xml += tabs + "\t<e>" + converter.str() + "</e>\n";
+
+            converter.str("");
+            converter << sMax - s;
+            xml += tabs + "\t<t>" + converter.str() + "</t>\n" + tabs + "</point>\n";
+
+            return xml;
+        }
 	
 		constexpr static double pi = 3.14159265359;
 

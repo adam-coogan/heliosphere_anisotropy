@@ -13,7 +13,8 @@ namespace {
 		try {
 			for (int i = 0; i < rcs.getRunsPerThread(); i++) {
 				// Create trajectory starting at point specified in run configuration file
-				PPTrajectory traj(rcs.getR(), rcs.getTh(), rcs.getPhi(), ei, paramFileName);
+				PPTrajectory traj(rcs.getR(), rcs.getTh(), rcs.getPhi(), ei, paramFileName,
+                        rcs.getOutputFormat());
 
 				// Protect access to std::cout
 				{
@@ -67,7 +68,7 @@ void SolarPropMC::runMCs(const RunConfig& rcs, const std::string& paramFileName)
 			// Add a new thread executing runEnergyMCs to the back.  Pass it a reference to the run counter
 			// for the energy.  References must be wrapped in std::ref.
 			//mtx.lock();
-			std::cout << "Added thread " << i << " for energy " << ei << std::endl;
+			std::cout << "Added thread " << i << " for energy " << ei << " GeV" << std::endl;
 			//mtx.unlock();
 
 			std::get<2>(threadLists.back()).push_back(std::thread(runEnergyMCs, std::ref(ei), std::ref(rcs),

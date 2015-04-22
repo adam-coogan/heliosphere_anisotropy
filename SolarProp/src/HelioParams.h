@@ -48,7 +48,8 @@ class HelioParams {
 
 		const std::string& getParamFileName() const { return params.getParamFileName(); };
 
-		std::string toXML() const { return "\t<params>\n" + params.toXML() + "\t</params>\n"; };
+		std::string toXML(int indents) const { return "\t<params>\n" + params.toXML(indents + 1)
+            + "\t</params>\n"; };
 
 	private:
 		// Stores all numerical parameters

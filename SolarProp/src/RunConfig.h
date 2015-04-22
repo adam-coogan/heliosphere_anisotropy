@@ -6,6 +6,7 @@
 #define RUNCONFIG_H
 
 #include "Params.h"
+#include "PPTrajectory.h"
 #include <string>
 #include <vector>
 
@@ -35,11 +36,18 @@ class RunConfig {
 			}
 
 			// The output format must specify whether to record all points or just the first and last
-			if (flags["output_format"] != "all" && flags["output_format"] != "firstlast") {
-				throw ParamInvalidException(rcFileName, "runs_per_thread");
+			if (flags["output_format"] == "all") {
+                outputFormat = OutputFormat::All;
+            } else if (flags["output_format"] == "firstlast") {
+                outputFormat = OutputFormat::FirstLast;
+            } else {
+				throw ParamInvalidException(rcFileName, "output_format");
 			}
 			
-			// TODO: make sure output_dir exists!
+			// TODO: make sure output_dir exists!  Throw exception if it doesn't.
+            if (flags["output_dir"].back() != '/') {
+                flags["output_dir"] += "/";
+            }
 
 			// Must run at least one MC per thread
 			if (startPoint["eis"] <= 0) {
@@ -61,16 +69,20 @@ class RunConfig {
 		int getThreadsPerEnergy() const { return intParams["threads_per_energy"]; };
 		int getRunsPerThread() const { return intParams["runs_per_thread"]; };
 
-		const std::string getOutputDir() const { return flags["output_dir"] + "/"; };
+		const std::string& getOutputDir() const { return flags["output_dir"]; };
 
 		// All parameters come from the same file
 		const std::string& getRunParamFileName() const { return startPoint.getParamFileName(); };
 
-		// TODO: write all eis to XML!
+        const OutputFormat& getOutputFormat() const { return outputFormat; };
+
+		// TODO: write ALL eis to XML!
+        /*
 		std::string toXML() const {
 			return "\t<run_configs>\n" + startPoint.toXML() + intParams.toXML() + flags.toXML()
 				+ "\t</params>\n";
 		};
+        */
 
 	private:
 		// Initial energies to simulate
@@ -82,8 +94,11 @@ class RunConfig {
 		// Contains number of threads to run per energy and number of simulations to carry out in each thread
 		Params<int> intParams;
 
-		// Contains output format and directory
+		// Contains directory
 		Params<std::string> flags;
+
+        // Enum value specifying output format
+        OutputFormat outputFormat;
 };
 
 #endif
