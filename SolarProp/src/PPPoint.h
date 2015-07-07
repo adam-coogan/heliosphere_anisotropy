@@ -1,6 +1,7 @@
 #ifndef	PPPOINT_H
 #define PPPOINT_H
 
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -26,44 +27,49 @@ class PPPoint {
 		double getS() const { return s; };
 
 		PPPoint& setR(double r0) {
+            r = r0;
+
+            // Make sure r is non-negative
 			if (r < 0) {
-				setTh(PPPoint::pi - th);
-				setPhi(phi + PPPoint::pi);
+				setTh(M_PI - th);
+				setPhi(phi + M_PI);
 				r = -r0;
-			} else {
-				r = r0;
 			}
 
 			return *this;
 		};
 
 		PPPoint& setTh(double th0) {
+            th = th0;
+
+            // Check whether 0 <= th <= pi
 			if (th < 0) {
-				th = -th;
-				setPhi(phi + PPPoint::pi);
-			} else if (th > PPPoint::pi) {
-				while(th  > PPPoint::pi) {
-					th = 2 * PPPoint::pi - th;
-				}
-				setPhi(phi + PPPoint::pi);
-			} else {
-				th = th0;
-			}
+                while (th < 0) {
+                    th += 2 * M_PI;
+                }
+				setTh(th);
+			} else if (th > M_PI && th <= 2 * M_PI) {
+                th = 2 * M_PI - th;
+                setPhi(phi + M_PI);
+			} else if (th > 2 * M_PI) {
+                setTh(th - 2 * M_PI);
+            }
 
 			return *this;
 		};
 
 		PPPoint& setPhi(double phi0) {
+            phi = phi0;
+
+            // Check whether 0 <= phi <= 2 pi
 			if (phi < 0) {
 				while (phi < 0) {
-					phi += 2 * PPPoint::pi;
+					phi += 2 * M_PI;
 				}
-			} else if (phi > 2 * PPPoint::pi) {
-				while (phi > 2 * PPPoint::pi) {
-					phi -= 2 * PPPoint::pi;
+			} else if (phi > 2 * M_PI) {
+				while (phi > 2 * M_PI) {
+					phi -= 2 * M_PI;
 				}
-			} else {
-				phi = phi0;
 			}
 
 			return *this;
@@ -120,8 +126,6 @@ class PPPoint {
 
             return xml;
         }
-	
-		constexpr static double pi = 3.14159265359;
 
 	private:
 		double r, th, phi, e, s;

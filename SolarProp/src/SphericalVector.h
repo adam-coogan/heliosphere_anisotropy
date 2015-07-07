@@ -11,7 +11,7 @@ struct SphericalVector {
 	double r, th, phi;
 
 	friend std::ostream& operator<<(std::ostream& os, const SphericalVector& sv) {
-		os << "(v_r, v_th, v_phi) = (" << sv.r << ", " << sv.th << ", " << sv.phi << ")";
+		os << "(" << sv.r << ", " << sv.th << ", " << sv.phi << ")";
 		return os;
 	};
 

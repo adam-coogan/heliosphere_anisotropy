@@ -1,12 +1,6 @@
 #include "SolarPropMC.h"
-#include <functional>
-#include <iomanip> // TODO: use this to format file names nicely, truncating trailing 0s!!!
 #include <iostream>
-#include <mutex>
-#include <sstream>
-#include <thread>
-#include <tuple>
-#include <vector>
+#include <string>
 
 /*
  * Main MC method.  Runs MC samples in separate threads with specified configurations.
@@ -30,6 +24,9 @@ int main(int argc, char* argv[]) {
 
 		// Run the MCs!
 		SolarPropMC::runMCs(rcs, paramFileName);
+
+        // Beep when done
+        std::cout << '\a' << std::endl;
 
 		return 0;
 	} else {

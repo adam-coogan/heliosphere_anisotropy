@@ -6,10 +6,13 @@
 
 // TODO: invalidate if parameter file could not be found!!!									 2015-02-24 11:40
 // TODO: should be able to give angle at which the particle was detected at Earth.			 2015-02-25 01:11
-// TODO: make an integrator class that determines what method the trajectory uses.  Should be able to give it
-//		 the pseudoparticle integrator, the deterministic one I've implemented in Mathematica, or one that
-//		 calculates single particle trajectories including the random components, which is what I need to
-//		 find a way to implement.															 2015-03-06 16:45
+
+/* 
+ * TODO: make an integrator class that determines what method the trajectory uses.  Should be able to give it
+ *		 the pseudoparticle integrator, the deterministic one I've implemented in Mathematica, or one that
+ *		 calculates single particle trajectories including the random components, which is what I need to
+ *		 find a way to implement.															 2015-03-06 16:45
+ */
 
 // Prints name and value of a variable p to the given stream
 #define DEBUG_PRINT_PARAM(stream, p) \
@@ -68,7 +71,7 @@ class PPTrajectory {
 		 *	A BoundaryHit specifying whether the particle has hit the heliopause, entered the sun or whether
 		 *	it has not reached a boundary yet.
 		 */
-		BoundaryHit integrate(int n = -1);
+		const BoundaryHit& integrate(int n = -1);
 
 		/* Queries the integration status.
 		 * Returns:
@@ -145,17 +148,30 @@ class PPTrajectory {
         // Specifies the XML output type to create when toXML is called
         OutputFormat outputFormat;
 
-		// Unchanging constants: speed of light and pi
-		constexpr static double cAUs = 0.0020039888; // c in AU/s
-		constexpr static double pi = 3.14159265359;
+		// Speed of light in AU/s
+		constexpr static double cAUs = 0.002004;
 
 		/* 
 		 * Steps the integration forward once.  This can be called even after the particle has hit the sun or
 		 * heliopause.  Called by integrate.  Updates status if the particle reaches a boundary.
 		 * Returns:
-		 *	*this.
+		 *	Current status as determined by checkStatus.
 		 */
-		PPTrajectory& step();
+		const BoundaryHit& step();
+
+        // Helper functions for incrementing the integration
+        double getDr(const double& dWr, const double& dWphi) const;
+        double getDth(const double& dWth) const;
+        double getDphi(const double& dWphi) const;
+        double getDe() const;
+
+        /*
+         * Determines current status of the trajectory
+         * Returns:
+         *  Sun if the line between the last and second to last points in the trajectory go through the sun,
+         *  Heliopause if the particle has exited the solar system and None otherwise.
+         */
+        const BoundaryHit& checkStatus();
 
 		/*
 		 * Computes velocity.
@@ -177,7 +193,7 @@ class PPTrajectory {
 		 *	The component of the diffusion tensor k parallel to the magnetic field in HMF (heliospheric
 		 *	magnetic field) aligned coordinates in AU.
 		 */
-		double lambdaPar() const;
+		double lambdaPar();
 
 		/*
 		 * Drift reduction factor at current point (eq 10).
@@ -200,8 +216,9 @@ class PPTrajectory {
 		 * Returns:
 		 *	Theta'.
 		 */
-		double getThp() const { return pi / 2; };
+		double getThp() const { return M_PI / 2.0; };
 
+        // TODO: this doesn't need to take arguments.
 		/*
 		 * Heaviside step function.  Used to separate the HMF into regions of opposite polarity.
 		 * Returns:
@@ -212,8 +229,8 @@ class PPTrajectory {
 		double heaviside(double th, double thp) const {
 			if (th <= thp) {
 				return 1;
-			//} else if (th == thp) {
-			//	return 0;
+			} else if (th == thp) {
+				return 0;
 			} else {
 				return -1;
 			}

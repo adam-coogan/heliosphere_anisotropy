@@ -11,28 +11,32 @@ namespace {
 	void runEnergyMCs(const double& ei, const RunConfig& rcs, const std::string& paramFileName, int& runCount,
 			std::mutex& mtx) {
 		try {
+            int integrationID;
+
 			for (int i = 0; i < rcs.getRunsPerThread(); i++) {
 				// Create trajectory starting at point specified in run configuration file
 				PPTrajectory traj(rcs.getR(), rcs.getTh(), rcs.getPhi(), ei, paramFileName,
                         rcs.getOutputFormat());
 
-				// Protect access to std::cout
-				{
-					std::lock_guard<std::mutex> lock(mtx);
-					std::cout << "Running an integration..." << std::endl;
-				}
-
 				// Run the full simulation
 				traj.integrate(0);
 
-				// Protect access to runCount with the mutex
-				{
-					// If writeToXML throws an exception that is not caught, this will call traj's destructor
-					// and prevent memory leaks!  TODO: catch the exception...
-					std::lock_guard<std::mutex> lock(mtx);
+				// Protect access to runCount
+                {
+                    std::lock_guard<std::mutex> lock(mtx);
 
-					// Write results to XML and increment the run counter
-					traj.writeToXML(rcs.getOutputDir() + "run_" + std::to_string(runCount++) + ".xml");
+                    // Get the intergration number
+                    integrationID = runCount++;
+                }
+
+                // Write results to XML and increment the run counter
+                // TODO: catch exceptions...
+                traj.writeToXML(rcs.getOutputDir() + "run_" + std::to_string(integrationID) + ".xml");
+
+				// Protect access to cout
+				{
+					std::lock_guard<std::mutex> lock(mtx);
+					std::cout << "Finished and wrote integration " << integrationID << std::endl;
 				}
 			}
 		} catch (ParamException& e) {
@@ -67,12 +71,14 @@ void SolarPropMC::runMCs(const RunConfig& rcs, const std::string& paramFileName)
 		for (int i = 0; i < rcs.getThreadsPerEnergy(); i++) {
 			// Add a new thread executing runEnergyMCs to the back.  Pass it a reference to the run counter
 			// for the energy.  References must be wrapped in std::ref.
-			//mtx.lock();
-			std::cout << "Added thread " << i << " for energy " << ei << " GeV" << std::endl;
-			//mtx.unlock();
-
 			std::get<2>(threadLists.back()).push_back(std::thread(runEnergyMCs, std::ref(ei), std::ref(rcs),
 						std::ref(paramFileName), std::ref(std::get<1>(threadLists.back())), std::ref(mtx)));
+
+            // Protect access to std::cout
+            {
+                std::lock_guard<std::mutex> lock(mtx);
+                std::cout << "Added thread " << i << " for energy " << ei << " GeV" << std::endl;
+            }
 		}
 	}
 

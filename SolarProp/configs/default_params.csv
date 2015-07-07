@@ -4,7 +4,7 @@ ds,350.0
 # Constant in parallel mean free path (ie, kpar) (AU)
 lambda0,0.15
 
-# Rigidity constant in kpar 1 GV * 2.23*10^-11 T*AU/GV = 2.23*10^-11 T*AU
+# Rigidity constant in kpar: 1 GV * 2.23*10^-11 T*AU/GV = 2.23*10^-11 T*AU
 rig0,0.0000000000223
 
 # Reference value for B (T).  Gives |B| ~ 5 nT at Earth.
@@ -19,7 +19,7 @@ vsw,0.000002674
 # Distance to heliopause (AU)
 rHP,140.0
 
-# Sun's equatorial angular velocity (rad/s)
+# Sun's equatorial angular velocity (rad/s).  Period is 25.05 days.
 omega,0.000002904
 
 # Radius of sun (AU)
@@ -38,4 +38,4 @@ m,0.000511
 e0,0.000511
 
 # Sign indicating polarity of the solar cycle.  Must be +1 or -1.
-ac,-1
+ac,1

@@ -13,32 +13,38 @@ PPTrajectory::PPTrajectory(double ri, double thi, double phii, double ei, const 
 		// If the particle enters the sun
 		status = BoundaryHit::Sun;
 	}
+
+	// Update all parameters
+	updateB();
+	updateKTensor();
+	updateVdrift();
 }
 
 double PPTrajectory::vel() const {
-	return cAUs * sqrt(1 - pow(params.getM() / traj.back().getE(), 2));
+	return cAUs * sqrt(1 - pow(params.getM() / (traj.back().getE() + params.getM()), 2));
 }
 
 // Returns rigidity in T*AU
 double PPTrajectory::rigidity() const {
 	// Conversion factor: 1 GV/c = 2.23*10^-11 T*AU
-	return 2.23 * pow(10, -11) * sqrt(pow(traj.back().getE(), 2) - pow(params.getM(), 2));
+	return 2.23 * pow(10, -11) * sqrt(traj.back().getE() * (traj.back().getE() + 2 * params.getM()));
 }
 
-double PPTrajectory::lambdaPar() const {
+double PPTrajectory::lambdaPar() {
 	if (rigidity() >= params.getRig0()) {
 		return params.getLambda0() * (rigidity() / params.getRig0()) 
 			* (1 + traj.back().getR() / params.getR0());
 	} else {
 		return params.getLambda0() * (1 + traj.back().getR() / params.getR0());
-	}	
+	}
 
-	// lambdaPar for the wavy paper
-	/*
-	return pow(params.getR0() / traj.back().getR(), 2) * pow((params.getVsw() * params.getVsw()
-		+ pow(traj.back().getR() * params.getOmega() * sin(traj.back().getTh()), 2))
-		/ (params.getVsw() * params.getVsw() + pow(params.getR0() * params.getOmega(), 2)), 1.0 / 2.0);
-	*/
+    /*
+    // Get field at earth
+    updateB();
+    double be = params.getB0() * sqrt(1 + pow(params.getOmega() * params.getR0() / params.getVsw(), 2));
+
+    return params.getLambda0() * (rigidity() / params.getRig0()) * (be / b.magnitude());
+    */
 }
 
 double PPTrajectory::fs() const {
@@ -58,8 +64,7 @@ PPTrajectory& PPTrajectory::updateB() {
 
 		// Compute B
 		b.r = params.getAc() * params.getB0() * pow(params.getR0() / r, 2) * h;
-		b.phi = -params.getAc() * params.getB0() * pow(params.getR0() / r, 2) * h * params.getOmega()
-			* r * sinth / params.getVsw();
+		b.phi = -b.r * params.getOmega() * r * sinth / params.getVsw();
 
 		updatedB = true;
 	}
@@ -73,17 +78,21 @@ PPTrajectory& PPTrajectory::updateKTensor() {
 		updateB();
 
 		kpar = (vel() / 3) * lambdaPar();
-		kperp = 0.01 * kpar;
+		kperp = params.getDiffFact() * kpar;
 
 		// This component is independent of angle
 		kTensor.rr = (b.r*b.r * kpar + b.phi*b.phi * kperp) / (b.r*b.r + b.phi*b.phi);
 		kTensor.thth = kperp;
 		kTensor.phiphi = (b.phi*b.phi * kpar + b.r*b.r * kperp) / (b.r*b.r + b.phi*b.phi);
-		kTensor.rphi = kTensor.phir = b.r * b.phi * (kpar - kperp) / (b.r*b.r + b.phi*b.phi);
+		kTensor.rphi = b.r * b.phi * (kpar - kperp) / (b.r*b.r + b.phi*b.phi);
+        kTensor.phir = kTensor.rphi;
 
 		// These should always be zero!!!
-		kTensor.rth = kTensor.thr = 0;
-		kTensor.phith = kTensor.thphi = 0; 
+		kTensor.rth = 0;
+        kTensor.thr = 0;
+		kTensor.phith = 0; 
+		kTensor.thphi = 0; 
+
 		updatedKTensor = true;
 	}
 
@@ -110,22 +119,22 @@ PPTrajectory& PPTrajectory::updateVdrift() {
 		double vdHCSphi = 0;
 		// The formula for HCS drifts only applies for |d| <= 2 rL!
 		if (fabs(r * costh) <= 2 * rL) {
-			vdHCSr = (0.457 - 0.412 * fabs(r * costh) / rL + 0.0915 * pow(r * costh / rL, 2))
-				* params.getAc() * params.getQSign() * vel() / sqrt(1.0 + gammaGC * gammaGC);
-			vdHCSphi = vdHCSr;
+			vdHCSr = (0.457 - 0.412 * fabs(r * costh / rL) + 0.0915 * pow(r * costh / rL, 2))
+				* params.getAc() * params.getQSign() * vel();
 
 			// Put in the factors that are different between the components
-			vdHCSr *= gammaGC;
+			vdHCSphi = vdHCSr / sqrt(1.0 + gammaGC * gammaGC);
+			vdHCSr *= gammaGC / sqrt(1.0 + gammaGC * gammaGC);
 		}
 
 		// Compute v_d^gc factor
-		double vdgcFact = 2 * rig * params.getQSign() * vel() * params.getAc() * r
+		double vdgcFact = 2 * rig * vel() * r * params.getQSign() * params.getAc() 
 			/ (3 * params.getB0() * pow(params.getR0(), 2) * pow(1 + gammaGC * gammaGC, 2));
 		vdgcFact *= heaviside(traj.back().getTh(), getThp());
 
 		// Incorporate the drift reduction factor and combine all components
 		vdrift.r = fs() * (vdHCSr + vdgcFact * (-gammaGC * costh / sinth));
-		vdrift.th = fs() * vdgcFact * (2 + gammaGC * gammaGC) * gammaGC;
+		vdrift.th = fs() * (vdgcFact * (2 + gammaGC * gammaGC) * gammaGC);
 		vdrift.phi = fs() * (vdHCSphi + vdgcFact * gammaGC * gammaGC * costh / sinth);
 
 		updatedVdrift = true;
@@ -134,87 +143,135 @@ PPTrajectory& PPTrajectory::updateVdrift() {
 	return *this;
 }
 
-PPTrajectory& PPTrajectory::step() {
+double PPTrajectory::getDr(const double& dWr, const double& dWphi) const {
+    // Convenience variables
+	double r = traj.back().getR();
+	double gammaGC = r * params.getOmega() * sin(traj.back().getTh()) / params.getVsw();
+
+    // dr/ds
+	double dsCdr = (kpar * (3 * params.getR0() + r * (3 + gammaGC * gammaGC)) + kperp * gammaGC*gammaGC
+        * (2*params.getR0() * (2 + gammaGC*gammaGC) + r * (5 + 3 * gammaGC*gammaGC)))
+        / (r * (params.getR0() + r) * pow(1 + gammaGC*gammaGC, 2))
+        - params.getVsw()
+        - vdrift.r;
+
+    // dr/dWr
+	double dWrCdr = sqrt(2*kTensor.rr - 2*pow(kTensor.rphi, 2) / kTensor.phiphi);
+
+    // dr/dWphi
+	double dWphiCdr = sqrt(2 / kTensor.phiphi) * kTensor.rphi;
+    
+    return dsCdr * params.getDs() + dWrCdr * dWr + dWphiCdr * dWphi;
+}
+
+double PPTrajectory::getDth(const double& dWth) const {
+    // Convenience variable
+	double r = traj.back().getR();
+
+	// dth/ds
+	double dsCdth = kperp * cos(traj.back().getTh()) / (r * r * sin(traj.back().getTh())) - vdrift.th / r;
+
+	// dth/dWth
+	double dWthCdth = sqrt(2 * kTensor.thth) / r;
+    
+    return dsCdth * params.getDs() + dWthCdth * dWth;
+}
+
+double PPTrajectory::getDphi(const double& dWphi) const {
+    // Convenience variables
+	double r = traj.back().getR();
+	double sinth = sin(traj.back().getTh());
+	double gammaGC = r * params.getOmega() * sinth / params.getVsw();
+
+    // dphi/ds
+	double dsCdphi = ((kperp - kpar) * params.getOmega() * ((gammaGC*gammaGC * + 3) * r + 2 * params.getR0()))
+        / ((params.getR0() + r) * r * params.getVsw() * pow(1 + gammaGC*gammaGC, 2))
+        - vdrift.phi / (r * sinth);
+
+    // dphi/dWphi
+	double dWphiCdphi = sqrt(2 * kTensor.phiphi) / (r * sinth);
+    
+    return dsCdphi * params.getDs() + dWphiCdphi * dWphi;
+}
+
+double PPTrajectory::getDe() const {
+	return params.getDs() * 2 * traj.back().getE() * params.getVsw() * gamma() / (3 * traj.back().getR());
+}
+
+const BoundaryHit& PPTrajectory::step() {
 	// Update all parameters
 	updateB();
 	updateKTensor();
 	updateVdrift();
-	
-	// Make stuff clearer and maybe slightly faster
-	double r = traj.back().getR();
-	double sinth = sin(traj.back().getTh());
-	double costh = cos(traj.back().getTh());
-	double phi = traj.back().getPhi();
-	// Convenience parameter
-	double gammaGC = r * params.getOmega() * sinth / params.getVsw();
-
-	// Coefficients in dr
-	double dsCdr = (kpar * (2 * params.getR0() + r * (3 + gammaGC * gammaGC)) + kperp * gammaGC * gammaGC
-		* (2 * params.getR0() * (2 + gammaGC * gammaGC) + r * (5 + 3 * gammaGC * gammaGC)))
-		/ (r * (r + params.getR0()) * pow(1 + gammaGC * gammaGC, 2))
-		- params.getVsw()
-		- vdrift.r;
-
-	double dWrCdr = sqrt(2 * kTensor.rr - 2 * pow(kTensor.rphi, 2) / kTensor.phiphi);
-
-	double dWphiCdr = sqrt(2 / kTensor.phiphi) * kTensor.rphi;
-	
-	// Coefficients in dth
-	double dsCdth = kperp * costh / (r * r * sinth) - vdrift.th / r;
-
-	double dWthCdth = sqrt(2 * kTensor.thth) / r;
-	
-	// Coefficients in dphi
-	double dsCdphi = (kperp - kpar) * gammaGC * (2 * params.getR0() + r * (3 + gammaGC * gammaGC))
-		/ (r * r * (r + params.getR0()) * pow(1 + gammaGC * gammaGC, 2) * sinth)
-		- vdrift.phi / (r * sinth);
-
-	double dWphiCdphi = sqrt(2 * kTensor.phiphi) / (r * sinth);
-	
-	// Coefficients in dE
-	double dsCdE = 2 * traj.back().getE() * params.getVsw() * gamma() / (3 * r);
 	
 	// Generate Wiener terms
 	double dWr = ndistro(generator) * sqrt(params.getDs());
 	double dWth = ndistro(generator) * sqrt(params.getDs()); 
 	double dWphi = ndistro(generator) * sqrt(params.getDs());
 
-	// Move the particle to the new point
-	traj.push_back(PPPoint(r + dsCdr * params.getDs() + dWrCdr * dWr + dWphiCdr * dWphi,
-		traj.back().getTh() + dsCdth * params.getDs() + dWthCdth * dWth,
-		phi + dsCdphi * params.getDs() + dWphiCdphi * dWphi,
-		traj.back().getE() + dsCdE * params.getDs(),
-		traj.back().getS() + params.getDs()));
+    // Make particle at the next point
+	traj.push_back(PPPoint(traj.back().getR() + getDr(dWr, dWphi),
+                traj.back().getTh() + getDth(dWth),
+                traj.back().getPhi() + getDphi(dWphi),
+                traj.back().getE() + getDe(),
+                traj.back().getS() + params.getDs()));
 	
-	// If the particle has reached or passed the heliopause
-	// TODO: put this in a getStatus() function!
-	if (traj.back().getR() >= params.getRHP()) {
-		status = BoundaryHit::Heliopause;
-	} else if (traj.back().getR() <= params.getRSun()) {
-		// If the particle enters the sun
-		status = BoundaryHit::Sun;
-	}
-
-	// Made a new point, so everything needs to be updated again
-	updatedB = false;
-	updatedVdrift = false;
-	updatedKTensor = false;
-
-	return *this;
+    // Check if the particle hit the heliopause or sun
+    return checkStatus();
 }
 
-BoundaryHit PPTrajectory::integrate(int n) {
+const BoundaryHit& PPTrajectory::checkStatus() {
+	if (traj.back().getR() >= params.getRHP()) {
+		status = BoundaryHit::Heliopause;
+        return status;
+	} else { // Particle may have gone through the sun.  Check this.
+        // Get previous point
+        const double& r = traj.end()[-2].getR();
+        const double& th = traj.end()[-2].getTh();
+        const double& phi = traj.end()[-2].getPhi();
+
+        // Check if the particle has entered or jumped through the sun
+        const double& rNew = traj.back().getR();
+        const double& thNew = traj.back().getTh();
+        const double& phiNew = traj.back().getPhi();
+
+        // Get shortest distance from the line between the new and old points and the sun
+        double dToOrigin = sqrt(pow(r * rNew, 2) * (pow(cos(thNew) * sin(th), 2)
+                    - 1/2 * cos(phi - phiNew) * sin(2*th) * sin(2*thNew)
+                    + pow(sin(thNew), 2) * (pow(cos(th), 2) + pow(sin(th) * sin(phi - phiNew), 2))))
+            / sqrt(r*r + rNew*rNew
+                    - 2*r*rNew * (cos(th) * cos(thNew) + cos(phi - phiNew) * sin(th) * sin(thNew)));
+
+        // If the particle entered the sun, change the status.  Otherwise, continue.
+        if (dToOrigin <= params.getRSun()) {
+            status = BoundaryHit::Sun;
+            // Put the particle at the origin!
+            // TODO: this is a bit kludgy.  Should write the status to XML!                  2015-05-05 14:22
+            traj.back().setR(0.0);
+
+            return status;
+        } else {
+            // Made a new point, so everything needs to be updated again
+            updatedB = false;
+            updatedVdrift = false;
+            updatedKTensor = false;
+
+            return status;
+        }
+    }
+}
+
+const BoundaryHit& PPTrajectory::integrate(int n) {
 	// For positive n, integrate n times, or until a boundary is hit.
 	if (n > 0) {
 		for (int i = 0; i < n; i++) {
-			step();
-			// If a boundary is hit, stop integrating
-			if (status != BoundaryHit::None) {
+			// If a boundary was hit, stop integrating
+			if (step() != BoundaryHit::None) {
 				break;
 			}
 		}
 	} else {
-		// For negative n, integrate until a boundary is hit
+		// For non-positive n, integrate until a boundary is hit
 		int i = 0;
 		while (status == BoundaryHit::None) {
 			step();
@@ -245,6 +302,12 @@ std::string PPTrajectory::toXML() const {
 
 	// Write simulation parameters
 	xml += "<trajectory>\n" + params.toXML(1);
+    xml += "\t<boundary>";
+    if (status == BoundaryHit::Sun) {
+        xml += "sun</boundary>\n";
+    } else {
+        xml += "heliopause</boundary>\n";
+    }
 	xml += "\t<points>\n";
 
 	// Full precision version of to_string

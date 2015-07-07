@@ -10,11 +10,9 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import xml.etree.ElementTree as ET
 import os, sys, collections
+import SolarPropContainers
 
 ### Parse XML data
-# Container for point data
-PPoint = collections.namedtuple('PPoint', ['r', 'th', 'phi', 'e', 't'])
-
 # Path to trajectory
 trajPath = sys.argv[1]
 
@@ -31,7 +29,7 @@ for param in root.find('params').iter().next():
 points = []
 
 for point in root.find('points').findall('point'):
-    points.append(PPoint(float(point.find('r').text), float(point.find('th').text),
+    points.append(SolarPropContainers.PPoint(float(point.find('r').text), float(point.find('th').text),
         float(point.find('phi').text), float(point.find('e').text), float(point.find('t').text)))
 
 # Convert positions from spherical to cartesian coordinates

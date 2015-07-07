@@ -1,4 +1,4 @@
-CC=clang++ -std=c++11
+CC=clang++ -std=c++11 -O2
 CFLAGS=-c
 LFLAGS=
 OBJS=$(BUILDDIR)/PPTrajectory.o $(BUILDDIR)/SolarProp.o $(BUILDDIR)/ParamExceptions.o $(BUILDDIR)/SolarPropMC.o
@@ -12,7 +12,7 @@ $(BINDIR)/SolarProp: $(OBJS)
 $(BUILDDIR)/SolarProp.o: $(SRCDIR)/SolarProp.cpp $(SRCDIR)/PPTrajectory.h $(SRCDIR)/RunConfig.h
 	$(CC) $(CFLAGS) $(SRCDIR)/SolarProp.cpp -o $@
 
-$(BUILDDIR)/SolarPropMC.o: $(SRCDIR)/SolarProp.cpp $(SRCDIR)/PPTrajectory.h $(SRCDIR)/RunConfig.h
+$(BUILDDIR)/SolarPropMC.o: $(SRCDIR)/SolarPropMC.cpp $(SRCDIR)/PPTrajectory.h $(SRCDIR)/RunConfig.h
 	$(CC) $(CFLAGS) $(SRCDIR)/SolarPropMC.cpp -o $@
 
 $(BUILDDIR)/PPTrajectory.o: $(SRCDIR)/PPTrajectory.h $(SRCDIR)/PPTrajectory.cpp $(SRCDIR)/HelioParams.h
