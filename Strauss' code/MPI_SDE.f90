@@ -12,39 +12,42 @@
 
 
 	INTEGER, PARAMETER :: Nk = 1
-	REAL :: Energies(Nk)
+!	REAL :: Energies(Nk)
 
 
-	INTEGER :: file_counter = 100.0
+!	INTEGER :: file_counter = 100.0
 	INTEGER :: task_counter = 0.0
 
 	REAL, PARAMETER :: PI = 3.141592653589793
 
-	INTEGER :: SEEDS(7200)
+!	INTEGER :: SEEDS(7200)
 
-	REAL :: rgrid(400)
+!	REAL :: rgrid(400)
 
 
 	REAL :: phi_begin
 	REAL :: phi_earth(1)
 
+    REAL :: r, th, ph
+    REAL :: Br, Bph, B, B0
+
 
 !	-----------------------------------------------------------
 !	Different SEED for each process
 
-	CALL PARALLEL_SEEDS(SEEDS)
+!	CALL PARALLEL_SEEDS(SEEDS)
 	
 !	-----------------------------------------------------------
 
-   call MPI_INIT(ierr)
-   if (ierr .ne. MPI_SUCCESS) then
-      print *,'Error starting MPI program. Terminating.'
-      call MPI_ABORT(MPI_COMM_WORLD, rc, ierr)
-   end if
-
-   call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
-   call MPI_COMM_SIZE(MPI_COMM_WORLD, numtasks, ierr)
-   print *, 'Number of processes:',numtasks,' Check process number . . .',rank
+!   call MPI_INIT(ierr)
+!   if (ierr .ne. MPI_SUCCESS) then
+!      print *,'Error starting MPI program. Terminating.'
+!      call MPI_ABORT(MPI_COMM_WORLD, rc, ierr)
+!   end if
+!
+!   call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
+!   call MPI_COMM_SIZE(MPI_COMM_WORLD, numtasks, ierr)
+!   print *, 'Number of processes:',numtasks,' Check process number . . .',rank
 
 !	-----------------------------------------------------------
 
@@ -86,7 +89,7 @@
 
 !	END IF
 
-Energies(1) = 0.45
+!Energies(1) = 0.10
 
 !DO k = 2, NK, 1
 
@@ -105,75 +108,103 @@ Energies(1) = 0.45
 !	END DO
 
 
-rgrid(1) = 0.1
-rgrid(2) = 1.0
-rgrid(3) = 10.0
-rgrid(4) = 20.0
-rgrid(5) = 25.0
-rgrid(6) = 30.0
-rgrid(7) = 40.0
-rgrid(8) = 45.0
-rgrid(9) = 50.0
-rgrid(10) = 60.0
-rgrid(11) = 65.0
-rgrid(12) = 70.0
-rgrid(13) = 80.0
-rgrid(14) = 85.0
-rgrid(15) = 90.0
+!rgrid(1) = 0.1
+!rgrid(2) = 1.0
+!rgrid(3) = 10.0
+!rgrid(4) = 20.0
+!rgrid(5) = 25.0
+!rgrid(6) = 30.0
+!rgrid(7) = 40.0
+!rgrid(8) = 45.0
+!rgrid(9) = 50.0
+!rgrid(10) = 60.0
+!rgrid(11) = 65.0
+!rgrid(12) = 70.0
+!rgrid(13) = 80.0
+!rgrid(14) = 85.0
+!rgrid(15) = 90.0
 
 
 !	-----------------------------------------------------------
 
-        OPEN(700,file='Diffusion_Coefficients.txt',status='unknown')
-        OPEN(600,file='Solar_wind_density.txt',status='unknown')
-        OPEN(500,file='Alfven_speed.txt',status='unknown')
-        OPEN(400,file='Turbulence_parameters.txt',status='unknown')
+!        OPEN(700,file='Diffusion_Coefficients.txt',status='unknown')
+!        OPEN(600,file='Solar_wind_density.txt',status='unknown')
+!        OPEN(500,file='Alfven_speed.txt',status='unknown')
+!        OPEN(400,file='Turbulence_parameters.txt',status='unknown')
 
-DO j = 1, 1, 1
+!DO j = 1, 1, 1
+!
+!
+!	DO i = 1, numtasks - 1, 1 
+!
+!		file_counter = file_counter + 1.0
+!		task_counter = task_counter + 1
+!
+!		IF (rank.EQ.i) THEN
+!
+!WRITE(*,*) 'Started process number:', task_counter, 'on node no.:', rank
+!
+!	
+!    E_begin = 0.100 !Energies(task_counter)
+!
+!    phi_begin = pi
+!    theta_begin = pi/2.0
+!    r_begin = 1.0
 
+    B0 = 5.0/SQRT(2.0) * 0.06
 
-	DO i = 1, numtasks - 1, 1 
+    r = 1.0
+    th = pi/2.0
+    ph = 0.0
 
-		file_counter = file_counter + 1.0
-		task_counter = task_counter + 1
+    CALL MAGNETICFIELD(r,th,ph,Br,Bph,B,B0)
 
-		IF (rank.EQ.i) THEN
+    WRITE(*,*) 'Magnetic field at (r, th, ph) = (', r, ', ', th, ', ', ph, '): Br = ', Br, ', Bph = ', Bph,&
+        ', B_Earth = ', B
 
-WRITE(*,*) 'Started process number:', task_counter, 'on node no.:', rank
+    r = 10.0
+    th = pi/3.0
+    ph = pi/3.0
 
-	
-		E_begin = Energies(task_counter)
+    CALL MAGNETICFIELD(r,th,ph,Br,Bph,B,B0)
 
-                phi_begin = pi
-		theta_begin = pi/2.0
-		r_begin = 1.0
+    WRITE(*,*) 'Magnetic field at (r, th, ph) = (', r, ', ', th, ', ', ph, '): Br = ', Br, ', Bph = ', Bph
+
+    r = 10.0
+    th = -pi/3.0
+    ph = 3.0*pi/2.0
+
+    CALL MAGNETICFIELD(r,th,ph,Br,Bph,B,B0)
+
+    WRITE(*,*) 'Magnetic field at (r, th, ph) = (', r, ', ', th, ', ', ph, '): Br = ', Br, ', Bph = ', Bph
 
 
 !	Call different seed on each process
-			CALL sgrnd(SEEDS(i))
-
+!			CALL sgrnd(SEEDS(i))
+!
 !	Call the code
-			CALL SDE(phi_begin,r_begin,E_begin,j_BEGIN,counter,j_N, P,theta_begin,SEEDS(task_counter))
+    !CALL SDE(phi_begin,r_begin,E_begin,j_BEGIN,counter,j_N, P,theta_begin,SEEDS(task_counter))
 
 !	Write the output to file
-			WRITE(file_counter,"(7(ES18.8))") r_begin, E_begin,j_BEGIN,counter, j_N*P*P, theta_begin, phi_begin
+    !file_counter = 1.0
+    !WRITE(file_counter,"(7(ES18.8))") r_begin, E_begin,j_BEGIN,counter, j_N*P*P, theta_begin, phi_begin
 
-			WRITE(*,*) 'Finished process number:', task_counter, 'with SEED:', SEEDS(task_counter)
-			WRITE(*,*) 'Output printed to file . . . ', file_counter
+!	WRITE(*,*) 'Finished process number:', task_counter, 'with SEED:', SEEDS(task_counter)
+    !WRITE(*,*) 'Output printed to file . . . ', file_counter
 
 
-		END IF
+!		END IF
+!
+!	END DO ! the FOR
+!
+!END DO ! the FOR
 
-	END DO ! the FOR
-
-END DO ! the FOR
-
-CLOSE(700)
-CLOSE(600)
-CLOSE(500)
-CLOSE(400)
-
-  call MPI_FINALIZE(ierr)
+!CLOSE(700)
+!CLOSE(600)
+!CLOSE(500)
+!CLOSE(400)
+!
+!  call MPI_FINALIZE(ierr)
 
    end
 
@@ -218,7 +249,7 @@ CLOSE(400)
 !	-----------------------------------------------------------
 !       Files to write output
 
-        OPEN(800,file='End_Position.txt',status='unknown')
+    OPEN(800,file='End_Position.txt',status='unknown')
 	OPEN(999,file='End_energy.txt',status='unknown')
 	OPEN(995,file='Time_spend.txt',status='unknown')
 !	-----------------------------------------------------------
@@ -472,8 +503,8 @@ CLOSE(999)
 
 	IF(distance.LE.2.0*Larmor)THEN
 
-		vdr = vdr + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS*sinpsi
-                vdphi = vdphi + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS*cospsi
+    vdr = vdr + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS*sinpsi
+    vdphi = vdphi + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS * cospsi
 
 	ENDIF
 
@@ -482,7 +513,7 @@ CLOSE(999)
 
 	CALL MAGNETICFIELD(r,theta,phi,Br,Bphi,B,B0)
 
-        CALL DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel,K_perpr,K_perptheta,BETA,r,theta,printer,V_sw)
+    CALL DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel,K_perpr,K_perptheta,BETA,r,theta,printer,V_sw)
 
 !	Spherical coordinates	
 	CALL SPHERICALCOORDINATES(r,theta,phi,K_parallel,K_perpr,K_perptheta,K_rr,&
@@ -495,7 +526,7 @@ K_rphi, K_phiphi, K_thetatheta, K_thetar, K_thetaphi)
 	
 	CALL MAGNETICFIELD(r1,theta,phi,Br,Bphi,B,B0)
 
-        CALL DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel1,K_perpr1,K_perptheta1,BETA,r1,theta,printer,V_sw)
+    CALL DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel1,K_perpr1,K_perptheta1,BETA,r1,theta,printer,V_sw)
 
 !	Spherical coordinates	
 	CALL SPHERICALCOORDINATES(r1,theta,phi,K_parallel1,K_perpr1,K_perptheta1,K_rr1, &
@@ -576,11 +607,16 @@ K_rphi3, K_phiphi3, K_thetatheta3, K_thetar3, K_thetaphi3)
 
 	B11 = SQRT(2.0*delta_T)*SQRT((K_phiphi*K_thetar*K_thetar - 2.0*K_rphi*K_thetar*K_thetaphi + K_rr*K_thetaphi*K_thetaphi + &
 					K_thetatheta*K_rphi*K_rphi - K_rr*K_phiphi*K_thetatheta)/(K_thetaphi*K_thetaphi - K_phiphi*K_thetatheta))
+
 	B12 = SQRT(2.0*delta_T)*((K_rphi*K_thetaphi - K_thetar*K_phiphi)/(K_thetaphi*K_thetaphi - K_thetatheta*K_phiphi)* &
 					SQRT(K_thetatheta - K_thetaphi*K_thetaphi/K_phiphi))
+
 	B13 = SQRT(2.0*delta_T)*(K_rphi/SQRT(K_phiphi))
+
 	B22 = SQRT(2.0*delta_T)*(SQRT(K_thetatheta - K_thetaphi*K_thetaphi/K_phiphi)/r)
+
 	B23 = SQRT(2.0*delta_T)*(K_thetaphi/r/SQRT(K_phiphi))
+
 	B33 = SQRT(2.0*delta_T)*(SQRT(K_phiphi)/r/sin(theta))
 
 	RETURN
@@ -610,13 +646,13 @@ END
 SUBROUTINE SPIRAL_ANGLE(r,theta,phi,Omega,sinpsi,cospsi)
 	IMPLICIT NONE
 
-        REAL :: r, theta, phi, V_sw = 1.0
-        REAL :: Omega, sinpsi, cospsi, tanpsi
-        REAL, PARAMETER :: pi = 3.141592653589793
-        REAL :: R_Sun = 0.005, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
+    REAL :: r, theta, phi, V_sw = 1.0
+    REAL :: Omega, sinpsi, cospsi, tanpsi
+    REAL, PARAMETER :: pi = 3.141592653589793
+    REAL :: R_Sun = 0.005, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
 
-        Omega = Omega1*PROTIME
-        tanpsi = Omega*(r - R_Sun)*sin(theta)/V_sw
+    Omega = Omega1*PROTIME
+    tanpsi = Omega*(r - R_Sun)*sin(theta)/V_sw
 	cospsi = 1.0/SQRT(1.0 + tanpsi*tanpsi)
 	sinpsi = SQRT(1.0 - cospsi*cospsi)
 
@@ -690,32 +726,32 @@ SUBROUTINE DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel,K_perpr,K_perptheta,BETA
       lambda_parallel = 3.0*q/pi*Rc*Rc/kmin*B*B/delta_slab*(0.25 + 2.0/(2.0-q)/(4.0-q)/Rc**(q))
 
 !     electrons
-      lambda_parallel = 3.0*q/SQRT(pi)/(q-1.0)*Rc*Rc/bc/kmin*B*B/delta_slab*( &
-bc/4.0/SQRT(pi)+&
-2.0/SQRT(pi)/(2.0-q)/(4.0-q)*bc/Rc**(q)+&
-(1.0/0.886+1.0/SQRT(pi)/1.5)*bc**(pin-1.0)/Rc**(q)/Qc**(pin-q))
+!      lambda_parallel = 3.0*q/SQRT(pi)/(q-1.0)*Rc*Rc/bc/kmin*B*B/delta_slab*( &
+!                                                                             bc/4.0/SQRT(pi)+&
+!                                                                             2.0/SQRT(pi)/(2.0-q)/(4.0-q)*bc/Rc**(q)+&
+!                                                                             (1.0/0.886+1.0/SQRT(pi)/1.5)*bc**(pin-1.0)/Rc**(q)/Qc**(pin-q))
 
 
 
 
-lambda_parallel = 0.05*Bearth/B*P
+!      lambda_parallel = 0.05*Bearth/B*P
 
-IF (P.LT.1.0) THEN
+!    IF (P.LT.1.0) THEN
 
-lambda_parallel = 0.05*Bearth/B
+!    lambda_parallel = 0.05*Bearth/B
 
-END IF
+!    END IF
 
-      K_parallel = lambda_parallel*BETA*750.0/3.0
+!    K_parallel = lambda_parallel*BETA*750.0/3.0
 
 
-K_parallel = 25.0*P*(1.0 + r)
+    K_parallel = 25.0*P*(1.0 + r)
 
-IF (P.LT.1.0) THEN
+    IF (P.LT.1.0) THEN
 
-K_parallel = 25.0*1.0*(1.0 + r)
+    K_parallel = 25.0*1.0*(1.0 + r)
 
-END IF
+    END IF
 
 !    -----------------------------------------------
 !    lambda perp
@@ -723,7 +759,7 @@ END IF
 !     lambda_perp = (1.0/SQRT(3.0)/2.0/SQRT(pi)*l2D*1.128/2.565*delta_2D/B/B)**(2.0/3.0)*lambda_parallel**(1.0/3.0)*r**(0.65)
 
 
-      K_perpr = 0.02*K_parallel
+    K_perpr = 0.02*K_parallel
 ! lambda_perp*BETA*750.0/3.0
 	K_perptheta = K_perpr
 
@@ -978,7 +1014,7 @@ END DO
       parameter(M     =  397)
       parameter(MATA  = -1727483681)
 !                                    constant vector a
-      parameter(UMASK = -2147483648)
+      parameter(UMASK = -2147483647)
 !                                    most significant w-r bits
       parameter(LMASK =  2147483647)
 !                                    least significant r bits

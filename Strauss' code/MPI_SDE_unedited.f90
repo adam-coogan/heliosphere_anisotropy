@@ -11,12 +11,12 @@
 	REAL :: j_BEGIN,counter,j_N, P,theta_begin
 
 
-	INTEGER, PARAMETER :: Nk = 10
+	INTEGER, PARAMETER :: Nk = 1
 	REAL :: Energies(Nk)
 
 
 	INTEGER :: file_counter = 100.0
-	INTEGER :: task_counter = 0
+	INTEGER :: task_counter = 0.0
 
 	REAL, PARAMETER :: PI = 3.141592653589793
 
@@ -52,17 +52,23 @@
 !	E_begin = 0.004
 
 
-	Energies(1) = 0.01
-	Energies(2) = 0.03
-	Energies(3) = 0.06
-	Energies(4) = 0.1
-	Energies(5) = 0.2
-	Energies(6) = 0.5
-	Energies(7) = 1.0
-	Energies(8) = 2.0
-	Energies(9) = 4.0
-	Energies(10) = 7.0
-	
+!	Energies(1) = 0.001
+!	Energies(2) = 0.002
+!	Energies(3) = 0.005
+!	Energies(4) = 0.01
+!	Energies(5) = 0.02
+!	Energies(6) = 0.05
+!	Energies(7) = 0.1
+!	Energies(8) = 0.2
+!	Energies(9) = 0.5
+!	Energies(10) = 1.0
+!	Energies(11) = 2.0
+!	Energies(12) = 5.0
+!	Energies(13) = 10.0
+!	Energies(14) = 20.0
+!	Energies(15) = 50.0
+
+
 
 	phi_earth(1) = 0.0
 
@@ -80,16 +86,13 @@
 
 !	END IF
 
-!Energies(1) = 0.001
+Energies(1) = 0.45
 
 !DO k = 2, NK, 1
 
 !Energies(k) = Energies(k-1)*exp(0.1)
 
 !END DO
-
-
-!Energies(1) = 0.1
 
 !	END DO
 
@@ -141,7 +144,7 @@ WRITE(*,*) 'Started process number:', task_counter, 'on node no.:', rank
 	
 		E_begin = Energies(task_counter)
 
-                phi_begin = pi/2.0
+                phi_begin = pi
 		theta_begin = pi/2.0
 		r_begin = 1.0
 
@@ -185,16 +188,17 @@ CLOSE(400)
 
 	REAL :: RNumber1 = 0.0, RNumber2 = 0.0
 	REAL :: RNumber3 = 0.0, RNumber4 = 0.0
-	REAL, PARAMETER :: N = 10
+	REAL, PARAMETER :: N = 10000
 
 	DOUBLE PRECISION :: RANDOMNUMBERS
 	INTEGER :: SEED
 
 	REAL :: Counter
-	REAL, PARAMETER :: r_inner = 0.1
+	REAL, PARAMETER :: r_inner = 0.01
 	REAL :: E_begin, r_begin
 	REAL, PARAMETER :: delta_T = 0.001
-	REAL, PARAMETER :: r_boundary = 10.0, E_0 = 0.938
+	REAL, PARAMETER :: r_boundary = 120.0, E_0 = 0.000511
+!0.938
 	
 	
 	REAL :: E_end, P
@@ -215,7 +219,8 @@ CLOSE(400)
 !       Files to write output
 
         OPEN(800,file='End_Position.txt',status='unknown')
-
+	OPEN(999,file='End_energy.txt',status='unknown')
+	OPEN(995,file='Time_spend.txt',status='unknown')
 !	-----------------------------------------------------------
 
 
@@ -302,7 +307,7 @@ CLOSE(400)
 			Counter = Counter + 1.0
 			theta_end = theta
 
-!	Write(*,*)  Counter
+	Write(*,*)  Counter
 
  		P = SQRT(E_end*(E_end + 2.0*E_0))
 
@@ -310,11 +315,13 @@ CLOSE(400)
 			
 			j_BEGIN = j_BEGIN + j_N
 
-	WRITE(800,"(3(ES18.8))") r, theta, phi
+!	WRITE(800,"(3(ES18.8))") r, theta, phi
+	WRITE(999,"(1(ES18.8))") E_end
+	WRITE(995,"(1(ES18.8))") timespend*4.31*delta_T
 
 		END IF
 
-		WRITE(*,*) counter
+!		WRITE(*,*) counter
 
 	IF ((Counter.GE.N)) THEN
 
@@ -336,7 +343,8 @@ CLOSE(400)
 		CALL LIS(E_begin,P,j_N,E_0)
 
 CLOSE(800)
-
+CLOSE(999)
+  CLOSE(995)
 !	------------------------------------------------------
 
 	RETURN
@@ -389,25 +397,19 @@ CLOSE(800)
 	REAL :: K_rr3, K_rphi3, K_phiphi3, K_thetatheta3, K_thetar3, K_thetaphi3
 
 !	Variables for drift calculations
-	REAL :: gamma_d, drift_coeff, pol_cycle = 1.0
-        REAL :: charge = 1.0
+	REAL :: gamma_d, drift_coeff, pol_cycle = -1.0
+        REAL :: charge = -1.0
 	REAL :: Larmor, FS, Omega,sinpsi,cospsi
-	REAL :: theta_HCS,sin_beta,cos_beta, alfa
 
 !	variables for the HMF field
 	REAL :: Br, Bphi, B, Bearth
-        REAL :: B0
+        REAL, PARAMETER :: B0 = 5.0/SQRT(2.0)*0.06
 
 !       Variables for printing output
         INTEGER :: printer
 
-!	magnetic field strength
-	CALL SPIRAL_ANGLE(1.0,pi/2.0,0.0,Omega,sinpsi,cospsi)
-
-	 B0 = 5.0/SQRT(1.0 + Omega*Omega)*0.06
-
-
 !=======================================================================
+
 !	Solar wind speed (400km/s)
 	V_sw = 1.0
 
@@ -431,9 +433,7 @@ CLOSE(800)
 	Larmor = 1.0/B*P/750.0
 
 !	Drift reduction function
-	FS = 1.0
-!0.5*10.0*P*P/(1.0 + 10.0*P*P)
-!1.0*0.5
+	FS = 0.5*10.0*P*P/(1.0 + 10.0*P*P)
 !10.0*P*P/(1.0 + 10.0*P*P)
 
         CALL SPIRAL_ANGLE(r,theta,phi,Omega,sinpsi,cospsi)
@@ -441,15 +441,9 @@ CLOSE(800)
 	gamma_d = r*Omega*sin(theta)/V_sw
 	drift_coeff = 2.0/3.0/pol_cycle/charge/B0*P*BETA*r/(1.0+gamma_d*gamma_d)/(1.0+gamma_d*gamma_d)*FS
 
-	alfa = 30.0/180.0*pi
+	distance = abs(r*cos(theta))
 
-	theta_HCS = pi/2.0 + ASIN(SIN(alfa)*SIN(phi + Omega*r/V_sw))
-
-	CALL HCS(r,theta,phi,alfa,sin_beta,cos_beta,Omega,distance)
-
-!	distance = abs(r*cos(theta))
-
-	IF(theta.LT.theta_HCS)THEN
+	IF(theta.LT.pi/2.0)THEN
 
 		vdr = drift_coeff*(-gamma_d/tan(theta))
 		vdtheta = drift_coeff*(2.0*gamma_d + gamma_d*gamma_d*gamma_d)
@@ -457,7 +451,7 @@ CLOSE(800)
 
 		ENDIF
 
-	IF(theta.EQ.theta_HCS)THEN
+	IF(theta.EQ.pi/2.0)THEN
 
 		vdr = 0.0
 		vdtheta = 0.0
@@ -465,7 +459,7 @@ CLOSE(800)
 
 	ENDIF
 
-	IF(theta.GT.theta_HCS)THEN
+	IF(theta.GT.pi/2.0)THEN
 	
 		vdr = -drift_coeff*(-gamma_d/tan(theta))
 		vdtheta = -drift_coeff*(2.0*gamma_d + gamma_d*gamma_d*gamma_d)
@@ -476,18 +470,10 @@ CLOSE(800)
 	END IF
 	
 
-
-
 	IF(distance.LE.2.0*Larmor)THEN
 
-
-
-		vdr = vdr + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS & 
-            *sinpsi*cos_beta
-        vdphi = vdphi + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS & 
-            *cospsi*cos_beta
-		vdtheta = vdtheta + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA &
-            *750.0*FS*sin_beta
+		vdr = vdr + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS*sinpsi
+                vdphi = vdphi + pol_cycle*charge*(0.457 - 0.412*distance/Larmor + 0.0915*distance*distance/Larmor/Larmor)*BETA*750.0*FS*cospsi
 
 	ENDIF
 
@@ -499,7 +485,7 @@ CLOSE(800)
         CALL DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel,K_perpr,K_perptheta,BETA,r,theta,printer,V_sw)
 
 !	Spherical coordinates	
-	CALL SPHERICALCOORDINATES(r,theta,phi,K_parallel,K_perpr,K_perptheta,K_rr, &
+	CALL SPHERICALCOORDINATES(r,theta,phi,K_parallel,K_perpr,K_perptheta,K_rr,&
 K_rphi, K_phiphi, K_thetatheta, K_thetar, K_thetaphi)
 
 !	--------------------------------------------
@@ -562,8 +548,8 @@ K_rphi2, K_phiphi2, K_thetatheta2, K_thetar2, K_thetaphi2)
         CALL DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel3,K_perpr3,K_perptheta3,BETA,r,theta,printer,V_sw)
 
 !	Spherical coordinates	
-	CALL SPHERICALCOORDINATES(r,theta,phi3,K_parallel3,K_perpr3,K_perptheta3,K_rr3,&
- K_rphi3, K_phiphi3, K_thetatheta3, K_thetar3, K_thetaphi3)
+	CALL SPHERICALCOORDINATES(r,theta,phi3,K_parallel3,K_perpr3,K_perptheta3,K_rr3, &
+K_rphi3, K_phiphi3, K_thetatheta3, K_thetar3, K_thetaphi3)
 
 
 	dK_phirdphi = (K_rphi3 - K_rphi)/delta_phi
@@ -601,219 +587,12 @@ K_rphi2, K_phiphi2, K_thetatheta2, K_thetar2, K_thetaphi2)
 	END
 
 !	=================================================
-SUBROUTINE HCS(r_,theta_,phi_,alfa,sin_beta,cos_beta,Omega,distance)
-	IMPLICIT NONE
-
-	REAL :: r_, theta_, phi_, theta_HCS, sin_beta, cos_beta, Omega, V_SW
-	REAL :: alfa, distance, beta, dthet_dr, C
-	REAL, PARAMETER :: pi = 3.141592653589793
-	REAL :: r(3), phi(3), L(3)
-	INTEGER :: i, j, ig, is, im
-	INTEGER :: centroid_r, centroid_phi, r_test, phi_test, L_test
-	REAL :: sinpsi, cospsi
-
-	V_SW = 1.0
-
-!	alfa = 5.0/180.0*pi
-
-!	Initial simplex
-	r(1) = r_
-	phi(1) = phi_
-
-	CALL LINE_ELEMENT(r_,phi_,theta_,r(1),phi(1),alfa,Omega,L(1))
-
-	r(2) = r_ + 0.5
-	phi(2) = phi_
-
-	CALL LINE_ELEMENT(r_,phi_,theta_,r(2),phi(2),alfa,Omega,L(2))
-
-	r(3) = r_
-	phi(3) = phi_ + 0.7
-
-	CALL LINE_ELEMENT(r_,phi_,theta_,r(3),phi(3),alfa,Omega,L(3))
-
-!	Loop the Nelder Scheme
-	DO i  = 0, 10, 1
-
-!	Find largest index
-	ig = 1
-
-	DO j = 1, 3
-
-	  IF (L(j).GE.L(ig)) THEN
-
-	    ig = j
-
-	  END IF
-
-	END DO
-
-!	Find smallest index
-	is = 1
-
-	DO j = 1, 3
-
-	  IF (L(j).LE.L(is)) THEN
-
-	    is = j
-
-	  END IF
-
-	END DO
-
-!	Find medium index
-	im = 1
-
-	DO j = 1, 3
-
-	  IF ((L(j).LT.L(ig)).AND.(L(j).GT.L(is))) THEN
-
-	    im = j
-
-	  END IF
-
-	END DO
-
-!WRITE(*,*) ig, im, is
-
-!	Calculate the centroid
-	centroid_r = 0.5*(r(is) + r(im))
-	centroid_phi = 0.5*(phi(is) + phi(im))
-
-!	First test point - REFLECT
-	r_test = 2.0*centroid_r - r(ig)
-	phi_test = 2.0*centroid_phi - phi(ig)
-
-	CALL LINE_ELEMENT(r_,phi_,theta_,REAL(r_test),REAL(phi_test),alfa,Omega,REAL(L_test))
-
-	  IF (L_test.LT.L(ig)) THEN
-!	Keep the new point, but also extend
-
-	    r(ig) = r_test
-	    phi(ig) = phi_test
-	    L(ig) = L_test
-
-!	EXTEND
-
-	    r_test = centroid_r + 2.0*(r(ig) - centroid_r)
-	    phi_test = centroid_phi + 2.0*(phi(ig) - centroid_phi)
-	    CALL LINE_ELEMENT(r_,phi_,theta_,REAL(r_test),REAL(phi_test),alfa,Omega,REAL(L_test))
-
-	      IF (L_test.LT.L(ig)) THEN
-!	Keep the point and move on
-
-		r(ig) = r_test
-		phi(ig) = phi_test
-		L(ig) = L_test	
-
-	      ENDIF
-
-
-	  ELSE !CONTRACT AND XPAND!
-
-!	EXPAND SIMPLEX
-
-	    r_test = centroid_r + 0.5*(r(ig) - centroid_r)
-	    phi_test = centroid_phi + 0.5*(phi(ig) - centroid_phi)
-	    CALL LINE_ELEMENT(r_,phi_,theta_,REAL(r_test),REAL(phi_test),alfa,Omega,REAL(L_test))
-
-	      IF (L_test.LT.L(ig)) THEN
-
-		r(ig) = r_test
-		phi(ig) = phi_test
-		L(ig) = L_test	
-
-	      ELSE
-
-!	CONTRACT SIMPLEX and keep the new point
-
-		r(ig) = r(is) + 0.5*(r(ig) - r(is))
-		phi(ig) = phi(is) + 0.5*(phi(ig) - phi(is))
-		CALL LINE_ELEMENT(r_,phi_,theta_,r(ig),phi(ig),alfa,Omega,L(ig))  
-
-		r(im) = r(is) + 0.5*(r(im) - r(is))
-		phi(im) = phi(is) + 0.5*(phi(im) - phi(is))
-		CALL LINE_ELEMENT(r_,phi_,theta_,r(im),phi(im),alfa,Omega,L(im))  
-
-	      ENDIF
-
-	  END IF
-
-	 END DO !Whole itration loop
-
-!====================== END OF NELDER MEAD
-!	Smallest point
-	is = 1
-
-	DO j = 1, 3
-
-	  IF (L(j).LE.L(is)) THEN
-
-	    is = j
-
-	  END IF
-
-	END DO
-
-!WRITE(*,*) r(is), phi(is),SQRT(L(is))
-
-
-	distance = SQRT(L(is))
-
-	theta_HCS = pi/2.0 + ASIN(SIN(alfa)*SIN(phi(is) + Omega*r(is)/V_SW))
-
-	dthet_dr = cos(phi(is) + r(is)*Omega/V_SW)
-
-	IF (dthet_dr.LT.0.0) THEN
-
-	  C = -1.0
-    
-	ELSE
-
-	  C = 1.0
-
-	END IF
-
-	CALL SPIRAL_ANGLE(r(is),theta_HCS,phi(is),Omega,sinpsi,cospsi)
-
-
-	beta = C*ATAN((Omega*r(is)/V_SW*SQRT(SIN(alfa)*SIN(alfa) - COS(theta_HCS)*COS(theta_HCS))/SIN(theta_HCS))/sinpsi)
-
-	sin_beta = SIN(BETA)
-	cos_beta = COS(BETA)
-
-
-	RETURN
-END
-!	=================================================
-SUBROUTINE LINE_ELEMENT(r_,phi_,theta_,r,phi,alfa,Omega,L)
-	IMPLICIT NONE
-
-	REAL :: r_, theta_, phi_
-	REAL :: alfa, Omega, L, r, theta, phi
-	REAL, PARAMETER :: pi = 3.141592653589793
-	REAL :: dr, dtheta, dphi	
-	REAL :: V_SW!	Find smallest index
-
-	V_SW  = 1.0
-
-	theta = pi/2.0 + ASIN(SIN(alfa)*SIN(phi + Omega*r/V_SW))
-
-	dr = r_ - r
-	dtheta = theta_ - theta
-	dphi = phi_ - phi
-
-	L = dr*dr + r*r*dtheta*dtheta + r*r*SIN(theta)*sin(theta)*dphi*dphi
-
-	RETURN
-END
-!	=================================================
 SUBROUTINE MAGNETICFIELD(r,theta,phi,Br,Bphi,B,B0)
 	IMPLICIT NONE
 
 	REAL, PARAMETER :: pi = 3.141592653589793
 	REAL :: V_sw = 1.0
-	REAL :: R_Sun = 0.0, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
+	REAL :: R_Sun = 0.005, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
 	REAL :: Omega = 0.0, B0
 	REAL :: Br, Bphi,B
 	REAL :: r, theta, phi
@@ -834,7 +613,7 @@ SUBROUTINE SPIRAL_ANGLE(r,theta,phi,Omega,sinpsi,cospsi)
         REAL :: r, theta, phi, V_sw = 1.0
         REAL :: Omega, sinpsi, cospsi, tanpsi
         REAL, PARAMETER :: pi = 3.141592653589793
-        REAL :: R_Sun = 0.0, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
+        REAL :: R_Sun = 0.005, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
 
         Omega = Omega1*PROTIME
         tanpsi = Omega*(r - R_Sun)*sin(theta)/V_sw
@@ -857,13 +636,14 @@ SUBROUTINE DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel,K_perpr,K_perptheta,BETA
        REAL :: density, alfven, kmin, l2D
        REAL :: larmor, delta_slab, delta_2D, q, Rc
 
-       REAL :: phi, Omega, sinpsi, cospsi
-!       REAL :: Qc, bc, a, b, kii
+       REAL :: phi, Omega, sinpsi, cospsi, pin
+       REAL :: Qc, bc, aa, bb, kii, kd, OmegaCi
+
 
        CALL SPIRAL_ANGLE(r,theta,phi,Omega,sinpsi,cospsi)
 
 !      ----- Solar wind mass density
-!       density = 5.0d6/r/r/V_sw*1.67d-27
+       density = 5.0d6/r/r/V_sw*1.67d-27
 
 !      ----- Alfven speed
        alfven = B/0.06*1.0d-9/SQRT(density*1.26d-6)/1000.0/400.0
@@ -882,37 +662,69 @@ SUBROUTINE DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel,K_perpr,K_perptheta,BETA
 
 !      ----- Kolmagorov index
        q = 5.0/3.0
+!      ----- Dissipation range index
+       pin = 2.6
 
        Rc = kmin*larmor
 
 !      ---- 2D correlation length
        l2D = 3.1d-3*SQRT(r)
 
+!      ----- proton gyrofrequency
+       OmegaCi = 1.6d-19*B/0.06*1.0d-9/1.672d-27
+
+!      ----- ion inertial scale
+       kii = 2.0*pi*OmegaCi*sinpsi/alfven
+
+!      ----- kd - break inertial dissipation range
+       aa = 0.152
+       bb = 0.451
+       kd = 2.0*pi/V_sw*(aa + bb/2.0/pi*kii*V_sw)*374000.0
+
+       Qc = kd*larmor
+       bc = BETA*750.0/2.0/alfven
+
 !     -----------------------------------------------
 !     lambda parallel
-
+!     protons
       lambda_parallel = 3.0*q/pi*Rc*Rc/kmin*B*B/delta_slab*(0.25 + 2.0/(2.0-q)/(4.0-q)/Rc**(q))
 
+!     electrons
+      lambda_parallel = 3.0*q/SQRT(pi)/(q-1.0)*Rc*Rc/bc/kmin*B*B/delta_slab*( &
+bc/4.0/SQRT(pi)+&
+2.0/SQRT(pi)/(2.0-q)/(4.0-q)*bc/Rc**(q)+&
+(1.0/0.886+1.0/SQRT(pi)/1.5)*bc**(pin-1.0)/Rc**(q)/Qc**(pin-q))
 
 
-      lambda_parallel = 0.05*Bearth/B*P
 
 
-      K_parallel = lambda_parallel*BETA*750.0/3.0
+lambda_parallel = 0.05*Bearth/B*P
+
+IF (P.LT.1.0) THEN
+
+lambda_parallel = 0.05*Bearth/B
+
+END IF
+
+K_parallel = lambda_parallel*BETA*750.0/3.0
 
 
+K_parallel = 25.0*P*(1.0 + r)
 
-      K_parallel = 0.083333*BETA*SQRT(P)*Bearth/B*100.0
+IF (P.LT.1.0) THEN
 
+K_parallel = 25.0*1.0*(1.0 + r)
+
+END IF
 
 !    -----------------------------------------------
 !    lambda perp
 
-!     lambda_perp = (1.0/SQRT(3.0)/2.0/SQRT(pi)*l2D*1.128/2.565*delta_2D/B/B)**(!2.0/3.0)*lambda_parallel**(1.0/3.0)*r**(0.65)
+!     lambda_perp = (1.0/SQRT(3.0)/2.0/SQRT(pi)*l2D*1.128/2.565*delta_2D/B/B)**(2.0/3.0)*lambda_parallel**(1.0/3.0)*r**(0.65)
 
 
-	K_perpr = 0.05*K_parallel
-!lambda_perp*BETA*750.0/3.0
+    K_perpr = 0.02*K_parallel
+! lambda_perp*BETA*750.0/3.0
 	K_perptheta = K_perpr
 
 !	----------------------------------------------
@@ -923,7 +735,7 @@ SUBROUTINE DIFFUSION_COEFFICIENTS(Bearth,B,P,K_parallel,K_perpr,K_perptheta,BETA
 		WRITE(700,"(5(ES18.8))") r, P, theta, lambda_parallel, lambda_perp
 		WRITE(600,"(4(ES18.8))") r, theta, density, density/1.0d6/1.67d-27
 		WRITE(500,"(4(ES18.8))") r, theta, alfven*400.0, B/0.06
-		WRITE(400,"(7(ES18.8))") r, theta, kmin, larmor, delta_slab, delta_2D, l2D
+		WRITE(400,"(10(ES18.8))") r, theta, kmin, larmor, delta_slab, delta_2D, l2D, kd, kii, OmegaCi
 
 		printer = printer + 1
 
@@ -944,7 +756,7 @@ K_rphi, K_phiphi, K_thetatheta, K_thetar, K_thetaphi)
 		REAL :: K_rr, K_rphi, K_phiphi, K_thetatheta, K_thetar, K_thetaphi
 
 	REAL :: tanpsi, cospsi, sinpsi
-	REAL :: R_Sun = 0.0, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
+	REAL :: R_Sun = 0.005, Omega1 = 2.0*pi/25.4/3600.0/24.0, PROTIME = 1.496d8/400.0
 	REAL :: Omega = 0.0
 
 	Omega = Omega1*PROTIME
@@ -1030,36 +842,63 @@ end
 		IMPLICIT NONE
 
 	REAL :: E_end,P,j_N
-	REAL :: j_LIS, BETA
+	REAL :: j_LIS
 	REAL :: theta, E_0, a, b, c, d
 
 
 		P = SQRT(E_end*(E_end + 2.0*E_0))
 
 !	Protons
-
-		IF (E_end.LT.1.0) THEN
+!		IF (E_end.LT.1.0) THEN
  
-			j_LIS = exp(4.64 - 0.08*log(E_end)*log(E_end) &
-				-2.91*SQRT(E_end))/P/P
+!			j_LIS = exp(4.64 - 0.08*log(E_end)*log(E_end) &
+!				-2.91*SQRT(E_end))/P/P
 
-		ELSE
+!		ELSE
 	
-			j_LIS = exp(3.22 - 2.86*log(E_end) - 1.5/E_end)/P/P
+!			j_LIS = exp(3.22 - 2.86*log(E_end) - 1.5/E_end)/P/P
+
+!		END IF
+
+!		j_N = j_LIS
+
+!        Electron
+		IF (P.LT.0.0026) THEN
+
+				a=126.067948848145
+				b=0.2567973348983205
+				c=1.95129069032843
+				d=0.0171199701826333
+				
+				j_LIS = (a + c*log(P))/(1.0 + b*log(P) + d*log(P)**2)*1.7/P/P
+ 
+!			j_LIS = (214.32+3.32*log(P))/(1.0+0.26*log(P)+0.02*log(P)*log(P))/P/P
 
 		END IF
 
+		IF ((P.GE.0.0026).AND.(P.LT.0.1)) THEN
+ 
+			j_LIS = 1.7*((52.55+23.01*P)/(1.0+148.62*P))**(2)/P/P
+
+		END IF
+
+		IF ((P.GE.0.1).AND.(P.LE.10.0)) THEN
+ 
+			j_LIS = (1555.89+17.36*P-3.4d-3*P*P+5.13d-7*P*P*P)/(1.0-11.22*P+7532.93*P*P+2405.01*P*P*P+103.87*P*P*P*P)/P/P
+
+		END IF
+
+		IF (P.GT.10.0) THEN
+ 
+			j_LIS = 1.7*exp(-0.89-3.22*log(P))/P/P
+
+		END IF
+
+
+
 		j_N = j_LIS
 
 
-	    
-	      BETA = P/SQRT(P*P + E_0*E_0)
-
-	      j_N = 10.0/P/P*BETA*P**(-2.6)
-
-		j_LIS=(E_0*E_0 + P*P)**(-1.8)/P*10.0
-
-		j_N = j_LIS
 
 	RETURN
 	END
@@ -1139,7 +978,7 @@ END DO
       parameter(M     =  397)
       parameter(MATA  = -1727483681)
 !                                    constant vector a
-      parameter(UMASK = -2147483647)
+      parameter(UMASK = -2147483648)
 !                                    most significant w-r bits
       parameter(LMASK =  2147483647)
 !                                    least significant r bits
