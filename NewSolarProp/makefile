@@ -1,15 +1,15 @@
 CC=clang++ -std=c++11 -O2
 CFLAGS=-c
 LFLAGS=
-OBJS=$(BUILDDIR)/NewSolarProp.o
+OBJS=$(BUILDDIR)/StraussUnits.o
 BINDIR=bin
 BUILDDIR=build
 SRCDIR=src
 
-$(BINDIR)/NewSolarProp: $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o $(BINDIR)/NewSolarProp
+$(BINDIR)/StraussUnits: $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o $(BINDIR)/StraussUnits
 
-$(BUILDDIR)/NewSolarProp.o: $(SRCDIR)/NewSolarProp.cpp
+$(BUILDDIR)/StraussUnits.o: $(SRCDIR)/StraussUnits.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:

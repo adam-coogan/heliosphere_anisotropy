@@ -1,4 +1,5 @@
 #include <cmath>
+#include <limits>
 #include <random>
 #include <string>
 #include <iostream>
@@ -12,57 +13,54 @@
 #define DEBUG false
 #define DEBUG_RANDOMS false
 
+#define PI 3.141592653589793
+
 //// Constants
 
 // Initial coordinates
 const double r0 = 1.0; // AU
-const double th0 = M_PI / 2; // rad
-const double ph0 = 0; // rad
+const double th0 = PI / 2.0; // rad
+const double ph0 =  0.0; // rad
 // Jupiter initial phi position
-const double ph0Jup = M_PI;
+const double ph0Jup = PI;
 // Used for numerically differentiating K
 const double deltar = 0.01; // AU
-// Used for numerically differentiating K
-//const double deltath = M_PI / 180; // rad
-// Timestep
-const double ds = 4.3287*86400*0.001; // s.  345.6 is 0.004 days, though...
 // Parallel mean free path constant
 const double lambda0 = 0.15; // AU
 // Reference distance in mean free path
 const double rRefLambda = 1.0; // AU
-// Reference distance in magnetic field
-const double rRefB = 1.0; // AU
 // k_perp / k_parallel
 const double kperp_kpar = 0.01;
 // Reference rigidity
 const double P0 = 1.0; // GV
 // Polarity of HMF
 const double Ac = -1;
-// Angular velocity of sun
-const double Omega = 2 * M_PI / (25.4 * 24 * 3600); // rad / s
-// Speed of light
-const double speedOfLight = 0.002;// Strauss' value for c.  Shouldn't matter... 0.002004; // AU / s
 // Distance from sun to heliopause
 const double rHP = 140; // AU
 // Sun's radius
 const double rSun = 0.005; // AU
 // Inner boundary used in Strauss' code
 const double rInner = rSun; // AU
-// Solar wind velocity
-const double Vsw = 400 * 6.685e-9; // AU / s
-// Reference field strength.  TODO: CHECK THIS!!!
-//const double B0 = 3.535 * pow(10, -9) * 4.485 * pow(10, 10); // GV / AU
-const double B0 = 5.0e-9 / sqrt(1 + pow(rRefB - rSun, 2)) // sqrt(1 + pow(Omega * (rRefB0 - rSun) / Vsw, 2))
-    * 4.485e10; // GV / AU.  Strauss' version.  Gives Be = 5 nT.
 // Particle mass
 const double m = 0.000511;
 // Sign of particle's charge
 const int qSign = -1;
 
+// Program time
+const double protime = 1.496e8 / 400;
+// Timestep
+const double ds = 0.001;
+// Angular velocity of sun
+const double Omega1 = 2 * PI / (25.4 * 24 * 3600);
+// Solar wind velocity
+const double Vsw = 1;
+// Reference field strength
+const double B0 =  5 * 0.06;
+
 ////// Jupiter parameters
-const double omegaJup = 2 * M_PI / (4333.0 * 3600.0 * 24.0); // rad / s
+const double omegaJup = 2 * PI / (4333.0 * 3600.0 * 24.0) * protime;
 const double rJup = 5.2; // AU
-const double thJup = M_PI / 2.0;
+const double thJup = PI / 2.0;
 const double dphJup = 0.009 * 2.0;
 const double dthJup = 0.009 * 2.0;
 const double rBeginJup = rJup - 0.0477 * 2.0;
@@ -82,32 +80,6 @@ int heaviside(double x) {
 }
 */
 
-class BField {
-    public:
-        // Components
-        double br, bph;
-
-        BField() : br(0), bph(0) { };
-
-        BField(double r, double th) {
-            updateB(r, th);
-        };
-
-        double magnitude() const {
-            double mag = sqrt(br*br + bph*bph);
-            return mag;
-        };
-
-        BField& updateB(double rc, double thc) {
-            double bFact = Ac * B0 * rRefB*rRefB / (rc*rc);
-
-            br = bFact;
-            bph = -bFact * (rc - rSun) * Omega / Vsw * sin(thc);
-
-            return *this;
-        };
-};
-
 class KTensor {
     public:
         double rr, phph, rph, thth;
@@ -116,29 +88,20 @@ class KTensor {
 
         KTensor() : rr(0), phph(0), rph(0), thth(0) { };
 
-        KTensor(double r, double th, double v, double P) {
-            updateK(r, th, v, P);
+        KTensor(double r, double th, double P) {
+            updateK(r, th, P);
         }
 
-        KTensor& updateK(double rc, double thc, double vc, double Pc) {
+        KTensor& updateK(double rc, double thc, double Pc) {
             // Compute elements at shifted points and store elements
-            updateKElements(rc + deltar, thc, vc, Pc);
+            updateKElements(rc + deltar, thc, Pc);
 
             // Record relevant elements
             double krr_r = rr;
             double krph_r = rph;
 
-            // Make sure theta is in [0, pi].  No need to worry about phi here.
-            /*
-            if (thc + deltath > M_PI) {
-                updateKElements(rc, thc - deltath, vc, Pc);
-            } else {
-                updateKElements(rc, thc + deltath, vc, Pc);
-            }
-            */
-
             // Compute elements at actual point
-            updateKElements(rc, thc, vc, Pc);
+            updateKElements(rc, thc, Pc);
 
             // Compute r derivatives
             dKrr_dr = (krr_r - rr) / deltar;
@@ -146,29 +109,31 @@ class KTensor {
 
             // Compute th derivatives
             dKthth_dth = 0;
-            
-#if DEBUG
-            std::cout << "r, ph, P = " << rc << ", " << thc << ", " << Pc
-                << "\nK_par = " << (vc / 3) * lambda0 * (1 + rc / rRefLambda) * (Pc >= P0? Pc / P0 : 1)
-                << std::endl;
-#endif
-            /*
-                << "\nK_rr2 = " << krr_r
-                << "\nK_rr = " << rr << std::endl;
-                //<< "dK_rrdr = " << dKrr_dr << "\n"
-                //<< "dK_rphi_dr = " << dKrph_dr << std::endl;
-            */
 
+#if DEBUG
+            std::cout << "Krr = " << rr
+                << "\n\tKrr2 = " << krr_r
+                << "\nKphph = " << phph
+                << "\nKrph = " << rph
+                << "\n\tKrph2 = " << krph_r
+                << "\nKthth = " << thth
+                << "\ndKrr_dr = " << dKrr_dr
+                << "\n\tdelta_r = " << deltar
+                << "\ndKrph_dr = " << dKrph_dr << std::endl;
+#endif
+            
             return *this;
         };
 
     private:
-        KTensor& updateKElements(double rc, double thc, double vc, double Pc) {
-            double kpar = (vc / 3) * lambda0 * (1 + rc / rRefLambda) * (Pc >= P0? Pc / P0 : 1);
+        KTensor& updateKElements(double rc, double thc, double Pc) {
+            double beta = Pc / sqrt(Pc*Pc + m*m);
+            double kpar = (beta * 750 / 3) * lambda0 * (1 + rc / rRefLambda) * (Pc >= P0? Pc / P0 : 1);
 
             double kperp = kperp_kpar * kpar;
 
             // Convert to spherical coordinates
+            double Omega = Omega1 * protime;
             double tanPsi = Omega * (rc - rSun) * sin(thc) / Vsw;
             double cosPsi = 1 / sqrt(1 + tanPsi*tanPsi);
             double sinPsi = sqrt(1 - cosPsi*cosPsi);
@@ -198,11 +163,9 @@ double phJup;
 double ek; // GeV
 // Rigidity
 double P; // GV
-// Velocity
-double v; // AU / s
 
 // Magnetic field
-BField B;
+double Bmag;
 // Diffusion tensor in spherical coordinates
 KTensor K;
 // Partial derivatives of K.  TODO: delete!!!
@@ -211,16 +174,7 @@ KTensor K;
 double vdr, vdth, vdph;
 
 // Gaussian random number generator with mean 0 and standard deviation 1
-/* std::default_random_engine generator;
-std::normal_distribution<double> distribution(0.0, 1.0); */
-typedef boost::mt19937 MT19937;
-typedef boost::normal_distribution<double> NDistribution;
-MT19937 engine(static_cast<unsigned int>(std::time(0)));
-NDistribution distribution(0, 1);
-boost::variate_generator<MT19937, NDistribution> generator(engine, distribution);
-
-/*
-double seed1 = 1.0;
+double seed1 = 975635;
 double rand1, rand2;
 const double a = pow(7.0, 5);
 const double M = pow(2.0, 101) - 1;
@@ -235,35 +189,33 @@ void straussRand() {
     double sDev1 = randHelper1 / M;
     double sDev2 = randHelper2 / M;
 
-    rand1 = sqrt(-2.0 * log(sDev1)) * cos(2.0 * M_PI * sDev2);
-    rand2 = sqrt(-2.0 * log(sDev1)) * sin(2.0 * M_PI * sDev2);
+    rand1 = sqrt(-2.0 * log(sDev1)) * cos(2.0 * PI * sDev2);
+    rand2 = sqrt(-2.0 * log(sDev1)) * sin(2.0 * PI * sDev2);
 
 #if DEBUG_RANDOMS
     std::cout << "seed1 = " << seed1 << std::endl;
     std::cout << "r1, r2 = " << rand1 << ", " << rand2 << std::endl;
 #endif
 }
-*/
 
 ////////////////////////////////////////
-
-double getV(double e) {
-    return speedOfLight * sqrt(e * (e + 2 * m)) / (e + m);
-}
 
 double getP(double e) {
     return sqrt(e * (e + 2 * m));
 }
 
 void updateVd() {
+    double Omega = Omega1 * protime;
+
     double gamma = r * Omega * sin(th) / Vsw;
-    double vdCoeff = 2 * P * v * r / (3 * qSign * B0 * rRefB*rRefB * Ac * pow(1 + gamma * gamma, 2));
+    double beta = P / sqrt(P*P + m*m);
+    double vdCoeff = 2.0/(3.0 * Ac * qSign * B0) * P * beta * r / pow(1 + gamma*gamma, 2);
     double vdSign = 1;
 
     // Heaviside function comes in here
-    if (th > M_PI / 2) {
+    if (th > PI / 2) {
         vdSign = -1;
-    } else if (th == M_PI / 2) {
+    } else if (th == PI / 2) {
         vdSign = 0;
     }
 
@@ -272,20 +224,11 @@ void updateVd() {
     vdph = vdSign * vdCoeff * gamma*gamma / tan(th);
 
     double d = fabs(r * cos(th));
-    double rL = P / B.magnitude();
+    Bmag = B0 / (sqrt(1 + pow(1 - rSun, 2)) * r*r * 1/sqrt(1 + pow(Omega*(r-rSun)*sin(th)/Vsw, 2)));
+    double rL = P/750 * 1 / Bmag;
 
     if (d <= 2 * rL) {
-        /*
-        double tanPsi = Omega * (r - rSun) * std::sin(th) / Vsw;
-        double cosPsi = 1 / std::sqrt(1 + std::pow(tanPsi, 2));
-        double sinPsi = std::sqrt(1 - std::pow(cosPsi, 2));
-
-        double vdhcs = Ac * qSign * (0.457 - 0.412 * d / rL + 0.0915 * pow(d / rL, 2)) * v;
-        vdr += vdhcs * sinPsi;
-        vdph += vdhcs * cosPsi;
-        */
-        // TODO: DEBUG!!!
-        vdr += Ac * qSign * (0.457 - 0.412 * d / rL + 0.0915 * pow(d / rL, 2)) * v;
+        vdr += Ac * qSign * (0.457 - 0.412 * d / rL + 0.0915 * pow(d / rL, 2)) * beta * 750;
     }
 
     // Drift reduction factor
@@ -294,19 +237,18 @@ void updateVd() {
     vdr *= fs;
     vdth *= fs;
     vdph *= fs;
+
+#if DEBUG
+    std::cout << "vdCoeff = " << vdCoeff
+        << "\nvdr = " << vdr
+        << "\nvdth = " << vdth
+        << "\nvdph = " << vdph << std::endl;
+#endif
 }
 
 void updateVars() {
-#if DEBUG
-    std::cout << "s = " << s << std::endl;
-#endif
-
-    v = getV(ek);
     P = getP(ek);
-
-    B.updateB(r, th);
-    K.updateK(r, th, v, P);
-
+    K.updateK(r, th, P);
     updateVd();
 }
 
@@ -318,8 +260,6 @@ void initialize(double ek0) {
     ek = ek0;
     // Reset Jupiter
     phJup = ph0Jup;
-
-    updateVars();
 }
 
 Status step() {
@@ -328,11 +268,6 @@ Status step() {
     double dr_ds = 2 / r * K.rr + K.dKrr_dr - (Vsw + vdr);
     double dr_dWr = sqrt(2 * K.rr - 2 * K.rph*K.rph / K.phph);
     double dr_dWph = K.rph * sqrt(2 / K.phph);
-#if DEBUG
-    std::cout << "dr_ds = " << dr_ds << std::endl;
-    std::cout << "dr_dWr = " << dr_dWr << std::endl;
-    std::cout << "dr_dWph = " << dr_dWph << std::endl;
-#endif
 
     double dth_ds = 1 / (r*r) * K.dKthth_dth + 1 / (r*r * tan(th)) * K.thth - vdth / r;
     double dth_dWth = sqrt(2 * K.thth) / r;
@@ -344,16 +279,27 @@ Status step() {
     double dek_ds = 2 * Vsw / (3 * r) * Gamma * ek;
 
     // Generate the Wiener terms
+    /*
     double dWr = generator() * sqrt(ds);
     double dWth = generator() * sqrt(ds);
     double dWph = generator() * sqrt(ds);
-    /*
+    */
     straussRand();
     double dWr = sqrt(ds) * rand1;
     double dWph = sqrt(ds) * rand2;
     straussRand();
     double dWth = sqrt(ds) * rand2;
-    */
+
+#if DEBUG
+    std::cout << "dr_ds = " << dr_ds << std::endl;
+    std::cout << "dr_dWr = " << dr_dWr << std::endl;
+    std::cout << "dr_dWph = " << dr_dWph << std::endl;
+    std::cout << "dth_ds = " << dth_ds << std::endl;
+    std::cout << "dth_dWth = " << dth_dWth << std::endl;
+    std::cout << "dph_ds = " << dph_ds << std::endl;
+    std::cout << "dph_dWph = " << dph_dWph << std::endl;
+    std::cout << "dE_ds = " << dek_ds << std::endl;
+#endif
 
     // Move the particle
     r += dr_ds * ds + dr_dWr * dWr + dr_dWph * dWph;
@@ -366,22 +312,22 @@ Status step() {
     s += ds;
 
     // Renormalize coordinates
-    while (th > M_PI) {
-        th = 2 * M_PI - th;
-        ph = ph - M_PI;
+    while (th > PI) {
+        th = 2 * PI - th;
+        ph = ph - PI;
     }
 
     while (th < 0) {
         th = -th;
-        ph += M_PI;
+        ph += PI;
     }
 
-    while (ph > 2 * M_PI) {
-        ph -= 2 * M_PI;
+    while (ph > 2 * PI) {
+        ph -= 2 * PI;
     }
 
     while (ph < 0) {
-        ph += 2 * M_PI;
+        ph += 2 * PI;
     }
 
 
@@ -401,7 +347,12 @@ Status step() {
 // Returns a CSV string containing the particle's current coordinates, kinetic energy and elapsed time
 std::string stateToString() {
     return std::to_string(r) + "," + std::to_string(th) + "," + std::to_string(ph) + "," + std::to_string(ek)
-        + "," + std::to_string(s);
+        + "," + std::to_string(s * 4.3287 * 86400);
+}
+
+void printState() {
+    std::cout << "s = " << s * 4.3287 * 86400 << "\nr, th, ph, E = " << r << "," << th << ","
+        << ph << "," << ek << std::endl;
 }
 
 ////////////////////
@@ -410,10 +361,7 @@ std::string stateToString() {
 // argv[2]: number of runs ending at the heliopause to simulate
 // argv[3]: output file name.  The file will be a csv located in the rundata directory.
 int main(int argc, char *argv[]) {
-    // Indicates that only the final point needs to be stored
-    //bool endOnly = true;
-    
-    std::cout.precision(30);
+    std::cout.precision(std::numeric_limits<double>::max_digits10);
 
     // Make sure both command line arguments were provided
     if (argc == 4) {
@@ -453,6 +401,9 @@ int main(int argc, char *argv[]) {
 
             while (true) {
                 // Step the simulation
+#if DEBUG
+                printState();
+#endif
                 stepStatus = step();
 #if DEBUG
                 std::cout << std::endl;

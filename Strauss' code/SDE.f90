@@ -1,14 +1,14 @@
  	PROGRAM SDE
-		IMPLICIT NONE
+    IMPLICIT NONE
 
 !	-----------------------------------------------------------
 !	Initiate variables
 !	SEED_0 - SEED for random number generator
 !	N = number of iterations
 
-	DOUBLE PRECISION :: SEED_1 = 1.0
+	DOUBLE PRECISION :: SEED_1 = 975635
 	DOUBLE PRECISION :: RNumber1 = 0.0, RNumber2 = 0.0
-	REAL, PARAMETER :: N = 5000
+	REAL, PARAMETER :: N = 40000
 
 	DOUBLE PRECISION :: RANDOMNUMBERS
 
@@ -23,7 +23,7 @@
 	REAL, PARAMETER :: r_boundary = 140.0, E_0 = 0.000511
 	REAL :: E_end, P
 	REAL, PARAMETER :: PI = 3.141592653589793
-	REAL :: phi_begin = pi, phi, theta_begin = PI/2.0, theta, theta_end
+	REAL :: phi_begin = 0, phi, theta_begin = PI/2.0, theta, theta_end
 
 	REAl :: AA, BB, CC, DD, GG, HH, MM, NN
 	
@@ -63,6 +63,9 @@
 	OPEN(999,file='SEEDS.txt',status='unknown')
 !	-----------------------------------------------------------
 
+! Seed the random number generator
+CALL RANDOM_SEED()
+
 !	Energies(1) = 0.001
 !   Energies(2) = 0.002
 !   Energies(3) = 0.005
@@ -96,147 +99,141 @@ RANDOMNUMBERS = 0.0
 
 !	END DO
 	
-	phi_begin = PI
+!E_begin = 0.1
+!r_begin = 1.0
+!theta_begin = PI / 2.0
+!phi_begin = 0.0
 
-DO k = 1, Nk, 1
-    DO i = 1, Nr, 1
-        E_begin = Energies(k)
-        r_begin = radial_grid(i)
+r_begin = 1.0d0
+theta_begin = PI / 2.0d0
+phi_begin = 0.0d0
+E_begin = 0.10d0
 
-        WRITE(*,*) 'Energy: ', E_begin 
-        WRITE(*,*) 'Radial distance: ', r_begin
+WRITE(*,*) 'Energy: ', E_begin 
 
-        printer = 0
-        endwhile = 0
+printer = 0
+endwhile = 0
 
-        Counter = 0.0
-        Counter_jupiter = 0.0
-        j_N = 0.0
-        j_BEGIN = 0.0
-        j_JUP2 = 0.0
-        j_JUP = 0.0
+Counter = 0.0
+Counter_jupiter = 0.0
+j_N = 0.0
+j_BEGIN = 0.0
+j_JUP2 = 0.0
+j_JUP = 0.0
 
-        DO WHILE (endwhile.EQ.0)
-            !	Write(*,*)  Counter_jupiter, ' ::', Counter, ' ::',N, k, '  ::', Nk
-            r = r_begin
-            E = E_begin
-            phi = phi_begin
-            theta = theta_begin
-            
-            jovian_source = 0
-            phi_jupiter = PI
-            
-            timespend = 0.0
-            
-            DO WHILE ((r.LT.r_boundary).AND.(r.GT.r_inner).AND.(jovian_source.EQ.0)) ! Particle trajectory
-                ! ???
-                IF ((i.EQ.872).AND.(k.eq.1)) THEN
-                    WRITE(200,"(4(ES18.8))") r, E, phi,theta
+DO WHILE (endwhile.EQ.0)
+    !	Write(*,*)  Counter_jupiter, ' ::', Counter, ' ::',N, k, '  ::', Nk
+    r = r_begin
+    E = E_begin
+    phi = phi_begin
+    theta = theta_begin
+    
+    jovian_source = 0
+    phi_jupiter = PI
+    
+    timespend = 0.0
+
+    DO WHILE ((r.LT.r_boundary).AND.(r.GT.r_inner).AND.(jovian_source.EQ.0)) ! Particle trajectory
+        CALL RandomNumber(RNumber1,RNumber2,SEED_1,RANDOMNUMBERS)
+
+        ! TODO: DEBUG!!!
+!        WRITE(*,*) "s = ", timespend*delta_T*4.3287*86400
+
+        CALL Coefficients(r,phi,E,E_0,gamma,P,AA, BB, CC, DD, GG, HH, delta_T, MM, NN, theta, printer)
+
+        r = r + AA*delta_T + BB*RNumber1 + HH*RNumber2
+        
+        phi = phi + CC*delta_T + DD*RNumber2
+        
+        CALL RandomNumber(RNumber1,RNumber2,SEED_1,RANDOMNUMBERS)
+        
+        theta = theta + MM*delta_T + NN*RNumber2
+        
+        E = E + GG*delta_T
+
+        ! TODO DEBUG!!!
+!        WRITE(*,*) "dr_ds = ", AA
+!        WRITE(*,*) "dr_dWr = ", BB / sqrt(delta_T)
+!        WRITE(*,*) "dr_dWph = ", HH / sqrt(delta_T)
+!        WRITE(*,*) "dth_ds = ", MM
+!        WRITE(*,*) "dth_dWth = ", NN / sqrt(delta_T)
+!        WRITE(*,*) "dph_ds = ", CC
+!        WRITE(*,*) "dph_dWph = ", DD / sqrt(delta_T)
+!        WRITE(*,*) "dE_ds = ", GG
+!        WRITE(*,*) ""
+
+        phi_jupiter = phi_jupiter - Omega_jupiter*delta_T
+        
+        DO WHILE (theta.GT.PI)
+            theta = 2.0*PI - theta
+            phi = phi - PI
+        END DO
+        
+        DO WHILE (theta.LT.0.0)
+            theta = -theta
+            phi = phi + PI
+        END DO
+        
+        DO WHILE (phi.GT.2.0*PI)
+            phi = phi - 2.0*PI
+        END DO
+        
+        DO WHILE (phi.LT.0.0)
+            phi = phi + 2.0*PI
+        END DO
+        
+        !	Check Jupiter position
+        IF ((r.GT.rbegin_jupiter).AND.(r.LT.rend_jupiter)) THEN
+            IF ((phi.GT.(phi_jupiter - delta_phi_jupiter)).AND.(phi.LT.(phi_jupiter + delta_phi_jupiter))) THEN
+            IF ((theta.GT.(theta_jupiter - delta_theta_jupiter)).AND.(theta.LT.(theta_jupiter + delta_theta_jupiter))) THEN
+                    Counter_jupiter = Counter_jupiter + 1.0
+                    jovian_source = 1
+                    E_end = E
+                    
+                    CALL JOVIAN_LIS(E_end, E_0, j_JUP)
+                    
+                    j_JUP2 = j_JUP2 + j_JUP
+                    
+                    !WRITE(*,*) Counter, Counter_jupiter, N
+                    !WRITE(*,*) k, ':', Nk 
+                    
+!                            WRITE(900,"(2(ES18.8))") abs(phi_jupiter - PI)*180.0/PI, timespend*delta_T*4.3287
+!                            WRITE(999,"(1(ES18.8))") RANDOMNUMBERS
                 END IF
-
-                IF ((i.EQ.897).AND.(k.EQ.1)) THEN
-                    WRITE(300,"(4(ES18.8))") r, E, phi, theta
-                END IF
-                
-                IF ((i.EQ.922).AND.(k.EQ.1)) THEN
-                    WRITE(400,"(4(ES18.8))") r, E, phi, theta
-                END IF
-                
-                CALL RandomNumber(RNumber1,RNumber2,SEED_1,RANDOMNUMBERS)
-
-!                IF (r.GT.120) THEN
-!                    WRITE(*,*) "s = ", timespend*delta_T*4.3287*86400
-!                END IF
-                CALL Coefficients(r,phi,E,E_0,gamma,P,AA, BB, CC, DD, GG, HH, delta_T, MM, NN, theta, printer)
-                
-                r = r + AA*delta_T + BB*RNumber1 + HH*RNumber2
-                
-                phi = phi + CC*delta_T + DD*RNumber2
-                
-                CALL RandomNumber(RNumber1,RNumber2,SEED_1,RANDOMNUMBERS)
-                
-                theta = theta + MM*delta_T + NN*RNumber2
-                
-                E = E + GG*delta_T
-
-                phi_jupiter = phi_jupiter - Omega_jupiter*delta_T
-                
-                DO WHILE (theta.GT.PI)
-                    theta = 2.0*PI - theta
-                    phi = phi - PI
-                END DO
-            
-                DO WHILE (theta.LT.0.0)
-                    theta = -theta
-                    phi = phi + PI
-                END DO
-            
-                DO WHILE (phi.GT.2.0*PI)
-                    phi = phi - 2.0*PI
-                END DO
-                
-                DO WHILE (phi.LT.0.0)
-                    phi = phi + 2.0*PI
-                END DO
-                
-                !	Check Jupiter position
-                IF ((r.GT.rbegin_jupiter).AND.(r.LT.rend_jupiter)) THEN
-                    IF ((phi.GT.(phi_jupiter - delta_phi_jupiter)).AND.(phi.LT.(phi_jupiter + delta_phi_jupiter))) THEN
-                    IF ((theta.GT.(theta_jupiter - delta_theta_jupiter)).AND.(theta.LT.(theta_jupiter + delta_theta_jupiter))) THEN
-                            Counter_jupiter = Counter_jupiter + 1.0
-                            jovian_source = 1
-                            E_end = E
-                            
-                            CALL JOVIAN_LIS(E_end, E_0, j_JUP)
-                            
-                            j_JUP2 = j_JUP2 + j_JUP
-                            
-                            !WRITE(*,*) Counter, Counter_jupiter, N
-                            !WRITE(*,*) k, ':', Nk 
-                            
-                            WRITE(900,"(2(ES18.8))") abs(phi_jupiter - PI)*180.0/PI, timespend*delta_T*4.3287
-                            WRITE(999,"(1(ES18.8))") RANDOMNUMBERS
-                        END IF
-                    END IF
-                END IF
-                
-                timespend = timespend + 1.0
-            END DO !End while loop  - particle trajectory
-            
-            !	Check for LIS boundary
-            IF ((r.GT.r_begin).AND.(jovian_source.EQ.0)) THEN
-                E_end = E
-                Counter = Counter + 1.0
-                theta_end = theta
-                
-                P = SQRT(E_end*(E_end + 2.0*E_0))
-                
-                CALL LIS(E_end,P,j_N,E_0)
-                
-                j_BEGIN = j_BEGIN + j_N
-                
-                !!!!! Changed to my output format!
-                !WRITE(800,"(7(ES18.8))") counter, r, E, theta, phi, E_end, timespend*delta_T*4.3287
-                WRITE(800,"(5(ES18.8))") r, theta, phi, E_end, timespend*delta_T*4.3287*86400
             END IF
-            
-            IF ((Counter.GT.N)) THEN
-                endwhile = 1
-            END IF
+        END IF
+        
+        timespend = timespend + 1.0
+    END DO !End while loop  - particle trajectory
+    
+    !	Check for LIS boundary
+    IF ((r.GT.r_begin).AND.(jovian_source.EQ.0)) THEN
+        Counter = Counter + 1.0
+        
+        !!!!! Changed to my output format!
+        !WRITE(800,"(7(ES18.8))") counter, r, E, theta, phi, E_end, timespend*delta_T*4.3287
+        WRITE(800,"(5(ES18.8))") r, theta, phi, E, timespend*delta_T*4.3287*86400
+    END IF
 
-        END DO !End while loop - number of particles
+    IF (MOD(Counter, 100.0).EQ.0.0) THEN
+        WRITE(*,*) "Percent complete = ", Counter/N * 100.0
+    END IF
+    
+    IF ((Counter.GT.N)) THEN
+        endwhile = 1
+    END IF
 
-        P = SQRT(E_begin*(E_begin + 2.0*E_0))
+END DO !End while loop - number of particles
 
-        j_BEGIN = j_BEGIN/Counter*P*P
-        j_JUP2 = j_JUP2/Counter_jupiter*P*P
+!        P = SQRT(E_begin*(E_begin + 2.0*E_0))
+!
+!        j_BEGIN = j_BEGIN/Counter*P*P
+!        j_JUP2 = j_JUP2/Counter_jupiter*P*P
+!
+!
+!        CALL LIS(E_begin,P,j_N,E_0)
 
-
-        CALL LIS(E_begin,P,j_N,E_0)
-
-        WRITE(500,"(8(ES18.8))") r_begin, E_begin,j_BEGIN,counter, j_N*P*P, theta_begin, j_JUP2, Counter_jupiter
-    END DO ! End radial iteration do
-END DO ! End energy iteration do
+!WRITE(500,"(8(ES18.8))") r_begin, E_begin,j_BEGIN,counter, j_N*P*P, theta_begin, j_JUP2, Counter_jupiter
 
 
 	Close(100)
@@ -270,23 +267,24 @@ END DO ! End energy iteration do
 	DOUBLE PRECISION :: RANDOMNUMBERS
 
 	Random1 = MOD(a*SEED_1 + c,M)
-
 	Random2 = MOD(a*Random1 + c,M)
-
 	SEED_1 = Random2
-
-!	WRITE(*,*) SEED_1
-
-	!WRITE(999,"(1(ES18.8))") SEED_1
-
 	SDeviate1 = Random1/M
 	SDeviate2 = Random2/M
+	RNumber1 = SQRT(-2.0*ALOG(SDeviate1))*COS(2.0*PI*(SDeviate2))
+	RNumber2 = SQRT(-2.0*ALOG(SDeviate1))*SIN(2.0*PI*(SDeviate2))
 
-	RNumber1 = SQRT(-2.0*ALOG(SDeviate1))*COS(2.0*PI*SDeviate2)
-	RNumber2 = SQRT(-2.0*ALOG(SDeviate1))*SIN(2.0*PI*SDeviate2)
+!    CALL RANDOM_NUMBER(SDeviate1)
+!    CALL RANDOM_NUMBER(SDeviate2)
+!	RNumber1 = SQRT(-2.0*ALOG(1.0 - SDeviate1))*COS(2.0*PI*(1.0 - SDeviate2))
+!	RNumber2 = SQRT(-2.0*ALOG(1.0 - SDeviate1))*SIN(2.0*PI*(1.0 - SDeviate2))
 
+    ! TODO: DEBUG!!!
+!    WRITE(*,*) "seed = ", SEED_1
+!    WRITE(*,*) "r1, r2 = ", RNumber1, RNumber2
 
 	RANDOMNUMBERS = RANDOMNUMBERS + 2.0
+   !WRITE(999,"(1(ES18.8))") SEED_1
 
 	RETURN
 	END
@@ -322,7 +320,7 @@ END DO ! End energy iteration do
 !	Variables for drift calculations
 
 	REAL :: gamma_d, drift_coeff, pol_cycle = 1.0
-	REAL, PARAMETER :: B0 = 5.1*0.06 ! Due to weird B-field units
+	REAL, PARAMETER :: B0 = 5.0*0.06 ! Due to weird B-field units
 	REAL :: Bmag, Larmor, Krphidphi, FS
 
 	Omega = Omega1*PROTIME
@@ -348,11 +346,6 @@ END DO ! End energy iteration do
 	sinpsi = SQRT(1.0 - cospsi*cospsi)
 	
 	Bmag = B0/SQRT(1.0 + (1.0 - R_sun)*(1.0 - R_Sun))/r/r/cospsi
-
-    ! DEBUG
-!    if (r.GT.120) THEN
-!        WRITE(*,*) "|B| = ", Bmag / 0.06
-!    END IF
 
 !	larmor radius - AU
 	Larmor = 1.0/Bmag*P/750.0
@@ -471,19 +464,23 @@ END DO ! End energy iteration do
 !	theta - Derivatives of the diffusion coefficients
     dKthetthet_dthet = 0.0
 
-    ! DEBUG
-    !WRITE(*,*) "ek = ", E
-!    IF (r.GT.120) THEN
-!        WRITE(*,*) "r, th, P = ", r, theta, P
-!        !WRITE(*,*) "K_rr = ", K_rr / PROTIME
-!        !WRITE(*,*) "K_phiphi = ", K_phiphi / PROTIME
-!        !WRITE(*,*) "K_rphi = ", K_rphi / PROTIME
-!        !WRITE(*,*) "K_thetatheta = ", K_thetatheta / PROTIME
-!        WRITE(*,*) "K_par = ", K_parallel / PROTIME
-!        WRITE(*,*) "dK_rrdr = ", dK_rrdr / PROTIME
-!        WRITE(*,*) "dK_rphi_dr = ", dK_rphi_dr / PROTIME
-!        WRITE(*,*) ""
-!    END IF
+    ! TODO: DEBUG!!!
+!    WRITE(*,*) "r, th, phi, E = ", r, theta, phi, E
+!    !WRITE(*,*) "K_par = ", K_parallel
+!    WRITE(*,*) "K_rr = ", K_rr
+!    WRITE(*,*) "    Krr2 = ", K_rr2
+!    WRITE(*,*) "K_phph = ", K_phiphi
+!    WRITE(*,*) "K_rph = ", K_rphi
+!    WRITE(*,*) "    Krph2 = ", K_rphi2
+!    WRITE(*,*) "K_thth = ", K_thetatheta
+!    WRITE(*,*) "dKrr_dr = ", dK_rrdr
+!    WRITE(*,*) "    delta_r = ", delta_r
+!    WRITE(*,*) "dKrph_dr = ", dK_rphi_dr
+!    WRITE(*,*) "vdCoeff = ", drift_coeff / FS
+!    WRITE(*,*) "vdr = ", vdr
+!    WRITE(*,*) "vdth = ", vdtheta
+!    WRITE(*,*) "vdph = ", vdphi
+    !WRITE(*,*) "|B| = ", Bmag
 
 !	----------------------------------------------
 !	Rest of the numerical coefficients
@@ -500,10 +497,10 @@ END DO ! End energy iteration do
 	IF (printer.EQ.0) THEN
 
 !	Plasma profiles.txt
-		WRITE(600,"(8(ES18.8))") r, E, P, theta, V_sw, DivV_sw, Bmag/0.06, larmor
+		!WRITE(600,"(8(ES18.8))") r, E, P, theta, V_sw, DivV_sw, Bmag/0.06, larmor
 
 !	Diffusion Coefficients
-		WRITE(700,"(7(ES18.8))") r, E, P, theta, lambda_parallel, lambda_perpr, lambda_perptheta
+		!WRITE(700,"(7(ES18.8))") r, E, P, theta, lambda_parallel, lambda_perpr, lambda_perptheta
 
 		printer = printer + 1
 
