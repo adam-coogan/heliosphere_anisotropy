@@ -1,5 +1,9 @@
-CC=clang++ -std=c++11 -O2
-CFLAGS=-c
+ifeq (hostname,hyades.ucsc.edu)
+	CC=
+else
+	CC=clang++ -std=c++11
+endif
+CFLAGS=-c -O2
 LFLAGS=
 OBJS=$(BUILDDIR)/StraussUnits.o
 BINDIR=bin

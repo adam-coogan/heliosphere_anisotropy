@@ -1,5 +1,9 @@
 # Ignore build directory
-SolarProp/build/*
+SolarProp/build/
+SolarProp/bin/
+SolarProp/runs/
+SolarProp/test/
 
 # Ignore mac files
 .DS_Store
+*.swp

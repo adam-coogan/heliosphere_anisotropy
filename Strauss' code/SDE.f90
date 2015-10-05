@@ -8,7 +8,7 @@
 
 	DOUBLE PRECISION :: SEED_1 = 975635
 	DOUBLE PRECISION :: RNumber1 = 0.0, RNumber2 = 0.0
-	REAL, PARAMETER :: N = 40000
+	REAL, PARAMETER :: N = 50000
 
 	DOUBLE PRECISION :: RANDOMNUMBERS
 
@@ -51,20 +51,22 @@
 
 !	Output files
 
-	OPEN(100,file='Standard_Deviates.txt',status='unknown')
-	OPEN(200,file='ParticleTrajectory1.txt',status='unknown')
-	OPEN(300,file='ParticleTrajectory2.txt',status='unknown')	
-	OPEN(400,file='ParticleTrajectory3.txt',status='unknown')
-	OPEN(500,file='DifferentialIntensity.txt',status='unknown')
-	OPEN(600,file='PlasmaProfiles.txt',status='unknown')
-	OPEN(700,file='DiffusionCoefficients.txt',status='unknown')
-	OPEN(800,file='End-position.txt',status='unknown')
-	Open(900,file='Jovian-phi.txt',status='unknown')
-	OPEN(999,file='SEEDS.txt',status='unknown')
+	!OPEN(100,file='Standard_Deviates.txt',status='unknown')
+	!OPEN(200,file='ParticleTrajectory1.txt',status='unknown')
+	!OPEN(300,file='ParticleTrajectory2.txt',status='unknown')	
+	!OPEN(400,file='ParticleTrajectory3.txt',status='unknown')
+	!OPEN(500,file='DifferentialIntensity.txt',status='unknown')
+	!OPEN(600,file='PlasmaProfiles.txt',status='unknown')
+	!OPEN(700,file='DiffusionCoefficients.txt',status='unknown')
+	OPEN(800,file='../NewSolarProp/rundata/precision_test/strauss_alt0_run6.csv',status='unknown')
+	!Open(900,file='Jovian-phi.txt',status='unknown')
+	!OPEN(999,file='SEEDS.txt',status='unknown')
 !	-----------------------------------------------------------
 
 ! Seed the random number generator
-CALL RANDOM_SEED()
+!CALL RANDOM_SEED()
+! Generates new seed for each invocation of the program
+CALL init_random_seed()
 
 !	Energies(1) = 0.001
 !   Energies(2) = 0.002
@@ -225,15 +227,15 @@ DO WHILE (endwhile.EQ.0)
 
 END DO !End while loop - number of particles
 
-!        P = SQRT(E_begin*(E_begin + 2.0*E_0))
-!
-!        j_BEGIN = j_BEGIN/Counter*P*P
-!        j_JUP2 = j_JUP2/Counter_jupiter*P*P
-!
-!
-!        CALL LIS(E_begin,P,j_N,E_0)
+P = SQRT(E_begin*(E_begin + 2.0*E_0))
 
-!WRITE(500,"(8(ES18.8))") r_begin, E_begin,j_BEGIN,counter, j_N*P*P, theta_begin, j_JUP2, Counter_jupiter
+WRITE(*,*) "j_BEGIN = ", j_BEGIN
+j_BEGIN = j_BEGIN/Counter*P*P
+j_JUP2 = j_JUP2/Counter_jupiter*P*P
+
+CALL LIS(E_begin,P,j_N,E_0)
+
+WRITE(500,"(8(ES18.8))") r_begin, E_begin,j_BEGIN,counter, j_N*P*P, theta_begin, j_JUP2, Counter_jupiter
 
 
 	Close(100)
@@ -266,18 +268,20 @@ END DO !End while loop - number of particles
 	DOUBLE PRECISION :: SEED_1
 	DOUBLE PRECISION :: RANDOMNUMBERS
 
-	Random1 = MOD(a*SEED_1 + c,M)
-	Random2 = MOD(a*Random1 + c,M)
-	SEED_1 = Random2
-	SDeviate1 = Random1/M
-	SDeviate2 = Random2/M
-	RNumber1 = SQRT(-2.0*ALOG(SDeviate1))*COS(2.0*PI*(SDeviate2))
-	RNumber2 = SQRT(-2.0*ALOG(SDeviate1))*SIN(2.0*PI*(SDeviate2))
+! Strauss' really old-school method
+!	Random1 = MOD(a*SEED_1 + c,M)
+!	Random2 = MOD(a*Random1 + c,M)
+!	SEED_1 = Random2
+!	SDeviate1 = Random1/M
+!	SDeviate2 = Random2/M
+!	RNumber1 = SQRT(-2.0*ALOG(SDeviate1))*COS(2.0*PI*(SDeviate2))
+!	RNumber2 = SQRT(-2.0*ALOG(SDeviate1))*SIN(2.0*PI*(SDeviate2))
 
-!    CALL RANDOM_NUMBER(SDeviate1)
-!    CALL RANDOM_NUMBER(SDeviate2)
-!	RNumber1 = SQRT(-2.0*ALOG(1.0 - SDeviate1))*COS(2.0*PI*(1.0 - SDeviate2))
-!	RNumber2 = SQRT(-2.0*ALOG(1.0 - SDeviate1))*SIN(2.0*PI*(1.0 - SDeviate2))
+! The smooth way of doing it
+    CALL RANDOM_NUMBER(SDeviate1)
+    CALL RANDOM_NUMBER(SDeviate2)
+	RNumber1 = SQRT(-2.0*ALOG(1.0 - SDeviate1))*COS(2.0*PI*(1.0 - SDeviate2))
+	RNumber2 = SQRT(-2.0*ALOG(1.0 - SDeviate1))*SIN(2.0*PI*(1.0 - SDeviate2))
 
     ! TODO: DEBUG!!!
 !    WRITE(*,*) "seed = ", SEED_1
@@ -288,6 +292,59 @@ END DO !End while loop - number of particles
 
 	RETURN
 	END
+
+    ! Generates a different seed each time the program is run
+    subroutine init_random_seed()
+        use iso_fortran_env, only: int64
+        implicit none
+        integer, allocatable :: seed(:)
+        integer :: i, n, un, istat, dt(8), pid
+        integer(int64) :: t
+
+        call random_seed(size = n)
+        allocate(seed(n))
+        ! First try if the OS provides a random number generator
+        open(newunit=un, file="/dev/urandom", access="stream", &
+            form="unformatted", action="read", status="old", iostat=istat)
+        if (istat == 0) then
+            read(un) seed
+            close(un)
+        else
+            ! Fallback to XOR:ing the current time and pid. The PID is
+            ! useful in case one launches multiple instances of the same
+            ! program in parallel.
+            call system_clock(t)
+            if (t == 0) then
+            call date_and_time(values=dt)
+            t = (dt(1) - 1970) * 365_int64 * 24 * 60 * 60 * 1000 &
+                + dt(2) * 31_int64 * 24 * 60 * 60 * 1000 &
+                + dt(3) * 24_int64 * 60 * 60 * 1000 &
+                + dt(5) * 60 * 60 * 1000 &
+                + dt(6) * 60 * 1000 + dt(7) * 1000 &
+                + dt(8)
+            end if
+            pid = getpid()
+            t = ieor(t, int(pid, kind(t)))
+            do i = 1, n
+                seed(i) = lcg(t)
+            end do
+        end if
+        call random_seed(put=seed)
+    contains
+        ! This simple PRNG might not be good enough for real work, but is
+        ! sufficient for seeding a better PRNG.
+        function lcg(s)
+            integer :: lcg
+            integer(int64) :: s
+            if (s == 0) then
+            s = 104729
+            else
+            s = mod(s, 4294967296_int64)
+            end if
+            s = mod(s * 279470273_int64, 4294967291_int64)
+            lcg = int(mod(s, int(huge(0), int64)), kind(0))
+        end function lcg
+    end subroutine init_random_seed
 
 !-----------------------------------------------------
 
