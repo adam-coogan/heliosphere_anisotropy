@@ -1,8 +1,12 @@
 # Ignore build directory
-SolarProp/build/
-SolarProp/bin/
-SolarProp/runs/
-SolarProp/test/
+NewSolarProp/build/
+NewSolarProp/bin/
+NewSolarProp/figures/
+NewSolarProp/runs/
+NewSolarProp/test/
+SolarProp/
+NewSolarProp/scripts/.ipynb_checkpoints/
+.ipynb_checkpoints
 
 # Ignore mac files
 .DS_Store
