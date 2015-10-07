@@ -1,5 +1,5 @@
-ifeq (hostname,hyades.ucsc.edu)
-	CC=
+ifeq ($(shell hostname),hyades.ucsc.edu)
+	CC=icpc -std=c++11 -I/pfs/sw/serial/gcc/boost-1.57.0/include # Broken
 else
 	CC=clang++ -std=c++11
 endif

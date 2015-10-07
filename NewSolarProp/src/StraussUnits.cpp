@@ -346,8 +346,11 @@ Status step() {
 
 // Returns a CSV string containing the particle's current coordinates, kinetic energy and elapsed time
 std::string stateToString() {
-    return std::to_string(r) + "," + std::to_string(th) + "," + std::to_string(ph) + "," + std::to_string(ek)
-        + "," + std::to_string(s * 4.3287 * 86400);
+    return std::to_string(static_cast<long long>(r)) + ","
+        + std::to_string(static_cast<long long>(th)) + ","
+        + std::to_string(static_cast<long long>(ph)) + ","
+        + std::to_string(static_cast<long long>(ek)) + ","
+        + std::to_string(static_cast<long long>(s * 4.3287 * 86400));
 }
 
 void printState() {
@@ -361,7 +364,7 @@ void printState() {
 // argv[2]: number of runs ending at the heliopause to simulate
 // argv[3]: output file name.  The file will be a csv located in the rundata directory.
 int main(int argc, char *argv[]) {
-    std::cout.precision(std::numeric_limits<double>::max_digits10);
+    std::cout.precision(std::numeric_limits<double>::digits10); // Should be max_digits10, but icpc doesn't like that
 
     // Make sure both command line arguments were provided
     if (argc == 4) {
@@ -372,7 +375,7 @@ int main(int argc, char *argv[]) {
         // Output file name
         std::string fName(argv[3]);
         // Directory to which run data will be written
-        const std::string runDir("rundata");
+        const std::string runDir("rundata/");
 
         std::cout << "Tracing " << runs << " particles detected with energy " << ek0 << " GeV at Earth back"
             " to the heliopause..." << std::endl;
