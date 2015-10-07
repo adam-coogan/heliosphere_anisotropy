@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstdio>
 #include <ctime>
+#include <random>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
@@ -174,6 +175,13 @@ KTensor K;
 double vdr, vdth, vdph;
 
 // Gaussian random number generator with mean 0 and standard deviation 1
+typedef boost::mt19937 MT19937;
+typedef boost::normal_distribution<double> NDistribution;
+MT19937 engine(static_cast<unsigned int>(std::random_device{}()));
+NDistribution distribution(0, 1);
+boost::variate_generator<MT19937, NDistribution> generator(engine, distribution);
+
+/*
 double seed1 = 975635;
 double rand1, rand2;
 const double a = pow(7.0, 5);
@@ -197,6 +205,7 @@ void straussRand() {
     std::cout << "r1, r2 = " << rand1 << ", " << rand2 << std::endl;
 #endif
 }
+*/
 
 ////////////////////////////////////////
 
@@ -279,16 +288,16 @@ Status step() {
     double dek_ds = 2 * Vsw / (3 * r) * Gamma * ek;
 
     // Generate the Wiener terms
-    /*
     double dWr = generator() * sqrt(ds);
     double dWth = generator() * sqrt(ds);
     double dWph = generator() * sqrt(ds);
-    */
+    /*
     straussRand();
     double dWr = sqrt(ds) * rand1;
     double dWph = sqrt(ds) * rand2;
     straussRand();
     double dWth = sqrt(ds) * rand2;
+    */
 
 #if DEBUG
     std::cout << "dr_ds = " << dr_ds << std::endl;

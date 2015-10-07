@@ -6,4 +6,4 @@
 #PBS -l walltime=1:30:00
  
 cd $PBS_O_WORKDIR
-./StraussUnits 0.1 75000 hyades/alt0_test_run$PBS_ARRAYID
+./StraussUnits 0.1 75000 hyades/alt0_run$PBS_ARRAYID
