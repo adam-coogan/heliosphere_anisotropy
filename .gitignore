@@ -1,10 +1,12 @@
 # Ignore build directory
 NewSolarProp/bin/
 NewSolarProp/build/
+NewSolarProp/pbs/
 NewSolarProp/test/
 SolarProp/build/
 SolarProp/bin/
 SolarProp/test/
+Strauss' code/pbs/
 
 # Ignore mac files
 .DS_Store
