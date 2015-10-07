@@ -16,6 +16,9 @@
 #define PI 3.141592653589793
 
 //// Constants
+//
+// Directory to which run data will be written
+const std::string runDir("/Users/acoogan/Dropbox/heliosphere_anisotropy/NewSolarProp/rundata");
 
 // Initial coordinates
 const double r0 = 1.0; // AU
@@ -173,7 +176,15 @@ KTensor K;
 // Drift velocity components
 double vdr, vdth, vdph;
 
-// Gaussian random number generator with mean 0 and standard deviation 1
+// Gaussian random number generator with mean 0 and standard deviation 1.  Smooth method.
+typedef boost::mt19937 MT19937;
+typedef boost::normal_distribution<double> NDistribution;
+MT19937 engine(static_cast<unsigned int>(std::time(0)));
+NDistribution distribution(0, 1);
+boost::variate_generator<MT19937, NDistribution> generator(engine, distribution);
+
+// Gaussian random number generator with mean 0 and standard deviation 1.  Strauss old-school method.
+/*
 double seed1 = 975635;
 double rand1, rand2;
 const double a = pow(7.0, 5);
@@ -197,6 +208,7 @@ void straussRand() {
     std::cout << "r1, r2 = " << rand1 << ", " << rand2 << std::endl;
 #endif
 }
+*/
 
 ////////////////////////////////////////
 
@@ -279,16 +291,16 @@ Status step() {
     double dek_ds = 2 * Vsw / (3 * r) * Gamma * ek;
 
     // Generate the Wiener terms
-    /*
     double dWr = generator() * sqrt(ds);
     double dWth = generator() * sqrt(ds);
     double dWph = generator() * sqrt(ds);
-    */
+    /*
     straussRand();
     double dWr = sqrt(ds) * rand1;
     double dWph = sqrt(ds) * rand2;
     straussRand();
     double dWth = sqrt(ds) * rand2;
+    */
 
 #if DEBUG
     std::cout << "dr_ds = " << dr_ds << std::endl;
@@ -371,8 +383,6 @@ int main(int argc, char *argv[]) {
         double runs = std::stod(argv[2]);
         // Output file name
         std::string fName(argv[3]);
-        // Directory to which run data will be written
-        const std::string runDir("rundata");
 
         std::cout << "Tracing " << runs << " particles detected with energy " << ek0 << " GeV at Earth back"
             " to the heliopause..." << std::endl;
