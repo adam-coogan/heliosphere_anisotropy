@@ -1,7 +1,9 @@
 # Ignore build directory
+NewSolarProp/bin/
+NewSolarProp/build/
+NewSolarProp/test/
 SolarProp/build/
 SolarProp/bin/
-SolarProp/runs/
 SolarProp/test/
 
 # Ignore mac files

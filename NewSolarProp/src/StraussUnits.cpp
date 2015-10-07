@@ -346,11 +346,11 @@ Status step() {
 
 // Returns a CSV string containing the particle's current coordinates, kinetic energy and elapsed time
 std::string stateToString() {
-    return std::to_string(static_cast<long long>(r)) + ","
-        + std::to_string(static_cast<long long>(th)) + ","
-        + std::to_string(static_cast<long long>(ph)) + ","
-        + std::to_string(static_cast<long long>(ek)) + ","
-        + std::to_string(static_cast<long long>(s * 4.3287 * 86400));
+    return std::to_string(static_cast<long double>(r)) + ","
+        + std::to_string(static_cast<long double>(th)) + ","
+        + std::to_string(static_cast<long double>(ph)) + ","
+        + std::to_string(static_cast<long double>(ek)) + ","
+        + std::to_string(static_cast<long double>(s * 4.3287 * 86400));
 }
 
 void printState() {

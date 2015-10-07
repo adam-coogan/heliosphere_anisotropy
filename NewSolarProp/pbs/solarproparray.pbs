@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #PBS -N solarproparray
-#PBS -l ncpus=10
-#PBS -t 0-9
+#PBS -l ncpus=14
+#PBS -t 0-13
 #PBS -l walltime=1:30:00
  
 cd $PBS_O_WORKDIR
