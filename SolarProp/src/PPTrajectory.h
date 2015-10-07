@@ -126,12 +126,11 @@ class PPTrajectory {
 		//Indicates whether the boundary has been reached
 		BoundaryHit status;
 
-		// Magnetic field
+		// Magnetic field in units of GV/au.
 		SphericalVector b;
-		// curl(B/|B|)
-		SphericalVector curlBoverB;
 		// Diffusion tensor, k.  Depends on b.
 		SphericalTensor kTensor;
+        // Diffusion tensor components in HMF-aligned frame
 		double kpar, kperp;
 		// Drift velocity
 		SphericalVector vdrift;
@@ -237,8 +236,7 @@ class PPTrajectory {
 		};
 
 		/*
-		 * Gives magnetic field at current point (eq 5).  Recomputes b (in T) and curlBoverB at the current
-		 * point.
+		 * Gives magnetic field at current point (eq 5).  Recomputes b (in GV/au) at the current point.
 		 * Returns:
 		 *	*this.
 		 */

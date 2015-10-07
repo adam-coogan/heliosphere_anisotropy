@@ -2,7 +2,7 @@
 
 PPTrajectory::PPTrajectory(double ri, double thi, double phii, double ei, const std::string& paramFileName,
         const OutputFormat& oFormat) : traj(1, PPPoint(ri, thi, phii, ei, 0)), status(BoundaryHit::None),
-    b(0, 0, 0), curlBoverB(0, 0, 0), kTensor(0, 0, 0, 0, 0, 0, 0, 0, 0), kpar(0), kperp(0), vdrift(0, 0, 0),
+    b(0, 0, 0), kTensor(0, 0, 0, 0, 0, 0, 0, 0, 0), kpar(0), kperp(0), vdrift(0, 0, 0),
     updatedB(false), updatedVdrift(false), updatedKTensor(false),
 	generator(std::chrono::system_clock::now().time_since_epoch().count()), ndistro(0.0, 1.0),
 	params(paramFileName), outputFormat(oFormat) {
@@ -24,10 +24,12 @@ double PPTrajectory::vel() const {
 	return cAUs * sqrt(1 - pow(params.getM() / (traj.back().getE() + params.getM()), 2));
 }
 
-// Returns rigidity in T*AU
+//// Returns rigidity in T*AU
+// Returns rigidity in GV
 double PPTrajectory::rigidity() const {
 	// Conversion factor: 1 GV/c = 2.23*10^-11 T*AU
-	return 2.23 * pow(10, -11) * sqrt(traj.back().getE() * (traj.back().getE() + 2 * params.getM()));
+	//return 2.23 * pow(10, -11) * sqrt(traj.back().getE() * (traj.back().getE() + 2 * params.getM()));
+	return sqrt(traj.back().getE() * (traj.back().getE() + 2 * params.getM()));
 }
 
 double PPTrajectory::lambdaPar() {
@@ -37,14 +39,6 @@ double PPTrajectory::lambdaPar() {
 	} else {
 		return params.getLambda0() * (1 + traj.back().getR() / params.getR0());
 	}
-
-    /*
-    // Get field at earth
-    updateB();
-    double be = params.getB0() * sqrt(1 + pow(params.getOmega() * params.getR0() / params.getVsw(), 2));
-
-    return params.getLambda0() * (rigidity() / params.getRig0()) * (be / b.magnitude());
-    */
 }
 
 double PPTrajectory::fs() const {
@@ -64,7 +58,7 @@ PPTrajectory& PPTrajectory::updateB() {
 
 		// Compute B
 		b.r = params.getAc() * params.getB0() * pow(params.getR0() / r, 2) * h;
-		b.phi = -b.r * params.getOmega() * r * sinth / params.getVsw();
+		b.phi = b.r * (-params.getOmega() * (r - params.getRSun()) * sinth / params.getVsw());
 
 		updatedB = true;
 	}
@@ -128,8 +122,8 @@ PPTrajectory& PPTrajectory::updateVdrift() {
 		}
 
 		// Compute v_d^gc factor
-		double vdgcFact = 2 * rig * vel() * r * params.getQSign() * params.getAc() 
-			/ (3 * params.getB0() * pow(params.getR0(), 2) * pow(1 + gammaGC * gammaGC, 2));
+		double vdgcFact = 2 * rig * vel() * r * params.getQSign() * params.getAc()
+            / (3 * params.getB0() * pow(params.getR0(), 2) * pow(1 + gammaGC * gammaGC, 2));
 		vdgcFact *= heaviside(traj.back().getTh(), getThp());
 
 		// Incorporate the drift reduction factor and combine all components
@@ -148,10 +142,11 @@ double PPTrajectory::getDr(const double& dWr, const double& dWphi) const {
 	double r = traj.back().getR();
 	double gammaGC = r * params.getOmega() * sin(traj.back().getTh()) / params.getVsw();
 
-    // dr/ds
-	double dsCdr = (kpar * (3 * params.getR0() + r * (3 + gammaGC * gammaGC)) + kperp * gammaGC*gammaGC
-        * (2*params.getR0() * (2 + gammaGC*gammaGC) + r * (5 + 3 * gammaGC*gammaGC)))
-        / (r * (params.getR0() + r) * pow(1 + gammaGC*gammaGC, 2))
+    // dr/ds.  Lines 2 - 4 are dKrr / dr.
+	double dsCdr = 2 / r * kTensor.rr
+        + (kpar * (r - (r + 2 * params.getR0()) * pow(gammaGC, 2)) + kperp * pow(gammaGC, 2)
+                * (2 * params.getR0() + r * (3 + pow(gammaGC, 2))))
+            / (r * (r + params.getR0()) * pow(1 + gammaGC*gammaGC, 2))
         - params.getVsw()
         - vdrift.r;
 
@@ -167,9 +162,10 @@ double PPTrajectory::getDr(const double& dWr, const double& dWphi) const {
 double PPTrajectory::getDth(const double& dWth) const {
     // Convenience variable
 	double r = traj.back().getR();
+    double th = traj.back().getTh();
 
 	// dth/ds
-	double dsCdth = kperp * cos(traj.back().getTh()) / (r * r * sin(traj.back().getTh())) - vdrift.th / r;
+	double dsCdth = 1 / (r*r * sin(th) / cos(th)) * kTensor.thth - vdrift.th / r;
 
 	// dth/dWth
 	double dWthCdth = sqrt(2 * kTensor.thth) / r;
@@ -183,9 +179,10 @@ double PPTrajectory::getDphi(const double& dWphi) const {
 	double sinth = sin(traj.back().getTh());
 	double gammaGC = r * params.getOmega() * sinth / params.getVsw();
 
-    // dphi/ds
-	double dsCdphi = ((kperp - kpar) * params.getOmega() * ((gammaGC*gammaGC * + 3) * r + 2 * params.getR0()))
-        / ((params.getR0() + r) * r * params.getVsw() * pow(1 + gammaGC*gammaGC, 2))
+    // dphi/ds.  Lines 2 - 3 are dKrphi / dr.
+	double dsCdphi = 1 / (r*r * sinth) * kTensor.rphi
+        + (kpar - kperp) * (params.getR0() * (pow(gammaGC, 2) - 1) - 2 * r) * gammaGC
+            / ((r * sinth) * r * (r + params.getR0() * pow(1 + gammaGC*gammaGC, 2)))
         - vdrift.phi / (r * sinth);
 
     // dphi/dWphi
