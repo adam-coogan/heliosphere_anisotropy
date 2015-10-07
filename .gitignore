@@ -2,12 +2,14 @@
 NewSolarProp/build/
 NewSolarProp/bin/
 NewSolarProp/figures/
+NewSolarProp/pbs/
+NewSolarProp/rundata/macbookpro/
 NewSolarProp/runs/
+NewSolarProp/scripts/.ipynb_checkpoints/
 NewSolarProp/test/
 SolarProp/
-NewSolarProp/scripts/.ipynb_checkpoints/
+Strauss' code/pbs/
 .ipynb_checkpoints
 
-# Ignore mac files
 .DS_Store
 *.swp

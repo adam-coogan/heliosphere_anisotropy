@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstdio>
 #include <ctime>
+#include <random>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
@@ -16,9 +17,6 @@
 #define PI 3.141592653589793
 
 //// Constants
-//
-// Directory to which run data will be written
-const std::string runDir("/Users/acoogan/Dropbox/heliosphere_anisotropy/NewSolarProp/rundata");
 
 // Initial coordinates
 const double r0 = 1.0; // AU
@@ -179,12 +177,12 @@ double vdr, vdth, vdph;
 // Gaussian random number generator with mean 0 and standard deviation 1.  Smooth method.
 typedef boost::mt19937 MT19937;
 typedef boost::normal_distribution<double> NDistribution;
-MT19937 engine(static_cast<unsigned int>(std::time(0)));
+MT19937 engine(static_cast<unsigned int>(std::random_device{}()));
 NDistribution distribution(0, 1);
 boost::variate_generator<MT19937, NDistribution> generator(engine, distribution);
 
-// Gaussian random number generator with mean 0 and standard deviation 1.  Strauss old-school method.
 /*
+// Gaussian random number generator with mean 0 and standard deviation 1.  Strauss old-school method.
 double seed1 = 975635;
 double rand1, rand2;
 const double a = pow(7.0, 5);
@@ -358,8 +356,11 @@ Status step() {
 
 // Returns a CSV string containing the particle's current coordinates, kinetic energy and elapsed time
 std::string stateToString() {
-    return std::to_string(r) + "," + std::to_string(th) + "," + std::to_string(ph) + "," + std::to_string(ek)
-        + "," + std::to_string(s * 4.3287 * 86400);
+    return std::to_string(static_cast<long double>(r)) + ","
+        + std::to_string(static_cast<long double>(th)) + ","
+        + std::to_string(static_cast<long double>(ph)) + ","
+        + std::to_string(static_cast<long double>(ek)) + ","
+        + std::to_string(static_cast<long double>(s * 4.3287 * 86400));
 }
 
 void printState() {
@@ -373,7 +374,7 @@ void printState() {
 // argv[2]: number of runs ending at the heliopause to simulate
 // argv[3]: output file name.  The file will be a csv located in the rundata directory.
 int main(int argc, char *argv[]) {
-    std::cout.precision(std::numeric_limits<double>::max_digits10);
+    std::cout.precision(std::numeric_limits<double>::digits10); // Should be max_digits10, but icpc doesn't like that
 
     // Make sure both command line arguments were provided
     if (argc == 4) {
@@ -383,6 +384,9 @@ int main(int argc, char *argv[]) {
         double runs = std::stod(argv[2]);
         // Output file name
         std::string fName(argv[3]);
+
+        // Directory to which run data will be written
+        const std::string runDir("rundata/");
 
         std::cout << "Tracing " << runs << " particles detected with energy " << ek0 << " GeV at Earth back"
             " to the heliopause..." << std::endl;
