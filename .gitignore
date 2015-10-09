@@ -8,7 +8,8 @@ NewSolarProp/runs/
 NewSolarProp/scripts/.ipynb_checkpoints/
 NewSolarProp/test/
 SolarProp/
-Strauss' code/pbs/
+Strauss_code/pbs/
+Strauss_code/SDE
 .ipynb_checkpoints
 
 .DS_Store

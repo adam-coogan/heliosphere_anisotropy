@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #PBS -N solarproparray
-#PBS -l ncpus=14
-#PBS -t 0-13
-#PBS -l walltime=1:30:00
+#PBS -l nodes=1:ppn=1
+#PBS -t 15-19
+#PBS -l walltime=1:00:00
  
 cd $PBS_O_WORKDIR
-./StraussUnits 0.1 75000 hyades/alt0_run$PBS_ARRAYID
+./StraussUnits 3.0 10000 hyades/me/alt0_3.0GeV_run$PBS_ARRAYID
