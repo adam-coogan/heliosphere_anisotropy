@@ -11,6 +11,7 @@ SolarProp/
 Strauss_code/pbs/
 Strauss_code/SDE
 .ipynb_checkpoints
+plots/
 
 .DS_Store
 *.swp
