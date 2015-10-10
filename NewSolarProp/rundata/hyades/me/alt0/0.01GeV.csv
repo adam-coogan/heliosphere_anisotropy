@@ -1,4 +1,4 @@
-# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s (s).
+# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s (s).  Made with my code. 
 142.773681,3.136708,4.926934,0.496527,40560265.296058
 141.257599,0.014975,4.846905,0.373403,56653845.526214
 145.888839,0.007232,4.546199,0.379503,24381039.139180
