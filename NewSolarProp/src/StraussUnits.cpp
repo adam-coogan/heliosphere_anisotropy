@@ -392,8 +392,8 @@ int main(int argc, char *argv[]) {
             " to the heliopause..." << std::endl;
 
         // String containing run data.  This will be written to a CSV file.
-        std::string runsString("# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s "
-                "(s).");
+        std::string runsString;//("# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s "
+                //"(s).");
 
         // Measure how long the simulation takes.  Store time since program started.
         std::clock_t start = std::clock();
