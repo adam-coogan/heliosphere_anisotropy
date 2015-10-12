@@ -47,25 +47,23 @@ const double m = 0.000511;
 // Sign of particle's charge
 const int qSign = -1;
 
-// Program time
-const double protime = 1.496e8 / 400;
 // Timestep
-const double ds = 0.001;
+const double ds = 374.0; // s TODO
 // Angular velocity of sun
-const double Omega1 = 2 * PI / (25.4 * 24 * 3600);
+const double Omega1 = 2 * PI / (25.4 * 24 * 3600); // Hz TODO
 // Solar wind velocity
-const double Vsw = 1;
+const double Vsw = 400 * 6.685e-9; // TODO
 // Reference field strength
-const double B0 =  5 * 0.06;
+const double B0 =  5.0 * 1e-18 * 299792458; // 1 nT = (c in m/s) * 10^-18 GV / (c * AU)
 
 ////// Jupiter parameters
-const double omegaJup = 2 * PI / (4333.0 * 3600.0 * 24.0) * protime;
+const double omegaJup = 2 * PI / (4333.0 * 3600.0 * 24.0); // TODO
 const double rJup = 5.2; // AU
 const double thJup = PI / 2.0;
-const double dphJup = 0.009 * 2.0;
-const double dthJup = 0.009 * 2.0;
-const double rBeginJup = rJup - 0.0477 * 2.0;
-const double rEndJup = rJup + 0.095 * 2.0;
+const double dphJup = 0.009 * 2.0; // rad
+const double dthJup = 0.009 * 2.0; // rad
+const double rBeginJup = rJup - 0.0477 * 2.0; // AU
+const double rEndJup = rJup + 0.095 * 2.0; // AU
 
 ////////////////////////////////////////
 
@@ -233,18 +231,12 @@ void updateVd() {
     vdth = vdSign * vdCoeff * (2 + gamma*gamma) * gamma;
     vdph = vdSign * vdCoeff * gamma*gamma / tan(th);
 
-	double tanPsi = Omega*(r - rSun)*sin(th)/Vsw;
-	double cosPsi = 1.0/sqrt(1.0 + tanPsi*tanPsi);
-	double sinPsi = sqrt(1.0 - cosPsi*cosPsi);
-
     double d = fabs(r * cos(th));
-    Bmag = B0 / (sqrt(1 + pow(1 - rSun, 2)) * r*r * cosPsi);
+    Bmag = B0 / (sqrt(1 + pow(1 - rSun, 2)) * r*r * 1/sqrt(1 + pow(Omega*(r-rSun)*sin(th)/Vsw, 2)));
     double rL = P/750 * 1 / Bmag;
 
     if (d <= 2 * rL) {
-        double hcsDriftFact = Ac * qSign * (0.457 - 0.412 * d / rL + 0.0915 * pow(d / rL, 2)) * beta * 750;
-        vdr += hcsDriftFact * sinPsi;
-        vdph += hcsDriftFact * cosPsi;
+        vdr += Ac * qSign * (0.457 - 0.412 * d / rL + 0.0915 * pow(d / rL, 2)) * beta * 750;
     }
 
     // Drift reduction factor
