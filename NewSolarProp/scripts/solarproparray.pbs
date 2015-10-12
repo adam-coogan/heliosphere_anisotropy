@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#PBS -N solarproparray30MeV
+#PBS -N solarproparray3GeV
 #PBS -q hyper
 #PBS -t 1-5
 #PBS -l walltime=1:00:00
  
 cd $PBS_O_WORKDIR
-./StraussUnits 0.03 10000 hyades/me/alt0/0.03GeV_run$PBS_ARRAYID
+./StraussUnits 3.0 10000 hyades/me/alt0/3.0GeV_run$PBS_ARRAYID

@@ -418,6 +418,7 @@ int main(int argc, char *argv[]) {
         for (int successes = 0; successes < runs; ) {
             // Reinitialize simulation variables
             initialize(ek0);
+            // TODO: write initial point to file!
 
             while (true) {
                 // Step the simulation
@@ -441,7 +442,11 @@ int main(int argc, char *argv[]) {
                     // Particle ended at the heliopause!  Increment the event counter, add the end point to
                     // the list and run another trajectory.
                     successes++;
-                    runsString += "\n" + stateToString();
+                    runsString += stateToString();
+                    // Add a newline unless this was the last run
+                    if (successes != runs) {
+                        runsString += "\n";
+                    }
 
                     // Print percent indicator
                     runsTo1Percent--;
@@ -473,6 +478,7 @@ int main(int argc, char *argv[]) {
         std::ofstream writer(runDir + "/" + fName + ".csv");
 
         if (writer.is_open()) {
+            std::cout << std::string(runsString.begin(), runsString.begin() + 100) << std::endl;
             writer << runsString;
             writer.close();
         }
