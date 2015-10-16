@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Use this by running it in the directory with data files to be reformatted.
+
 for runfile in $1/*.csv; do
     firstchar=$(head -c 1 $runfile)
 
@@ -11,5 +13,7 @@ for runfile in $1/*.csv; do
         echo "Reformatted " $runfile
     fi
 done
+
+echo "Done reformatting!"
 
 
