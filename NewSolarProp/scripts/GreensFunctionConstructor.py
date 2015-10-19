@@ -27,6 +27,7 @@ def loadPairs(dataDir):
     minEkLIS = 1e10 # Some huge number
     maxEkLIS = 0
 
+    # Read pairs from files
     for df in dataFiles:
         # TODO: current convention: energy is part of file name.  Fine for isotropic LIS...
         ek = float(splitext(basename(df))[0][:-3])
@@ -35,6 +36,9 @@ def loadPairs(dataDir):
         rawData = np.loadtxt(fullDir + df, delimiter = ',')
         # Make the pairs
         [pairs.append((ek, ekLIS)) for ekLIS in rawData[:, 3]]
+
+    # Sort observed energies
+    eks.sort()
 
     return pairs, eks
 
@@ -86,9 +90,9 @@ def roundedStr(num, n):
 #############################################################################################################
 
 # Bin boundaries for EkLIS
-minEkLIS = 0.01
+minEkLIS = 0.5
 maxEkLIS = 5.0
-nekLISBins = 15
+nekLISBins = 10
 
 # Get Ek counts for each EkLIS bin
 ePairs, eks = loadPairs('hyades/me/alt0/')
@@ -110,7 +114,7 @@ ax.set_xscale('log')
 ax.set_xlabel(r'$E_k$ at Earth (GeV)')
 ax.set_ylabel(r'$P(E_k; E_k^{\mathrm{LIS}}$')
 ax.set_title(r'Green\'s function for $e^-$ heliospheric propagation')
-plt.legend(loc='upper right')
+plt.legend(loc='upper left')
 
 plt.show()
 
