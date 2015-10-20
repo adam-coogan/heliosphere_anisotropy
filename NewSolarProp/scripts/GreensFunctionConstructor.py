@@ -90,8 +90,8 @@ def roundedStr(num, n):
 #############################################################################################################
 
 # Bin boundaries for EkLIS
-minEkLIS = 0.5
-maxEkLIS = 5.0
+minEkLIS = 0.05
+maxEkLIS = 0.5
 nekLISBins = 10
 
 # Get Ek counts for each EkLIS bin
@@ -103,7 +103,7 @@ fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 
 for ekbl in ekBinLists:
-    # Normalize Ek counts to get probabilities
+    # Normalize Ek counts to get probabilities P(E | E^LIS \in bin)
     ax.plot(eks, ekbl[1] / sum(ekbl[1]), '.-', label = '(' + roundedStr(ekbl[0][0], 3) + ', ' \
             + roundedStr(ekbl[0][1], 3) + ')')
 
