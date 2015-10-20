@@ -90,6 +90,12 @@ def getK(r, th, ph, ek):
 Local interstellar spectrum.
 """
 
+def jLISDelta(ek):
+    if ek >= ekLISBin[0] and ek < ekLISBin[1]:
+        return 1
+    else:
+        return 0
+
 def jLISLangner(ek):
     """
     LIS parametrization from Langner 2004, with correction from Strauss' code.  ek is in GeV.
@@ -112,15 +118,17 @@ def jLISLangner(ek):
     elif P > 10.0:
         return 1.7 * np.exp(-0.89 - 3.22 * np.log(P))
 
-def getJ(runName):
+def getJ(runName, jLIS = jLISLangner):
     """
     Performs MC integration to find the differential intensity at earth for a given run.
-    runName: csv containing trajectory exit points.
+        runName: csv containing trajectory exit points.
+        jLIS: the LIS function to use.
     Returns:
-    intitialPoint: the point at which the cosmic rays were observed and their energy.
-    j: the differential intensity at that point and energy.
-    sigma: the error on j.
+        intitialPoint: the point at which the cosmic rays were observed and their energy.
+        j: the differential intensity at that point and energy.
+        sigma: the error on j.
     """
+
     # Load exit points
     fullRunName = rundataPath + runName + '.csv'
     rawData = np.loadtxt(fullRunName, delimiter = ',')
@@ -139,11 +147,11 @@ def getJ(runName):
 
     # Average LIS at exit points
     #print([jLIS(ep['ee']) for ep in exitData][:10])
-    jN = sum([jLISLangner(ep['ee']) / rigidity(ep['ee'])**2 for ep in exitData]) \
+    jN = sum([jLIS(ep['ee']) / rigidity(ep['ee'])**2 for ep in exitData]) \
             / float(len(exitData)) * rigidity(e0)**2
 
     # Compute error
-    varjN = sum([(jLISLangner(ep['ee']) * (rigidity(e0) / rigidity(ep['ee']))**2 - jN)**2 for ep in exitData])
+    varjN = sum([(jLIS(ep['ee']) * (rigidity(e0) / rigidity(ep['ee']))**2 - jN)**2 for ep in exitData])
     varjN = varjN * 1.0 / (len(exitData) - 1.0)
 
     return (initialPoint, jN, np.sqrt(varjN / len(exitData)))
@@ -162,33 +170,33 @@ print('e0 = ' + str(x0['e0']) + ' GeV, j(x0) = ' + str(round(j, 5)) + ' +/- ' + 
 """
 
 # Use runs to compute modulated spectrum
-stE0s, stJs, stSigmas = map(list, zip(*[getJ('strauss/alt0/' + os.path.splitext(f)[0]) \
-        for f in listdir(rundataPath + 'strauss/alt0/')]))
-stE0s = [x0['e0'] for x0 in stE0s]
+#stE0s, stJs, stSigmas = map(list, zip(*[getJ('strauss/alt0/' + os.path.splitext(f)[0]) \
+#        for f in listdir(rundataPath + 'strauss/alt0/')]))
+#stE0s = [x0['e0'] for x0 in stE0s]
 
+# Calculate spectrum at Earth for the chosen bin
+ekLISBin = (0.05, 0.06)
 meE0s, meJs, meSigmas = map(list, zip(*[getJ('me/alt0/' + os.path.splitext(f)[0]) \
         for f in listdir(rundataPath + 'me/alt0/')]))
 meE0s = [x0['e0'] for x0 in meE0s]
 
-#############################################################
-
-# Plot spectra
-
+# Plot spectrum
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 
 # Strauss' modulated spectrum
-ax.errorbar(stE0s, stJs, yerr = stSigmas, fmt = '.', label='Strauss')
-ax.errorbar(meE0s, meJs, yerr = meSigmas, fmt = '.', label='Me')
+#ax.errorbar(stE0s, stJs, yerr = stSigmas, fmt = '.', label='Strauss')
+ax.errorbar(meE0s, meJs, yerr = meSigmas, fmt = '.', label=r'$E^\mathrm{LIS} \in($' + str(ekLISBin[0]) \
+        + ', ' + str(ekLISBin[1]) + '$)$')
 
 # Unmodulated spectrum
-eksLangner = 10.0 ** np.linspace(-3.0, 2.0, 1000) # Energies in GeV
-ax.plot(eksLangner, [jLISLangner(ek) for ek in eksLangner])
+#eksLangner = 10.0 ** np.linspace(-3.0, 2.0, 1000) # Energies in GeV
+#ax.plot(eksLangner, [jLISLangner(ek) for ek in eksLangner])
 
 ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlim(1e-3, 1e1)
-ax.set_ylim(1e-4, 1e4)
+#ax.set_ylim(1e-4, 1e4)
 ax.set_xlabel(r'T (GeV)')
 ax.set_ylabel(r'Intensity ($\mathrm{MeV}^{-1}\ \mathrm{s}^{-1}\ \mathrm{sr}^{-2}\ \mathrm{m}^{-2}$)')
 ax.set_title(r'Cosmic ray spectrum modulation ($A_c < 0$)')
