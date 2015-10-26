@@ -50,7 +50,7 @@ const int qSign = -1;
 // Program time
 const double protime = 1.496e8 / 400;
 // Timestep
-const double ds = 0.001;
+const double ds = 0.0001; // This is 0.001 in Strauss' paper!!!
 // Angular velocity of sun
 const double Omega1 = 2 * PI / (25.4 * 24 * 3600);
 // Solar wind velocity
