@@ -11,7 +11,10 @@ SolarProp/
 Strauss_code/pbs/
 Strauss_code/SDE
 .ipynb_checkpoints
-plots/
+plots/*
 
-.DS_Store
+*.DS_Store
 *.swp
+*.pyc
+
+solarprop_rolf_kappl/

@@ -90,12 +90,6 @@ def getK(r, th, ph, ek):
 Local interstellar spectrum.
 """
 
-def jLISDelta(ek):
-    if ek >= ekLISBin[0] and ek < ekLISBin[1]:
-        return 1
-    else:
-        return 0
-
 def jLISLangner(ek):
     """
     LIS parametrization from Langner 2004, with correction from Strauss' code.  ek is in GeV.
@@ -146,7 +140,6 @@ def getJ(runName, jLIS = jLISLangner):
     initialPoint = {'r0': r0, 'th0': th0, 'ph0': ph0, 'e0': e0}
 
     # Average LIS at exit points
-    #print([jLIS(ep['ee']) for ep in exitData][:10])
     jN = sum([jLIS(ep['ee']) / rigidity(ep['ee'])**2 for ep in exitData]) \
             / float(len(exitData)) * rigidity(e0)**2
 
@@ -158,50 +151,51 @@ def getJ(runName, jLIS = jLISLangner):
 
 #############################################################
 
-"""
-# Tests
-x0, j, sigma = getJ('hyades/me/alt0_0.1GeV')
-print('e0 = ' + str(x0['e0']) + ' GeV, j(x0) = ' + str(round(j, 5)) + ' +/- ' + str(round(sigma, 5))
-        + ' MeV^-1 s^-1 sr^-2 m^-2')
+if __name__ == "__main__":
+    """
+    # Tests
+    x0, j, sigma = getJ('hyades/me/alt0_0.1GeV')
+    print('e0 = ' + str(x0['e0']) + ' GeV, j(x0) = ' + str(round(j, 5)) + ' +/- ' + str(round(sigma, 5))
+            + ' MeV^-1 s^-1 sr^-2 m^-2')
 
-x0, j, sigma = getJ('macbookpro/precision_test/strauss_alt0_runs')
-print('e0 = ' + str(x0['e0']) + ' GeV, j(x0) = ' + str(round(j, 5)) + ' +/- ' + str(round(sigma, 5))
-        + ' MeV^-1 s^-1 sr^-2 m^-2')
-"""
+    x0, j, sigma = getJ('macbookpro/precision_test/strauss_alt0_runs')
+    print('e0 = ' + str(x0['e0']) + ' GeV, j(x0) = ' + str(round(j, 5)) + ' +/- ' + str(round(sigma, 5))
+            + ' MeV^-1 s^-1 sr^-2 m^-2')
+    """
 
-# Use runs to compute modulated spectrum
-#stE0s, stJs, stSigmas = map(list, zip(*[getJ('strauss/alt0/' + os.path.splitext(f)[0]) \
-#        for f in listdir(rundataPath + 'strauss/alt0/')]))
-#stE0s = [x0['e0'] for x0 in stE0s]
+    # Use runs to compute modulated spectrum
+    stE0s, stJs, stSigmas = map(list, zip(*[getJ('strauss/alt0/' + os.path.splitext(f)[0]) \
+            for f in listdir(rundataPath + 'strauss/alt0/')]))
+    stE0s = [x0['e0'] for x0 in stE0s]
 
-# Calculate spectrum at Earth for the chosen bin
-ekLISBin = (0.05, 0.06)
-meE0s, meJs, meSigmas = map(list, zip(*[getJ('me/alt0/' + os.path.splitext(f)[0]) \
-        for f in listdir(rundataPath + 'me/alt0/')]))
-meE0s = [x0['e0'] for x0 in meE0s]
+    meE0s, meJs, meSigmas = map(list, zip(*[getJ('me/alt0/' + os.path.splitext(f)[0]) \
+            for f in listdir(rundataPath + 'me/alt0/')]))
+    meE0s = [x0['e0'] for x0 in meE0s]
 
-# Plot spectrum
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
+    #############################################################
 
-# Strauss' modulated spectrum
-#ax.errorbar(stE0s, stJs, yerr = stSigmas, fmt = '.', label='Strauss')
-ax.errorbar(meE0s, meJs, yerr = meSigmas, fmt = '.', label=r'$E^\mathrm{LIS} \in($' + str(ekLISBin[0]) \
-        + ', ' + str(ekLISBin[1]) + '$)$')
+    # Plot spectra
 
-# Unmodulated spectrum
-#eksLangner = 10.0 ** np.linspace(-3.0, 2.0, 1000) # Energies in GeV
-#ax.plot(eksLangner, [jLISLangner(ek) for ek in eksLangner])
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
 
-ax.set_xscale('log')
-ax.set_yscale('log')
-ax.set_xlim(1e-3, 1e1)
-#ax.set_ylim(1e-4, 1e4)
-ax.set_xlabel(r'T (GeV)')
-ax.set_ylabel(r'Intensity ($\mathrm{MeV}^{-1}\ \mathrm{s}^{-1}\ \mathrm{sr}^{-2}\ \mathrm{m}^{-2}$)')
-ax.set_title(r'Cosmic ray spectrum modulation ($A_c < 0$)')
-plt.legend(loc='upper right')
+    # Strauss' modulated spectrum
+    ax.errorbar(stE0s, stJs, yerr = stSigmas, fmt = '.', label='Strauss')
+    ax.errorbar(meE0s, meJs, yerr = meSigmas, fmt = '.', label='Me')
 
-plt.show()
+    # Unmodulated spectrum
+    eksLangner = 10.0 ** np.linspace(-3.0, 2.0, 1000) # Energies in GeV
+    ax.plot(eksLangner, [jLISLangner(ek) for ek in eksLangner])
+
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.set_xlim(1e-3, 1e1)
+    ax.set_ylim(1e-4, 1e4)
+    ax.set_xlabel(r'T (GeV)')
+    ax.set_ylabel(r'Intensity ($\mathrm{MeV}^{-1}\ \mathrm{s}^{-1}\ \mathrm{sr}^{-2}\ \mathrm{m}^{-2}$)')
+    ax.set_title(r'Cosmic ray spectrum modulation ($A_c < 0$)')
+    plt.legend(loc='upper right')
+
+    plt.show()
 
 
