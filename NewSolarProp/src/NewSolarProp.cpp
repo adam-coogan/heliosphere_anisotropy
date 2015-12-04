@@ -431,7 +431,9 @@ int main(int argc, char *argv[]) {
 
         // String containing run data.  This will be written to a CSV file.
         std::string runsString("# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s "
-                "(s).");
+                "(s).\n# First line contains initial point of trajectory:");
+        // Store initial point in first line of file
+        runsString += "\n" + stateToString();
 
         // Measure how long the simulation takes.  Store time since program started.
         std::clock_t start = std::clock();

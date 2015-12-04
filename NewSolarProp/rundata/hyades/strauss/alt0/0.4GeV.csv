@@ -1,4 +1,6 @@
-# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s (s).  Made with Strauss code. 
+# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s (s).
+# First line contains initial point of trajectory:
+1.0,1.5707963267948966,0,0.4,0.0
 1.40626938e+02,3.13188028e+00,5.01872635e+00,7.85803914e-01,3.10831150e+06
 1.51922516e+02,3.14123368e+00,3.78584194e+00,9.68667150e-01,6.57715850e+06
 1.40755264e+02,3.13690209e+00,1.89282799e+00,7.56871462e-01,3.51522325e+06

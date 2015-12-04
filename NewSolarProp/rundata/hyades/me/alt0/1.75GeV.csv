@@ -1,4 +1,6 @@
-# Initial point: r = 1.0 AU, th = 1.5707963268 rad, ph = 0.0 rad, ek = 1.75, s = 0.0 s
+# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s (s).
+# First line contains initial point of trajectory:
+1.0,1.5707963267948966,0,1.75,0.0
 169.002583,3.134024,0.498724,1.911848,203455.825920
 141.640147,3.136000,0.201233,1.989311,335103.713280
 199.596218,0.002560,3.147026,2.064897,897599.232000
