@@ -2,15 +2,16 @@
 NewSolarProp/build/
 NewSolarProp/bin/
 NewSolarProp/figures/
-NewSolarProp/pbs/
 NewSolarProp/rundata/macbookpro/
-NewSolarProp/runs/
+.ipynb_checkpoints/
 NewSolarProp/scripts/.ipynb_checkpoints/
-NewSolarProp/test/
+
 SolarProp/
+
 Strauss_code/pbs/
 Strauss_code/SDE
-.ipynb_checkpoints
+
+*/.ipynb_checkpoints
 plots/*
 
 *.DS_Store
@@ -18,3 +19,7 @@ plots/*
 *.pyc
 
 solarprop_rolf_kappl/
+
+helios/build/
+helios/bin/
+
