@@ -11,7 +11,7 @@ import itertools
 
 if __name__ == "__main__":
     # Load exit data
-    runDir = 'rundata/'
+    runDir = '/Users/acoogan/Dropbox/heliosphere_anisotropy/NewSolarProp/rundata/'
     #fName = 'hyades/alt0_0.1GeV'
     #fName = 'strauss_run5'
     #fName = 'straussunits_alt0_run5'

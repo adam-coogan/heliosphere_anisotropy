@@ -2,6 +2,7 @@
 
 '''
 Alters the first line of files to contain the trajectory's energy, initial spatial location and some comments.
+NO LONGER NEEDED.  Output file format has been altered!
 '''
 
 from os.path import basename
