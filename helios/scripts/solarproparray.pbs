@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#PBS -N helios0.1GeV
+
+#PBS -t 1-2
+#PBS -l walltime=1:00:00
+#PBS -q hyper
+
+cd $PBS_O_WORKDIR
+
+./Helios -c params.config -o rundata/alt0/0.1GeV_run$PBS_ARRAYID\.csv
