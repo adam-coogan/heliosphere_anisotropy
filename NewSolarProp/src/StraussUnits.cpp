@@ -401,6 +401,7 @@ int main(int argc, char *argv[]) {
         std::string runsString("# Run exit points.  Columns are r (AU), th (rad), ph (rad), ek (GeV), s "
                 "(s).\n# First line contains initial point of trajectory:");
         // Store initial point in first line of file
+        initialize(ek0);
         runsString += "\n" + stateToString();
 
         // Measure how long the simulation takes.  Store time since program started.
@@ -418,10 +419,6 @@ int main(int argc, char *argv[]) {
 
         // Generate the runs
         for (int successes = 0; successes < runs; ) {
-            // Reinitialize simulation variables
-            initialize(ek0);
-            // TODO: write initial point to file!
-
             while (true) {
                 // Step the simulation
 #if DEBUG
@@ -462,6 +459,9 @@ int main(int argc, char *argv[]) {
                     break;
                 }
             }
+
+            // Reinitialize simulation variables
+            initialize(ek0);
         }
 
         // Measure new time since program started, subtract and convert to seconds or minutes
