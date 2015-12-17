@@ -66,19 +66,12 @@ def getJ(runName, jLIS = jLISLangner):
     # Load exit points
     fullRunName = rundataPath + runName + '.csv'
     rawData = np.loadtxt(fullRunName, delimiter = ',', comments = '#')
-    print runName
 
     # Get initial point from first line of csv
     r0 = rawData[0,0]
     th0 = rawData[0,1]
     ph0 = rawData[0,2]
     e0 = rawData[0,3]
-    print str(r0) + ', ' + str(th0) + ', ' + str(ph0) + ', ' + str(e0)
-    #r0 = 1.0
-    #th0 = np.pi / 2.0
-    #ph0 = 0.0
-    #e0 = float(os.path.splitext(os.path.basename(fullRunName))[0][:-3]) # TODO: store in first line of csv
-                                                                         # rather than using naming convention
     initialPoint = {'r0': r0, 'th0': th0, 'ph0': ph0, 'e0': e0}
 
     # Parse out the coordinates and energies into a list of tuples of exit points
