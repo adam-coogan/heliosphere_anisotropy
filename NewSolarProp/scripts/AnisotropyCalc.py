@@ -14,13 +14,13 @@ import subprocess
 import os.path
 from os import listdir
 from os.path import isfile, join
-from SDEModulate import rigidity, jLISLangner, getJ, me
+from SDEModulate import rigidity, jLISLangner, getJ, me, rundataPath
 
 # Directory containing run data relevant to numerical derivatives
-rundataPath = '/Users/acoogan/Dropbox/heliosphere_anisotropy/NewSolarProp/rundata/hyades/me/highstats/alt0/'
 
 """
 Basic constants and functions related to propagation quantities.
+TODO: figure these out from the files!
 """
 
 # Solar cycle polarity
@@ -37,6 +37,8 @@ qe = -1
 # Diffusion parameters
 lambda0 = 0.15 # AU
 kperp_kpar = 0.01
+rRefLambda = 1.0 # au
+P0 = 1.0 # GV
 
 def momentum(ek):
     return np.sqrt(ek * (ek + 2.0 * me)) # GeV
@@ -46,7 +48,7 @@ def velocity(ek):
 
 def getB(r, th, ph):    
     bFact = Ac * B0 * (rRefB / r)**2
-    return {bFact, 0.0, -bFact * (r - rSun) * Omega / Vsw * np.sin(th)}
+    return {'r': bFact, 'th': 0.0, 'ph': -bFact * (r - rSun) * Omega / Vsw * np.sin(th)}
 
 def getK(r, th, ph, ek):
     # Diffusion tensor
@@ -56,7 +58,7 @@ def getK(r, th, ph, ek):
     # Set up convenience variables
     p = momentum(ek)
     v = velocity(ek)
-    B = getB(r, th, ph, -1)
+    B = getB(r, th, ph)
 
     # Asymmetric part of k in spherical coordinates
     kAFact = p * v / (3 * qe * (B['r']**2 + B['ph']**2))
@@ -67,8 +69,8 @@ def getK(r, th, ph, ek):
 
     # Symmetric part of k
     kpar = v / 3 * lambda0 * (1 + r / rRefLambda)
-    if p > p0:
-        kpar = kpar * p / p0
+    if p > P0:
+        kpar = kpar * p / P0
         kperp = kperp_kpar * kpar
 
     # Convert symmetric part to spherical coordinates
@@ -84,20 +86,20 @@ def getK(r, th, ph, ek):
 
     return k
 
-def getjDerivs(baseFName, drFName, dthFName, dphFName, deFName, dirName = rundataPath):
+def getjDerivs(baseFName, drFName, dthFName, dphFName, deFName, dirName):
     """
     Arguments: file names with trajectories measured to near point at which anisotropy is to be computed.  
-    Directory containing the files.
+    Directory relative to rundataPath containing the files.
     Returns: numerical approximations of dj/dr, dj/dth, dj/dph, dj/dT at Earth.  Also gives x, the Earth
     point.
     """
     # Get j at Earth
-    xEarth, jEarth = getJ(dirName + '/' + baseFName)
+    xEarth, jEarth, _ = getJ(dirName + '/' + baseFName)
     # Get j at each of the points shifted spatially/spectrally from the one we care about
-    x_dr, j_dr = getJ(dirName + '/' + drFName)
-    x_dth, j_dth = getJ(dirName + '/' + dthFName)
-    x_dph, j_dph = getJ(dirName + '/' + dphFName)
-    x_de, j_de = getJ(dirName + '/' + deFName)
+    x_dr, j_dr, _ = getJ(dirName + '/' + drFName)
+    x_dth, j_dth, _ = getJ(dirName + '/' + dthFName)
+    x_dph, j_dph, _ = getJ(dirName + '/' + dphFName)
+    x_de, j_de, _ = getJ(dirName + '/' + deFName)
 
     # Compute derivatives
     dj_dr = (j_dr - jEarth) / (x_dr['r0'] - xEarth['r0'])
@@ -107,15 +109,16 @@ def getjDerivs(baseFName, drFName, dthFName, dphFName, deFName, dirName = rundat
 
     return (xEarth, jEarth, {"dj_dr": dj_dr, "dj_dth": dj_dth, "dj_dph": dj_dph, "dj_de": dj_de})
 
-def getAnisotropy(baseFName, drFName, dthFName, dphFName, deFName, dirName = rundataPath):
+def getAnisotropy(baseFName, drFName, dthFName, dphFName, deFName, dirName):
     """
-    Computes anisotropy at position specified in the provided file.  Files required for computing derivatives must
-    exist.  (See eq 1-2b in Jokipii and Kopriva 1979.)
+    Computes anisotropy at position specified in the provided file.  Files required for computing derivatives
+    must exist.  .csv extension should not be included in their names.
+    (See eq 1-2b in Jokipii and Kopriva 1979.)
     """
     # Set up convenience variables
     xEarth, jEarth, dj = getjDerivs(baseFName, drFName, dthFName, dphFName, deFName, dirName)
-    e0 = xEarth['ek']
-    k = getK(xEarth['r0'], xEarth['th'], xEarth['ph'], e0)
+    e0 = xEarth['e0']
+    k = getK(xEarth['r0'], xEarth['th0'], xEarth['ph0'], e0)
 
     # Streaming flux sf
     sfFact = 4.0 * np.pi / velocity(e0)
@@ -147,7 +150,8 @@ if __name__ == "__main__":
 
     print 'Computing anisotropy...'
 
-    delta = getAnisotropy('1.0GeV.csv', '1.0GeV_ph0.2pi.csv', '1.0GeV_r1.1AU.csv', '1.0GeV_th0.55pi.csv')
+    delta = getAnisotropy('1.0GeV', '1.0GeV_r1.1AU', '1.0GeV_th0.55pi', '1.0GeV_ph0.2pi', '1.05GeV',
+            'me/highstats/alt0/')
 
     print 'Anisotropy delta = ' + str(delta)
 
