@@ -11,6 +11,10 @@ import re
 import shutil
 import sys
 
+# Number of lines at the beginning of the file that are shared in common by runs generated with the same
+# parameters
+sharedLines = 3
+
 # Specify directory in which to concatenate files using the first command line argument
 rundir = sys.argv[1]
 
@@ -30,26 +34,28 @@ for un in uniqueNames:
     unFiles = [re.search(un + '_run.*csv', rf) for rf in runfiles]
     unFiles = [rundir + uf.group(0) for uf in unFiles if uf != None]
 
-    # TODO: write code to remove and store the first line from each file for a given energy
-    """
+    # Store first lines, which contain comments and initial point
+    firstLines = ''
     with open(unFiles[0], 'r') as f:
         print unFiles[0]
 
-        firstLine = f.readline()
-        print firstLine
-    """
+        for i in range(1, sharedLines + 1):
+            firstLines = firstLines + f.readline()
 
     # Make output file
     outfilename = rundir + un + '.csv'
     with open(outfilename, 'w') as outfile:
         # Write first line containing initial point information to the outfile
-        # TODO: SolarProp should give each run file an appropriate header!
-        #outfile.write('# Initial point: r = 1.0 AU, th = 1.5707963268 rad, ph = 0.0 rad, ek = ' + un \
-        #        + ', s = 0.0 s\n')
+        outfile.write(firstLines)
 
         # Concatenate contents from files that have the same unique basename
         for uf in unFiles:
             with open(uf, 'r') as readfile:
+                # Discard first lines
+                for i in range(1, sharedLines + 1):
+                    readfile.readline()
+
+                # Concatenate contents from file being read into the output file
                 shutil.copyfileobj(readfile, outfile)
                 outfile.write('\n')
 
