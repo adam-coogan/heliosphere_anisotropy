@@ -11,8 +11,7 @@ po::variables_map parseCLArgs(int argc, char *argv[]) {
     // Description of command line options
     po::options_description clDesc;
     clDesc.add_options()
-        ("configpath,c", po::value<std::string>()->default_value("/Users/acoogan/Dropbox/"
-             "heliosphere_anisotropy/helios/config/params.config", "configuration file"))
+        ("configpath,c", po::value<std::string>()->default_value("config/params.config", "configuration file"))
         ("outpath,o", po::value<std::string>(), "output file path (including csv extension)")
         ("numruns,n", po::value<int>()->default_value(1), "number of runs")
     ;
