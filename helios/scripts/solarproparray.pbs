@@ -8,4 +8,4 @@
 
 cd $PBS_O_WORKDIR
 
-./Helios -c params.config -o rundata/alt0/0.1GeV_run$PBS_ARRAYID\.csv
+./Helios -c params.config -o rundata/helios/alt0/0.1GeV_run$PBS_ARRAYID\.csv
