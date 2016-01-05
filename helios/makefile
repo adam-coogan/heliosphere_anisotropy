@@ -1,11 +1,12 @@
 ifeq ($(shell hostname),hyades.ucsc.edu)
-	CC=icpc -std=c++11 -I/pfs/sw/serial/gcc/boost-1.57.0/include # Broken?
+	CC=icpc -std=c++11 -I/pfs/sw/serial/gcc/boost-1.57.0/include
+	LFLAGS=/pfs/sw/serial/gcc/boost-1.57.0/lib/libboost_program_options.so.1.57.0
 else
 	CC=clang++ -std=c++11 -I /usr/local/opt/boost/include
+	LFLAGS=-lboost_program_options
 endif
 
 CFLAGS=-c -O2
-LFLAGS=-lboost_program_options
 OBJS=$(BUILDDIR)/Parameters.o $(BUILDDIR)/Basic3DParams.o
 BINDIR=bin
 BUILDDIR=build
