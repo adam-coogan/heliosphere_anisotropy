@@ -4,25 +4,47 @@
 Basic3DParams::Basic3DParams() : Parameters() {
     desc.add_options()
         // Strauss' model's parameters
-        ("deltar", po::value<double>()->default_value(0.01), "used for numerical radial derivatives (au)")
-        ("lambda0", po::value<double>()->default_value(0.15), "parallel mean free path constant (au)")
-        ("rRefLambda", po::value<double>()->default_value(1.0), "reference distance in mean free path (au)")
-        ("kperp_kpar", po::value<double>()->default_value(0.01), "ratio of k_perp to k_parallel")
-        ("rig0", po::value<double>()->default_value(1.0), "reference rigidity in mean free path (GV)")
-        ("ds", po::value<double>()->default_value(350), "timestep (s)")
-        ("b0", po::value<double>()->default_value(5.0), "reference magnetic field strength (nT)")
-        ("Ac", po::value<int>(), "HMF polarity (+/- 1)") // TODO: should be read in from a file
+        ("deltar", po::value<double>()->default_value(0.01)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), deltar)),
+                "used for numerical radial derivatives (au)")
+        ("lambda0", po::value<double>()->default_value(0.15)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), lambda0)),
+                "parallel mean free path constant (au)")
+        ("rRefLambda", po::value<double>()->default_value(1.0)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), rRefLambda)),
+                "reference distance in mean free path (au)")
+        ("kperp_kpar", po::value<double>()->default_value(0.01)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), kperp_kpar)),
+                "ratio of k_perp to k_parallel")
+        ("rig0", po::value<double>()->default_value(1.0)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), rig0)),
+                "reference rigidity in mean free path (GV)")
+        ("ds", po::value<double>()->default_value(350)->notifier(std::bind1st(std::mem_fun(&assignParam), ds)),
+                "timestep (s)")
+        ("b0", po::value<double>()->default_value(5.0)->notifier(std::bind1st(std::mem_fun(&assignParam), b0)),
+                "reference magnetic field strength (nT)")
+        ("Ac", po::value<int>()->notifier(std::bind1st(std::mem_fun(&assignParam), Ac)), "HMF polarity (+/- 1)") // TODO: should be read in from a file
         //("alpha", po::value<double>(), "HCS tilt angle (rad)") // TODO: implement and read from file
         // Jupiter parameters
-        ("ph0Jup", po::value<double>()->default_value(M_PI), "Jupiter's initial azimuthal position")
-        ("omegaJup", po::value<double>()->default_value(2 * M_PI / (4333 * 3600 * 24)), "Jupter's orbital "
-                                                                                                    "period")
-        ("rBeginJup", po::value<double>()->default_value(5.2 - 0.0477 * 2), "inner boundary of Jupiter's "
-                                                                                                    "volume")
-        ("rEndJup", po::value<double>()->default_value(5.2 + 0.095 * 2), "outer boundary of Jupiter's volume")
-        ("dthJup", po::value<double>()->default_value(0.009 * 2), "polar size of Jupiter's volume")
-        ("dphJup", po::value<double>()->default_value(0.009 * 2), "azimuthal size of Jupiter's volume")
-        ("thJup", po::value<double>()->default_value(M_PI / 2), "Jupiter's polar angle")
+        ("ph0Jup", po::value<double>()->default_value(M_PI)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), ph0Jup)),
+                "Jupiter's initial azimuthal position")
+        ("omegaJup", po::value<double>()->default_value(2 * M_PI / (4333 * 3600 * 24))
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), omegaJup)), "Jupiter's orbital period")
+        ("rBeginJup", po::value<double>()->default_value(5.2 - 0.0477 * 2)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), rBeginJup)), "inner boundary of Jupiter's volume")
+        ("rEndJup", po::value<double>()->default_value(5.2 + 0.095 * 2)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), rEndJup)),
+                "outer boundary of Jupiter's volume")
+        ("dthJup", po::value<double>()->default_value(0.009 * 2)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), dthJup)),
+                "polar size of Jupiter's volume")
+        ("dphJup", po::value<double>()->default_value(0.009 * 2)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), dphJup)),
+                "azimuthal size of Jupiter's volume")
+        ("thJup", po::value<double>()->default_value(M_PI / 2)
+                ->notifier(std::bind1st(std::mem_fun(&assignParam), thJup)),
+                "Jupiter's polar angle")
     ;
 }
 

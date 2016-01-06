@@ -125,10 +125,10 @@ TrajectoryBase<T>::TrajectoryBase(const std::string& paramFileName) : params() {
 template<class T>
 Status TrajectoryBase<T>::initialize() {
     // Set initial phase space coordinates
-    r = params.r0();
-    th = params.th0();
-    ph = params.ph0();
-    ek = params.ek0();
+    r = params.getR0();
+    th = params.getTh0();
+    ph = params.getPh0();
+    ek = params.getEk0();
     s = 0;
 
     updateVars();
@@ -148,9 +148,9 @@ Status TrajectoryBase<T>::initialize(const std::string& paramFileName) {
 template<class T>
 Status TrajectoryBase<T>::getStatus() {
     // Check status
-    if (r < params.rSun()) {
+    if (r < params.getRSun()) {
         status = Status::Sun;
-    } else if (r > params.rHP()) {
+    } else if (r > params.getRHP()) {
         status = Status::Heliopause;
     } else {
         status = Status::Running;
@@ -176,24 +176,24 @@ std::string TrajectoryBase<T>::stateToString() const {
 
 template<class T>
 void TrajectoryBase<T>::updateP() {
-    P = sqrt(ek*ek + 2 * ek * params.m()) / std::abs(params.charge());
+    P = sqrt(ek*ek + 2 * ek * params.getM()) / std::abs(params.getCharge());
 }
 
 template<class T>
 void TrajectoryBase<T>::updateBeta() {
-    beta = sqrt(ek*ek + 2 * ek * params.m()) / (ek + params.m());
+    beta = sqrt(ek*ek + 2 * ek * params.getM()) / (ek + params.getM());
 }
 
 template<class T>
 void TrajectoryBase<T>::updatePsi() {
-    tanPsi = params.omega() * (r - params.rSun()) * sin(th) / params.Vsw();
+    tanPsi = params.getOmega() * (r - params.getRSun()) * sin(th) / params.getVsw();
     cosPsi = 1 / sqrt(1 + tanPsi*tanPsi);
     sinPsi = sqrt(1 - cosPsi*cosPsi);
 }
 
 template<class T>
 void TrajectoryBase<T>::updateGamma() {
-    gamma = r * params.omega() * sin(th) / params.Vsw();
+    gamma = r * params.getOmega() * sin(th) / params.getVsw();
 }
 
 template<class T>
