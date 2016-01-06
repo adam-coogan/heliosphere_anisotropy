@@ -1,1 +1,2 @@
 2015-12-17 12:32 Figure out command line argument to pass to analysis scripts so they can be run on files generated StraussUnits, SDE.f90 and Helios.  Maybe just code relevant rundir paths and comment/uncomment as needed.
+2015-12-17 12:42 TEST HELIOS ON HYADES!!!
