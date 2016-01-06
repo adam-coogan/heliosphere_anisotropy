@@ -22,14 +22,14 @@ Parameters::Parameters() : desc("Simulation parameters") {
         ("th0", po::value<double>()->default_value(M_PI / 2)
                 ->notifier([this](const double& th0Par) { this->th0 = th0Par; }),
                 "initial polar angle (rad)")
-        ("ph0", po::value<double>()->default_value(0.0)->notifier(std::bind1st(&assignParam, ph0)),
+        ("ph0", po::value<double>()->default_value(0.0)
                 ->notifier([this](const double& ph0Par) { this->ph0 = ph0Par; }),
                 "initial azimuthal angle (rad)")
-        ("ek0", po::value<double>()->default_value(0.0)->notifier(std::bind1st(&assignParam, ek0)),
+        ("ek0", po::value<double>()->default_value(0.0)
                 ->notifier([this](const double& ek0Par) { this->ek0 = ek0Par; }),
                 "particle's initial kinetic energy (GeV)")
         // Minimum set of solar parameters
-        ("rHP", po::value<double>()->default_value(140)->notifier(std::bind1st(&assignParam, rHP)),
+        ("rHP", po::value<double>()->default_value(140)
                 ->notifier([this](const double& rHPPar) { this->rHP = rHPPar; }),
                 "distance from center of sun to heliopause (au)")
         ("rSun", po::value<double>()->default_value(0.005)
