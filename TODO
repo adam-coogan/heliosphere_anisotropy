@@ -1,2 +1,1 @@
 2015-12-17 12:32 Figure out command line argument to pass to analysis scripts so they can be run on files generated StraussUnits, SDE.f90 and Helios.  Maybe just code relevant rundir paths and comment/uncomment as needed.
-2016-01-05 13:54 Make Helios more efficient.  Try reducing the number of calls to variables_map in Parameters class.

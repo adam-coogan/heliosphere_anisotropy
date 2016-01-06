@@ -19,8 +19,11 @@ namespace po = boost::program_options;
 class Parameters {
     public:
         /*!
-         * Initializes parameter descriptions.  Subclasses must add new parameter descriptions in their 
-         * constructor.
+         * Initializes parameter descriptions.  A subclass must add new parameter descriptions for each new
+         * member variable in its constructor.  Parameter descriptions must have a notifier function of the
+         * form
+         *      [this](const double& varPar) { this->var = varPar; },
+         * where var is the parameter's name.
          */
         Parameters();
 
