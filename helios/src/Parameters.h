@@ -4,6 +4,7 @@
 #include <boost/program_options.hpp>
 #include <cmath>
 #include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -33,16 +34,16 @@ class Parameters {
 
         // TODO: check if valid before returning!  Throw exception if not.
         // Should not be overwriteable.
-        double m() const { return params["m"].as<double>(); };
-        int charge() const { return params["charge"].as<int>(); };
-        double r0() const { return params["r0"].as<double>(); };
-        double th0() const { return params["th0"].as<double>(); };
-        double ph0() const { return params["ph0"].as<double>(); };
-        double ek0() const { return params["ek0"].as<double>(); };
-        double rHP() const { return params["rHP"].as<double>(); };
-        double rSun() const { return params["rSun"].as<double>(); };
-        double omega() const { return params["omega"].as<double>(); };
-        double Vsw() const { return kmsToaus * params["Vsw"].as<double>(); };
+        double getM() const { return m; };
+        int getCharge() const { return charge; };
+        double getR0() const { return r0; };
+        double getTh0() const { return th0; };
+        double getPh0() const { return ph0; };
+        double getEk0() const { return ek0; };
+        double getRHP() const { return rHP; };
+        double getRSun() const { return rSun; };
+        double getOmega() const { return omega; };
+        double getVsw() const { return kmsToaus * Vsw; };
 
         /*!
          * Creates a string representation of the simulation's parameters.
@@ -56,19 +57,32 @@ class Parameters {
         const std::string& getParamFileName() const { return paramFileName; };
 
     protected:
-        //! Stores program parameters.
-        po::variables_map params;
-
         //! Description of parameters to read.
         // Should be a member variable so parameter descriptions can be accessed after the values are read.
         po::options_description desc;
 
+        //! Parameter file
+        std::string paramFileName;
+
+        //! Used to assign parameter values to internal variables
+        template <typename T>
+        void assignParam(T& var, const T& val) { var = val; };
+
+        // Store parameters as member variables to save time on lookup.
+        double m;
+        int charge;
+        double r0;
+        double th0;
+        double ph0;
+        double ek0;
+        double rHP;
+        double rSun;
+        double omega;
+        double Vsw;
+
         //! True if the parameters were successfully read from a file.
         // TODO: use this
         bool valid;
-
-        //! Parameter file
-        std::string paramFileName;
 
         //! 1 km / s = 6.685e-9 au / s.
         static constexpr double kmsToaus = 6.685e-9;
