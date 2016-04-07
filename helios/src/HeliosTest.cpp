@@ -1,4 +1,5 @@
 #include "Basic3D.h"
+#include "Basic3DParams.h"
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <limits>
@@ -23,7 +24,7 @@ int main(int argc, char *argv[]) {
     po::notify(clParams);
 
     // Make a test trajectory
-    Basic3D traj(clParams["configpath"].as<std::string>());
+    Basic3D<Basic3DParams> traj(clParams["configpath"].as<std::string>());
 
     std::cout << "Built a trajectory." << std::endl;
     std::cout << "Here's its state (r, th, ph, ek, s): " << traj.stateToString() << std::endl;
