@@ -113,8 +113,6 @@ class TrajectoryBase {
         // Functions for updating convenience variables.
         void updateP();
         void updateBeta();
-        void updatePsi();
-        void updateGamma();
 };
 
 template<class T>
@@ -185,24 +183,9 @@ void TrajectoryBase<T>::updateBeta() {
 }
 
 template<class T>
-void TrajectoryBase<T>::updatePsi() {
-    tanPsi = params.getOmega() * (r - params.getRSun()) * sin(th) / params.getVsw();
-    cosPsi = 1 / sqrt(1 + tanPsi*tanPsi);
-    sinPsi = sqrt(1 - cosPsi*cosPsi);
-}
-
-// TODO: put this and the next function into Basic3D since they depend on the B-field's form!!!
-template<class T>
-void TrajectoryBase<T>::updateGamma() {
-    gamma = r * params.getOmega() * sin(th) / params.getVsw();
-}
-
-template<class T>
 void TrajectoryBase<T>::updateVars() {
     updateP();
     updateBeta();
-    updatePsi();
-    updateGamma();
 }
 
 template<class T>

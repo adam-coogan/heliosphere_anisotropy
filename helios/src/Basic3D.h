@@ -124,9 +124,9 @@ template<class Par>
 void Basic3D<Par>::updateVars() {
     TrajectoryBase<Par>::updateVars();
 
-    // Only update diffusion tensor, etc after updating all other variables.  
     updatePsi();
     updateGamma();
+    // Only update diffusion tensor, etc after updating all other variables.  
     updateB();
     updateK();
     updateVdr();

@@ -21,9 +21,10 @@ class Wavy3D : public Basic3D<Par> {
         virtual void updateVdr();
 
         /*!
+         * This method is virtual since there are difference ways to calculate this.
          * \return angular extent of HCS at given radius and azimuthal angle.
          */
-        virtual double hcsExtent() const;
+        virtual double hcsExtent(double rS, double phS) const;
 
         // Gets distance to closest point on HCS
         virtual double getL() const;
@@ -46,8 +47,14 @@ class Wavy3D : public Basic3D<Par> {
         using Basic3D<Par>::updatePsi;
         using Basic3D<Par>::speedOfLight;
         using Basic3D<Par>::gamma;
+        using Basic3D<Par>::vd;
 };
 
+template<class Par>
+double Wavy3D<Par>::hcsExtent(double rS, double phS) const {
+    return M_PI / 2 + asin(sin(params.getAlpha()) * sin(phS - params.phPhase
+                + params.Omega() * rS / params.Vsw()));
+}
 
 template<class Par>
 void Wavy3D<Par>::updateVdr() {
