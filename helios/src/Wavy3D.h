@@ -26,8 +26,13 @@ class Wavy3D : public Basic3D<Par> {
          */
         virtual double hcsExtent(double rS, double phS) const;
 
-        // Gets distance to closest point on HCS
-        virtual double getL() const;
+        //! Gets distance to closest point on HCS.  Should return coordinates of that point as well.
+        double getLHCS() const;
+
+        /*! 
+         * \return xi, the angle between tangent to HCS and radial line.  The correct sign is also determined.
+         */
+        virtual double getXi(double rS, double thS, double phS) const;
 
         // Members are hidden during inheritance from a template class: these are all nondependent, and C++
         // won't look for them in the dependent base class.  Since these variables are used a lot, this seems
@@ -48,8 +53,23 @@ class Wavy3D : public Basic3D<Par> {
 
 template<class Par>
 double Wavy3D<Par>::hcsExtent(double rS, double phS) const {
-    return M_PI / 2 + asin(sin(params.getAlpha()) * sin(phS - params.phPhase
-                + params.Omega() * rS / params.Vsw()));
+    return M_PI / 2 + asin(sin(params.getAlpha()) * sin(phS - params.getPhPhase()
+                + params.getOmega() * rS / params.getVsw()));
+}
+
+// TODO: write this
+template<class Par>
+double Wavy3D<Par>::getLHCS() const {
+    return -1;
+}
+
+template<class Par>
+double Wavy3D<Par>::getXi(double rS, double thS, double phS) const {
+    double xi = params.Omega() * rS / (params.getVsw() * sinPsi * sin(thS))
+        * sqrt(pow(sin(params.getAlpha()), 2) - pow(cos(thS), 2));
+    double sgnXi = sgn(cos(phS - params.getPhPhase() + params.getOmega() * rS / params.getVsw()));
+
+    return sgnXi * xi;
 }
 
 template<class Par>
@@ -72,13 +92,15 @@ void Wavy3D<Par>::updateVdr() {
     vd.th = vdSign * vdCoeff * (2 + gamma*gamma) * gamma;
     vd.ph = vdSign * vdCoeff * gamma*gamma / tan(th);
 
-    // Compute HCS part of drifts
-    double d = fabs(r * cos(th));
+    // Compute HCS part of drifts.  This is different with a wavy HCS.
+    double hcsL = getLHCS();
     double rL = P / bMag * 0.0223; // (1 GV/c) / (1 nT) = 0.0223 au
 
-    if (d <= 2 * rL) {
+    if (hcsL <= 2 * rL) {
         double hcsDriftFact = params.getAc() * sgn(params.getCharge())
-            * (0.457 - 0.412 * d / rL + 0.0915 * pow(d / rL, 2)) * speedOfLight*beta;
+            * (0.457 - 0.412 * hcsL / rL + 0.0915 * pow(hcsL / rL, 2)) * speedOfLight*beta;
+
+        // This is different with a wavy HCS.
         vd.r += hcsDriftFact * sinPsi;
         vd.ph += hcsDriftFact * cosPsi;
 #if DEBUG
