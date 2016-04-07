@@ -32,22 +32,18 @@ class Wavy3D : public Basic3D<Par> {
         // Members are hidden during inheritance from a template class: these are all nondependent, and C++
         // won't look for them in the dependent base class.  Since these variables are used a lot, this seems
         // better than using this->... or TrajectoryBase<P>::.
-        using Basic3D<Par>::status;
         using Basic3D<Par>::params;
-        using Basic3D<Par>::s;
         using Basic3D<Par>::r;
         using Basic3D<Par>::th;
         using Basic3D<Par>::ph;
-        using Basic3D<Par>::ek;
         using Basic3D<Par>::P;
         using Basic3D<Par>::beta;
-        using Basic3D<Par>::tanPsi;
         using Basic3D<Par>::sinPsi;
         using Basic3D<Par>::cosPsi;
-        using Basic3D<Par>::updatePsi;
         using Basic3D<Par>::speedOfLight;
         using Basic3D<Par>::gamma;
         using Basic3D<Par>::vd;
+        using Basic3D<Par>::bMag;
 };
 
 template<class Par>
@@ -62,9 +58,9 @@ void Wavy3D<Par>::updateVdr() {
     double vdSign = 1;
 
     // Heaviside function comes in here
-    if (th > M_PI / 2) {
+    if (th > hcsExtent(r, ph)) {
         vdSign = -1;
-    } else if (th == M_PI / 2) {
+    } else if (th == hcsExtent(r, ph)) {
         vdSign = 0;
     }
 
