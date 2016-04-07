@@ -1,4 +1,5 @@
 #include "Basic3D.h"
+#include "Basic3DParams.h"
 #include "Simulation.h"
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Building simulation..." << std::endl;
 
         // Run the simulation
-        Simulation<Basic3D> sim(configPath, numRuns);
+        Simulation<Basic3D<Basic3DParams>> sim(configPath, numRuns);
 
         sim.run();
 

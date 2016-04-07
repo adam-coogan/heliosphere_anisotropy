@@ -1,7 +1,7 @@
 #ifndef BASIC3D
 #define BASIC3D
 
-#include "Basic3DParams.h"
+//#include "Basic3DParams.h"
 #include "DiffusionTensor.h"
 #include "DriftVelocity.h"
 #include "MagneticField.h"
@@ -28,8 +28,10 @@ typedef boost::variate_generator<MT19937, NDistribution> VariateGenerator;
 
 /*!
  * Implements the basic 3D model found in doi:10.1088/0004-637X/735/2/83 (Strauss et al).
+ * \param Par the parameter container type.  A container of type Basic3D should be used with this class.
  */
-class Basic3D : public TrajectoryBase<Basic3DParams> {
+template<class Par>
+class Basic3D : public TrajectoryBase<Par> {
     public:
         //! Override base class constructor to set up random number generator.
         Basic3D(std::string paramFileName);
@@ -42,22 +44,6 @@ class Basic3D : public TrajectoryBase<Basic3DParams> {
         virtual Status getStatus();
 
     protected:
-        // Members are hidden during inheritance from a template class.  Since these variables are used a lot,
-        // this seems better than using this->... or TrajectoryBase<Basic3DParams>::.
-        using TrajectoryBase<Basic3DParams>::status;
-        using TrajectoryBase<Basic3DParams>::params;
-        using TrajectoryBase<Basic3DParams>::s;
-        using TrajectoryBase<Basic3DParams>::r;
-        using TrajectoryBase<Basic3DParams>::th;
-        using TrajectoryBase<Basic3DParams>::ph;
-        using TrajectoryBase<Basic3DParams>::ek;
-        using TrajectoryBase<Basic3DParams>::P;
-        using TrajectoryBase<Basic3DParams>::beta;
-        using TrajectoryBase<Basic3DParams>::tanPsi;
-        using TrajectoryBase<Basic3DParams>::sinPsi;
-        using TrajectoryBase<Basic3DParams>::cosPsi;
-        using TrajectoryBase<Basic3DParams>::gamma;
-
         //! Jupiter's angular position
         double phJup;
 
@@ -96,24 +82,71 @@ class Basic3D : public TrajectoryBase<Basic3DParams> {
          */
         void updateVars();
 
+        /*!
+         * Updates angular variable associated with magnetic field.
+         */
+        void updatePsi();
+
+        /*!
+         * Updates variable associated with magnetic field.
+         */
+        void updateGamma();
+
+        // Members are hidden during inheritance from a template class: these are all nondependent, and C++
+        // won't look for them in the dependent base class.  Since these variables are used a lot, this seems
+        // better than using this->... or TrajectoryBase<P>::.
+        using TrajectoryBase<Par>::status;
+        using TrajectoryBase<Par>::params;
+        using TrajectoryBase<Par>::s;
+        using TrajectoryBase<Par>::r;
+        using TrajectoryBase<Par>::th;
+        using TrajectoryBase<Par>::ph;
+        using TrajectoryBase<Par>::ek;
+        using TrajectoryBase<Par>::P;
+        using TrajectoryBase<Par>::beta;
+        using TrajectoryBase<Par>::tanPsi;
+        using TrajectoryBase<Par>::sinPsi;
+        using TrajectoryBase<Par>::cosPsi;
+        using TrajectoryBase<Par>::updatePsi;
+        using TrajectoryBase<Par>::speedOfLight;
+        using TrajectoryBase<Par>::gamma;
+
     private:
         void updateKHelper();
 };
 
-Basic3D::Basic3D(std::string paramFileName) : TrajectoryBase<Basic3DParams>(paramFileName),
-        phJup(params.getPh0Jup()), engine(static_cast<unsigned int>(std::random_device{}())), distribution(0, 1),
-        generator(engine, distribution) { }
+template<class Par>
+Basic3D<Par>::Basic3D(std::string paramFileName) : TrajectoryBase<Par>(paramFileName),
+        phJup(params.getPh0Jup()), engine(static_cast<unsigned int>(std::random_device{}())),
+        distribution(0, 1), generator(engine, distribution) { }
 
-void Basic3D::updateVars() {
-    TrajectoryBase<Basic3DParams>::updateVars();
+template<class Par>
+void Basic3D<Par>::updateVars() {
+    TrajectoryBase<Par>::updateVars();
+
     // Only update diffusion tensor, etc after updating all other variables.  
+    updatePsi();
+    updateGamma();
     updateB();
     updateK();
     updateVdr();
 }
 
-Status Basic3D::getStatus() {
-    TrajectoryBase<Basic3DParams>::getStatus();
+template<class T>
+void Basic3D<T>::updatePsi() {
+    tanPsi = params.getOmega() * (r - params.getRSun()) * sin(th) / params.getVsw();
+    cosPsi = 1 / sqrt(1 + tanPsi*tanPsi);
+    sinPsi = sqrt(1 - cosPsi*cosPsi);
+}
+
+template<class T>
+void Basic3D<T>::updateGamma() {
+    gamma = r * params.getOmega() * sin(th) / params.getVsw();
+}
+
+template<class Par>
+Status Basic3D<Par>::getStatus() {
+    TrajectoryBase<Par>::getStatus();
 
     // Check whether particle ended in Jupiter's magnetosphere
     if (r > params.getRBeginJup() && r < params.getREndJup()
@@ -125,9 +158,10 @@ Status Basic3D::getStatus() {
     return status;
 }
 
-Status Basic3D::step() {
+template<class Par>
+Status Basic3D<Par>::step() {
     // Don't both stepping if simulation has finished
-    if (this->status == Status::Running) {
+    if (status == Status::Running) {
         // Updates everything
         updateVars();
 
@@ -171,7 +205,7 @@ Status Basic3D::step() {
         s += params.getDs();
 
         // Renormalize the angles
-        TrajectoryBase<Basic3DParams>::renormalize();
+        TrajectoryBase<Par>::renormalize();
 
         // Check the status
         getStatus();
@@ -180,12 +214,14 @@ Status Basic3D::step() {
     return status;
 }
 
-void Basic3D::updateB() {
+template<class Par>
+void Basic3D<Par>::updateB() {
     // Magnitude of magnetic field
     bMag = params.getB0() / (sqrt(1 + pow(1 - params.getRSun(), 2)) * r*r * cosPsi);
 }
 
-void Basic3D::updateK() {
+template<class Par>
+void Basic3D<Par>::updateK() {
     // Temporarily increment r to numerically differentiate k
     r += params.getDeltar();
     // Update convenience variables that depend on r
@@ -216,7 +252,8 @@ void Basic3D::updateK() {
 #endif
 }
 
-void Basic3D::updateKHelper() {
+template<class Par>
+void Basic3D<Par>::updateKHelper() {
     // Parallel and perpendicular diffusion components
     double kpar = (speedOfLight*beta / 3) * params.getLambda0() * (1 + r / params.getRRefLambda())
         * (P > params.getRig0() ? P / params.getRig0() : 1);
@@ -234,7 +271,8 @@ void Basic3D::updateKHelper() {
     k.thth = kperp; // kperp = kperp,th
 }
 
-void Basic3D::updateVdr() {
+template<class Par>
+void Basic3D<Par>::updateVdr() {
     // Sign of drift velocity.  Changes as the particle passes through the HCS.
     double vdSign = 1;
 

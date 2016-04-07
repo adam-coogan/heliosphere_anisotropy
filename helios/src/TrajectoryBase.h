@@ -191,6 +191,7 @@ void TrajectoryBase<T>::updatePsi() {
     sinPsi = sqrt(1 - cosPsi*cosPsi);
 }
 
+// TODO: put this and the next function into Basic3D since they depend on the B-field's form!!!
 template<class T>
 void TrajectoryBase<T>::updateGamma() {
     gamma = r * params.getOmega() * sin(th) / params.getVsw();
