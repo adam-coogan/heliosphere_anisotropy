@@ -98,16 +98,13 @@ class Basic3D : public TrajectoryBase<Par> {
         using TrajectoryBase<Par>::status;
         using TrajectoryBase<Par>::params;
         using TrajectoryBase<Par>::s;
-        using TrajectoryBase<Par>::r;
-        using TrajectoryBase<Par>::th;
-        using TrajectoryBase<Par>::ph;
+        using TrajectoryBase<Par>::pos;
         using TrajectoryBase<Par>::ek;
         using TrajectoryBase<Par>::P;
         using TrajectoryBase<Par>::beta;
         using TrajectoryBase<Par>::tanPsi;
         using TrajectoryBase<Par>::sinPsi;
         using TrajectoryBase<Par>::cosPsi;
-        using TrajectoryBase<Par>::updatePsi;
         using TrajectoryBase<Par>::speedOfLight;
         using TrajectoryBase<Par>::gamma;
 
@@ -134,14 +131,14 @@ void Basic3D<Par>::updateVars() {
 
 template<class T>
 void Basic3D<T>::updatePsi() {
-    tanPsi = params.getOmega() * (r - params.getRSun()) * sin(th) / params.getVsw();
+    tanPsi = params.getOmega() * (pos.getR() - params.getRSun()) * sin(pos.getTh()) / params.getVsw();
     cosPsi = 1 / sqrt(1 + tanPsi*tanPsi);
     sinPsi = sqrt(1 - cosPsi*cosPsi);
 }
 
 template<class T>
 void Basic3D<T>::updateGamma() {
-    gamma = r * params.getOmega() * sin(th) / params.getVsw();
+    gamma = pos.getR() * params.getOmega() * sin(pos.getTh()) / params.getVsw();
 }
 
 template<class Par>
@@ -149,9 +146,10 @@ Status Basic3D<Par>::getStatus() {
     TrajectoryBase<Par>::getStatus();
 
     // Check whether particle ended in Jupiter's magnetosphere
-    if (r > params.getRBeginJup() && r < params.getREndJup()
-            && ph > phJup - params.getDphJup() && ph < phJup + params.getDphJup()
-            && th > params.getThJup() - params.getDthJup() && th < params.getThJup() + params.getDthJup()) {
+    if (pos.getR() > params.getRBeginJup() && pos.getR() < params.getREndJup()
+            && pos.getPh() > phJup - params.getDphJup() && pos.getPh() < phJup + params.getDphJup()
+            && pos.getTh() > params.getThJup() - params.getDthJup()
+                && pos.getTh() < params.getThJup() + params.getDthJup()) {
         status = Status::Jupiter;
     }
 
@@ -166,17 +164,18 @@ Status Basic3D<Par>::step() {
         updateVars();
 
         // Compute all the differentials
-        double dr_ds = 2 / r * k.rr + k.rr_dr - (params.getVsw() + vd.r);
+        double dr_ds = 2 / pos.getR() * k.rr + k.rr_dr - (params.getVsw() + vd.r);
         double dr_dWr = sqrt(2 * k.rr - 2 * k.rph*k.rph / k.phph);
         double dr_dWph = k.rph * sqrt(2 / k.phph);
 
-        double dth_ds = 1 / (r*r * tan(th)) * k.thth - vd.th / r;
-        double dth_dWth = sqrt(2 * k.thth) / r;
+        double dth_ds = 1 / (pow(pos.getR(), 2) * tan(pos.getTh())) * k.thth - vd.th / pos.getR();
+        double dth_dWth = sqrt(2 * k.thth) / pos.getR();
 
-        double dph_ds = 1 / (r*r * sin(th)) * k.rph + 1 / (r * sin(th)) * k.rph_dr - vd.ph / (r * sin(th));
-        double dph_dWph = sqrt(2 * k.phph) / (r * sin(th));
+        double dph_ds = 1 / (pow(pos.getR(), 2) * sin(pos.getTh())) * k.rph
+            + 1 / (pos.getR() * sin(pos.getTh())) * k.rph_dr - vd.ph / (pos.getR() * sin(pos.getTh()));
+        double dph_dWph = sqrt(2 * k.phph) / (pos.getR() * sin(pos.getTh()));
 
-        double dek_ds = 2 * params.getVsw() / (3 * r) * beta*beta * (ek + params.getM());
+        double dek_ds = 2 * params.getVsw() / (3 * pos.getR()) * beta*beta * (ek + params.getM());
 
         // Generate the Wiener terms
         double dWr = generator() * sqrt(params.getDs());
@@ -194,18 +193,15 @@ Status Basic3D<Par>::step() {
         std::cout << "dE_ds = " << dek_ds << std::endl;
 #endif
 
-        // Move the particle
-        r += dr_ds * params.getDs() + dr_dWr * dWr + dr_dWph * dWph;
-        th += dth_ds * params.getDs() + dth_dWth * dWth;
-        ph += dph_ds * params.getDs() + dph_dWph * dWph;
+        // Move the particle.  Point class handles renormalizing the angles and radius.
+        pos.incrR(dr_ds * params.getDs() + dr_dWr * dWr + dr_dWph * dWph);
+        pos.incrTh(dth_ds * params.getDs() + dth_dWth * dWth);
+        pos.incrPh(dph_ds * params.getDs() + dph_dWph * dWph);
         ek += dek_ds * params.getDs();
         // Move Jupiter
         phJup -= params.getOmegaJup() * params.getDs();
         // Advance the backwards clock!
         s += params.getDs();
-
-        // Renormalize the angles
-        TrajectoryBase<Par>::renormalize();
 
         // Check the status
         getStatus();
@@ -217,13 +213,13 @@ Status Basic3D<Par>::step() {
 template<class Par>
 void Basic3D<Par>::updateB() {
     // Magnitude of magnetic field
-    bMag = params.getB0() / (sqrt(1 + pow(1 - params.getRSun(), 2)) * r*r * cosPsi);
+    bMag = params.getB0() / (sqrt(1 + pow(1 - params.getRSun(), 2)) * pow(pos.getR(), 2) * cosPsi);
 }
 
 template<class Par>
 void Basic3D<Par>::updateK() {
     // Temporarily increment r to numerically differentiate k
-    r += params.getDeltar();
+    pos.incrR(params.getDeltar());
     // Update convenience variables that depend on r
     updatePsi();
     updateKHelper();
@@ -231,7 +227,7 @@ void Basic3D<Par>::updateK() {
     double krph_r = k.rph;
 
     // Compute tensor elements at actual point
-    r -= params.getDeltar();
+    pos.incrR(-params.getDeltar());
     updatePsi();
     updateKHelper();
 
@@ -255,7 +251,7 @@ void Basic3D<Par>::updateK() {
 template<class Par>
 void Basic3D<Par>::updateKHelper() {
     // Parallel and perpendicular diffusion components
-    double kpar = (speedOfLight*beta / 3) * params.getLambda0() * (1 + r / params.getRRefLambda())
+    double kpar = (speedOfLight*beta / 3) * params.getLambda0() * (1 + pos.getR() / params.getRRefLambda())
         * (P > params.getRig0() ? P / params.getRig0() : 1);
     double kperp = params.getKperp_kpar() * kpar;
 #if DEBUG
@@ -277,22 +273,22 @@ void Basic3D<Par>::updateVdr() {
     double vdSign = 1;
 
     // Heaviside function comes in here
-    if (th > M_PI / 2) {
+    if (pos.getTh() > M_PI / 2) {
         vdSign = -1;
-    } else if (th == M_PI / 2) {
+    } else if (pos.getTh() == M_PI / 2) {
         vdSign = 0;
     }
 
     // Gradient and curvature part of drift velocity
-    double vdCoeff = 4.468e-5 * (2 * P * beta * r) // (1 GV) / (1 nT * 1 au) = 4.468e-5 au / s
+    double vdCoeff = 4.468e-5 * (2 * P * beta * pos.getR()) // (1 GV) / (1 nT * 1 au) = 4.468e-5 au / s
         / (3 * pow(1 + gamma*gamma, 2) * sgn(params.getCharge()) * params.getAc() * params.getB0()
                 * pow(params.getR0(), 2));
-    vd.r = vdSign * vdCoeff * (-gamma / tan(th));
+    vd.r = vdSign * vdCoeff * (-gamma / tan(pos.getTh()));
     vd.th = vdSign * vdCoeff * (2 + gamma*gamma) * gamma;
-    vd.ph = vdSign * vdCoeff * gamma*gamma / tan(th);
+    vd.ph = vdSign * vdCoeff * gamma*gamma / tan(pos.getTh());
 
     // Compute HCS part of drifts
-    double d = fabs(r * cos(th));
+    double d = fabs(pos.getR() * cos(pos.getTh()));
     double rL = P / bMag * 0.0223; // (1 GV/c) / (1 nT) = 0.0223 au
 
     if (d <= 2 * rL) {
