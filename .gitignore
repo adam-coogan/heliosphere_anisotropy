@@ -17,6 +17,8 @@ plots/*
 *.DS_Store
 *.swp
 *.pyc
+*.aux
+*.log
 
 solarprop_rolf_kappl/
 

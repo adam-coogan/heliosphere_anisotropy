@@ -2,6 +2,8 @@
 #define WAVY3D 
 
 #include "Basic3D.h"
+#include "Point.h"
+#include <tuple>
 
 /*!
  * Adds a wavy HCS into the basic heliosphere model.  See doi:10.1007/s10509-012-1003-z (Strauss et al 2012)
@@ -26,13 +28,17 @@ class Wavy3D : public Basic3D<Par> {
          */
         virtual double hcsExtent(double rS, double phS) const;
 
-        //! Gets distance to closest point on HCS.  Should return coordinates of that point as well.
-        double getLHCS() const;
+        /*!
+         * Gets distance to closest point on HCS.
+         * \return tuple containing the point in the HCS closest to the particle and the distance between the
+         * particle and point in AU.
+         */
+        std::tuple<Point, double> getLHCS() const;
 
         /*! 
          * \return xi, the angle between tangent to HCS and radial line.  The correct sign is also determined.
          */
-        virtual double getXi(double rS, double thS, double phS) const;
+        virtual double getXi(const Point& hcsPt) const;
 
         // Members are hidden during inheritance from a template class: these are all nondependent, and C++
         // won't look for them in the dependent base class.  Since these variables are used a lot, this seems
@@ -58,18 +64,21 @@ double Wavy3D<Par>::hcsExtent(double rS, double phS) const {
 }
 
 // TODO: write this
+// TODO: return closest point's coordinates.  May want to make a coordinate class, which could then be used
+// by TrajectoryBase.
 template<class Par>
-double Wavy3D<Par>::getLHCS() const {
-    return -1;
+std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
+    return std::tuple<Point, double>(Point(0, 0, 0), 0); // placeholder
 }
 
 template<class Par>
-double Wavy3D<Par>::getXi(double rS, double thS, double phS) const {
-    double xi = params.Omega() * rS / (params.getVsw() * sinPsi * sin(thS))
-        * sqrt(pow(sin(params.getAlpha()), 2) - pow(cos(thS), 2));
-    double sgnXi = sgn(cos(phS - params.getPhPhase() + params.getOmega() * rS / params.getVsw()));
+double Wavy3D<Par>::getXi(const Point& hcsPt) const {
+    double tanXi = params.Omega() * hcsPt.getR() / (params.getVsw() * sinPsi * sin(hcsPt.getTh()))
+        * sqrt(pow(sin(params.getAlpha()), 2) - pow(cos(hcsPt.getTh()), 2));
+    double sgnXi = sgn(cos(hcsPt.getPh() - params.getPhPhase()
+                + params.getOmega() * hcsPt.getR() / params.getVsw()));
 
-    return sgnXi * xi;
+    return sgnXi * atan(tanXi);
 }
 
 template<class Par>
@@ -92,20 +101,35 @@ void Wavy3D<Par>::updateVdr() {
     vd.th = vdSign * vdCoeff * (2 + gamma*gamma) * gamma;
     vd.ph = vdSign * vdCoeff * gamma*gamma / tan(th);
 
-    // Compute HCS part of drifts.  This is different with a wavy HCS.
-    double hcsL = getLHCS();
+    // Larmor radius
     double rL = P / bMag * 0.0223; // (1 GV/c) / (1 nT) = 0.0223 au
 
-    if (hcsL <= 2 * rL) {
-        double hcsDriftFact = params.getAc() * sgn(params.getCharge())
-            * (0.457 - 0.412 * hcsL / rL + 0.0915 * pow(hcsL / rL, 2)) * speedOfLight*beta;
+    // Check whether it's even possible for L < 2 r_L to be true
+    if (abs(th - M_PI / 2) <= params.getAlpha()
+            || (th < M_PI / 2 - params.getAlpha() && r * cos(params.getAlpha() + th) <= 2 * rL)
+            || (th > M_PI / 2 + params.getAlpha() && -r * cos(th - params.getAlpha()) <= 2 * rL)) {
+        // If it is possible, actually compute L
+        Point hcsPoint;
+        double hcsL;
+        std::tie(hcsPoint, hcsL) = getLHCS(); // unpacks the tuple returned by getLHCS()
 
-        // This is different with a wavy HCS.
-        vd.r += hcsDriftFact * sinPsi;
-        vd.ph += hcsDriftFact * cosPsi;
+        // If L is really less than 2 r_L, compute HCS drift velocity
+        if (hcsL <= 2 * rL) {
+            // Standard approximation
+            double hcsDriftFact = params.getAc() * sgn(params.getCharge())
+                * (0.457 - 0.412 * hcsL / rL + 0.0915 * pow(hcsL / rL, 2)) * speedOfLight*beta;
+            
+            // Get the angle xi
+            double xi = getXi(hcsPoint);
+
+            // This is different with a wavy HCS.
+            vd.r += hcsDriftFact * sinPsi * cos(xi);
+            vd.th += hcsDriftFact * sin(xi);
+            vd.ph += hcsDriftFact * cosPsi * cos(xi);
 #if DEBUG
-        std::cout << "hcsDriftFact = " << hcsDriftFact << std::endl;
+            std::cout << "hcsDriftFact = " << hcsDriftFact << std::endl;
 #endif
+        }
     }
 
     // Drift reduction factor
