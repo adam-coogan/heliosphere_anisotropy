@@ -6,42 +6,54 @@
 
 class Point {
     public:
+        //! Default constructor
+        Point() { set(0, 0, 0); };
+
         Point(double rn, double thn, double phn) {
             set(rn, thn, phn);
         };
+
+        double getR() const { return r; };
+        double getTh() const { return th; };
+        double getPh() const { return ph; };
 
         /*!
          * \arg rn new radial coordinate for the point
          * \return this point with r set to rn.  If rn < 0, th is set to pi + th.
          */
-        Point& setR(double rn) {
+        void setR(double rn) {
             if (rn < 0) {
                 r = std::abs(rn);
                 setTh(M_PI + th);
             } else {
                 r = rn;
             }
-
-            return *this;
         };
+
+        //! Increments r
+        void incrR(double deltaR) { setR(r + deltaR); };
 
         /*!
          * \arg thn new polar angle for the point
          * \return this point with th set to thn
          */
-        Point& setTh(double thn) {
+        void setTh(double thn) {
             th = thn;
-            return renormalizeTh();
         };
+
+        //! Increments th
+        void incrTh(double deltaTh) { setTh(r + deltaTh); };
 
         /*!
          * \arg phn new azimuthal angle for the point
          * \return this point with ph set to phn
          */
-        Point& setPh(double phn) {
+        void setPh(double phn) {
             ph = phn;
-            return renormalizePh();
         };
+
+        //! Increments ph
+        void incrPh(double deltaPh) { setPh(r + deltaPh); };
 
         //! Resets all coordinates, renormalizing if necessary
         void set(double rn, double thn, double phn) {
@@ -58,7 +70,7 @@ class Point {
         /*!
          * \return this point with th and ph renormalized to lie within [0, pi] and [0, 2 pi]
          */
-        Point& renormalizeTh() {
+        void renormalizeTh() {
             while (th > M_PI) {
                 th = 2 * M_PI - th;
                 ph = ph - M_PI;
@@ -68,14 +80,12 @@ class Point {
                 th = -th;
                 ph += M_PI;
             }
-
-            return renormalizePh();
         };
 
         /*!
          * \return this point with ph renormalized to lie within [0, 2 pi]
          */
-        Point& renormalizePh() {
+        void renormalizePh() {
             while (ph > 2 * M_PI) {
                 ph -= 2 * M_PI;
             }
@@ -83,8 +93,6 @@ class Point {
             while (ph < 0) {
                 ph += 2 * M_PI;
             }
-
-            return *this;
         };
 };
 
