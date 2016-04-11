@@ -7,6 +7,7 @@
 #include <limits>
 #include <sstream>
 #include <string>
+#include "Point.h"
 
 /*!
  * Describes a trajectory's status.  Contains Jupiter since there's no way to extend enums.
@@ -81,12 +82,8 @@ class TrajectoryBase {
 
         //! Backwards time (seconds).
         double s;
-        //! Distance from center of sun (au).
-        double r;
-        //! Polar angle (radians).
-        double th;
-        //! Azimuthal angle (radians).
-        double ph;
+        //! Particle's current position
+        Point pos;
         //! Kinetic energy (GeV).
         double ek;
 
@@ -105,11 +102,6 @@ class TrajectoryBase {
          */
         virtual void updateVars();
 
-        /*!
-         * Recalculates angles to make sure th is in [0, pi] and ph is in [0, 2pi].
-         */
-        void renormalize();
-
         // Functions for updating convenience variables.
         void updateP();
         void updateBeta();
@@ -123,9 +115,7 @@ TrajectoryBase<T>::TrajectoryBase(const std::string& paramFileName) : params() {
 template<class T>
 Status TrajectoryBase<T>::initialize() {
     // Set initial phase space coordinates
-    r = params.getR0();
-    th = params.getTh0();
-    ph = params.getPh0();
+    pos.set(params.getR0(), params.getTh0(), params.getPh0());
     ek = params.getEk0();
     s = 0;
 
@@ -146,9 +136,9 @@ Status TrajectoryBase<T>::initialize(const std::string& paramFileName) {
 template<class T>
 Status TrajectoryBase<T>::getStatus() {
     // Check status
-    if (r < params.getRSun()) {
+    if (pos.getR() < params.getRSun()) {
         status = Status::Sun;
-    } else if (r > params.getRHP()) {
+    } else if (pos.getR() > params.getRHP()) {
         status = Status::Heliopause;
     } else {
         status = Status::Running;
@@ -163,9 +153,9 @@ std::string TrajectoryBase<T>::stateToString() const {
     std::ostringstream out;
     out << std::setprecision(std::numeric_limits<double>::digits10);
 
-    out << static_cast<long double>(r) << ","
-        << static_cast<long double>(th) << ","
-        << static_cast<long double>(ph) << ","
+    out << static_cast<long double>(pos.getR()) << ","
+        << static_cast<long double>(pos.getTh()) << ","
+        << static_cast<long double>(pos.getPh()) << ","
         << static_cast<long double>(ek) << ","
         << static_cast<long double>(s);
 
@@ -186,27 +176,6 @@ template<class T>
 void TrajectoryBase<T>::updateVars() {
     updateP();
     updateBeta();
-}
-
-template<class T>
-void TrajectoryBase<T>::renormalize() {
-    while (th > M_PI) {
-        th = 2 * M_PI - th;
-        ph = ph - M_PI;
-    }
-
-    while (th < 0) {
-        th = -th;
-        ph += M_PI;
-    }
-
-    while (ph > 2 * M_PI) {
-        ph -= 2 * M_PI;
-    }
-
-    while (ph < 0) {
-        ph += 2 * M_PI;
-    }
 }
 
 #endif
