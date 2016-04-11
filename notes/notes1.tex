@@ -1,0 +1,104 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsfonts, slashed, dsfont, hyperref, comment, feynmp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[margin=1in]{geometry}
+\usepackage{sectsty}
+\sectionfont{\large}
+
+% Needed for feynmp
+\DeclareGraphicsRule{*}{mps}{*}{}
+
+\renewcommand\u[1]{\text{#1}} % No space
+\newcommand{\us}[1]{\text{ #1}} % Space
+\newcommand{\ee}[1]{\times10^{{#1}}}
+\renewcommand\L{\mathcal{L}}
+\newcommand{\M}{\mathcal{M}}
+\renewcommand\d{\partial}
+\newcommand{\bigo}{\mathcal{O}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\vev}[1]{\langle{#1}\rangle}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sgn}{\operatorname{sgn}}
+
+\begin{document}
+
+\section{Wavy heliospheric current sheet}
+
+Both components of the drift velocity are modified by the waviness:
+\begin{itemize}
+    \item
+        There is a Heaviside step function in the Parker field:
+        \begin{align*}
+            \vec{B} &= A_c B_0 \left( \frac{r_0}{r} \right)^2 \left( \hat{r} - \frac{\Omega r \sin\theta}{V_{sw}} \hat{\phi} \right) H(\theta' - \theta),
+        \end{align*}
+        where $\theta'$ is the angular extent of the HCS.  In Strauss et al 2012 this is given by eq 11:
+        \begin{align*}
+            \theta' &= \frac{\pi}{2} + \sin^{-1}\left[ \sin\alpha \sin\left( \phi - \phi_0(t) + \frac{\Omega r}{V_{sw}} \right) \right],
+        \end{align*}
+        where $\phi_0(t) = \phi_0 + \Omega t$ and $\phi_0$ is an arbitrary phase.  In the code, the step function appears when calculating the gradient/curvature part of the drift velocity.
+
+        \textbf{TODO}:
+        \begin{itemize}
+            \item
+                How is $\phi_0$ determined?
+            \item
+                $\alpha$ should also be time dependent.  How should I implement this? Parameter file should probably point to table of $\alpha$ vs $t$, which the parameter object can then parse.  The date at which the particle was observed at Earth can be specified in the run file.
+        \end{itemize}
+    \item
+        The HCS drift velocity is also affected.  It takes the form (eq 17)
+        \begin{align*}
+            \vec{v}_{hcs} &= v_{hcs} \left[ \cos A_\xi \xi \sin \Psi \hat{r} + \sin A_\xi \xi \hat{\theta} + \cos A_\xi \xi \cos\Psi \hat{\phi} \right] A_c \sgn q.
+        \end{align*}
+        The angle $\xi$ ($\beta$ in the reference) between the tangent to the HCS and the radial line passing through the point on the HCS is given by
+        \begin{align*}
+            \tan^2 \xi &= \left[ -r \frac{\d\theta'}{\d r} \right]^2 + \left[ \frac{1}{\sin\theta} \frac{\d \theta'}{\d\phi} \right]^2\\
+            \implies \tan \xi &= \frac{\Omega r}{V_{sw}} \frac{1}{\sin \Psi} \frac{\sqrt{\sin^2\alpha - \cos^2\theta'}}{\sin\theta'} \us{(for Parker field)}.
+        \end{align*}
+        The sign of $\xi$, $A_\xi = \pm 1$, is equal to the sign of $\d\theta'/\d r$:
+        \begin{align*}
+            A_\xi &= \sgn \cos\left( \phi - \phi_0(t) + \frac{\Omega r}{V_{sw}} \right).
+        \end{align*}
+        $v_{hcs}$ is given by the usual approximation:
+        \begin{align*}
+            v_{hcs} &= \left[ 0.457 - 0.412 \frac{L}{r_L} + 0.915 \frac{L^2}{r_L^2} \right] v,
+        \end{align*}
+        where $L$ is the smallest distance from the particle's position to the HCS.  If $L > 2 r_L$, $v_{hcs}$ is zero.  Finally, $\xi$ is evaluated at the HCS point which minimizes $L$.
+\end{itemize}
+
+The hard part of these modifications is calculating $L$, which cannot be done analytically and is expensive.  If
+\begin{itemize}
+    \item
+        $|\theta - \frac{\pi}{2}| \leq \alpha$,
+    \item
+        $\theta < \frac{\pi}{2} - \alpha$ and $L_+^{th} \leq 2 r_L$, where $L_+^{th} = r \cos(\alpha + \theta)$ is the distance from the particle to the surface bounding the HCS above,
+    \item
+        Or $\theta > \frac{\pi}{2} + \alpha$ and $L_-^{th} = - r \cos(\theta - \alpha) \leq 2 r_L$,
+\end{itemize}
+we compute $L$ using the Nelder-Mead simplex algorithm.  Here are the steps for minimizing $L(r_s, \phi_s)$, where $r_s$ and $\phi_s$ are the coordinates of a point in the sheet:
+\begin{enumerate}
+    \setcounter{enumi}{-1}
+    \item
+        Choose an initial set of points $\vec{x}_1$, $\vec{x}_2$, $\vec{x}_3$.
+    \item
+        Order vertices: $L(\vec{x}_1) \leq L(\vec{x}_2) \leq L(\vec{x}_3)$.
+    \item
+        Compute $\vec{x}_O = \frac{1}{2} (\vec{x}_1 + \vec{x}_2)$.
+    \item
+        Compute reflected point $\vec{x}_R = \vec{x}_O + \alpha (\vec{x}_O - \vec{x}_3)$.  If $L(\vec{x}_1) \leq L(\vec{x}_R) < L(\vec{x}_2)$, replace $\vec{x}_3$ with $\vec{x}_R$ and go to step 1.
+    \item
+        If $L(\vec{x}_R) < L(\vec{x}_1)$, compute expanded point $\vec{x}_E = \vec{x}_O + \gamma (\vec{x}_R - \vec{x}_O)$.  
+
+        If $L(\vec{x}_E) < L(\vec{x}_R)$, replace $\vec{x}_3$ with $\vec{x}_E$ and go to step 1.
+
+        Else, replace $\vec{x}_3$ with $\vec{x}_R$ and go to step 1.
+    \item
+        Compute contracted point $\vec{x}_C = \vec{x}_O + \rho (\vec{x}_3 - \vec{x}_O)$.
+
+        If $L(\vec{x}_C) < L(\vec{x}_3)$, replace $\vec{x}_3$ with $\vec{x}_C$ and go to step 1.
+    \item
+        For all but the $\vec{x}_1$, replace $\vec{x}_i$ with $\vec{x}_1 + \sigma (\vec{x}_i - \vec{x}_1)$.  Go to step 1.
+\end{enumerate}
+Standard values for the constants are $\alpha = 1$, $\gamma = 2$, $\rho = 1/2$, $\sigma = 1/2$.  
+
+\end{document}
