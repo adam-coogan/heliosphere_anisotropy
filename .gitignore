@@ -19,6 +19,7 @@ plots/*
 *.pyc
 *.aux
 *.log
+*.out
 
 solarprop_rolf_kappl/
 
