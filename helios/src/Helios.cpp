@@ -1,6 +1,7 @@
 #include "Basic3D.h"
 #include "Basic3DParams.h"
 #include "Simulation.h"
+#include "Wavy3D.h"
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <limits>

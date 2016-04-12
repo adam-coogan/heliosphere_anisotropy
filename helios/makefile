@@ -7,7 +7,7 @@ else
 endif
 
 CFLAGS=-c -O2
-OBJS=$(BUILDDIR)/Parameters.o $(BUILDDIR)/Basic3DParams.o
+OBJS=$(BUILDDIR)/Parameters.o $(BUILDDIR)/Basic3DParams.o $(BUILDDIR)/Point.o
 BINDIR=bin
 BUILDDIR=build
 SRCDIR=src
@@ -35,7 +35,7 @@ $(BUILDDIR)/HeliosTest.o: $(SRCDIR)/HeliosTest.cpp $(SRCDIR)/Basic3D.h
 Helios: $(OBJS) $(BUILDDIR)/Helios.o
 	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/Helios.o -o $(BINDIR)/Helios
 
-$(BUILDDIR)/Helios.o: $(SRCDIR)/Helios.cpp $(SRCDIR)/Basic3D.h $(SRCDIR)/Simulation.h
+$(BUILDDIR)/Helios.o: $(SRCDIR)/Helios.cpp $(SRCDIR)/Basic3D.h $(SRCDIR)/Simulation.h $(SRCDIR)/Wavy3D.h
 	$(CC) $(CFLAGS) $< -o $@
 
 # Objects
@@ -45,6 +45,9 @@ $(BUILDDIR)/Basic3DParams.o: $(SRCDIR)/Parameters.h $(SRCDIR)/Basic3DParams.h $(
 
 $(BUILDDIR)/Parameters.o: $(SRCDIR)/Parameters.h $(SRCDIR)/Parameters.cpp
 	$(CC) $(CFLAGS) $(SRCDIR)/Parameters.cpp -o $@
+
+$(BUILDDIR)/Point.o: $(SRCDIR)/Point.h $(SRCDIR)/Point.cpp
+	$(CC) $(CFLAGS) $(SRCDIR)/Point.cpp -o $@
 
 clean:
 	\rm $(BUILDDIR)/*o
