@@ -123,6 +123,15 @@ Point& Point::operator*=(const T& scalar) {
     return *this;
 }
 
+template<typename T>
+Point& Point::operator/=(const T& scalar) {
+    if (scalar != 0) {
+        return *this *= 1.0 / scalar;
+    } else {
+        throw std::domain_error("Point::operator/=: cannot divide by zero.");
+    }
+}
+
 Point Point::operator+(const Point& pt) const {
     return Point(*this) += pt;
 }
@@ -136,12 +145,23 @@ Point Point::operator*(const T& scalar) const {
     return Point(*this) *= scalar;
 }
 
+template<typename T>
+Point Point::operator/(const T& scalar) const {
+    return Point(*this) /= scalar;
+}
+
 bool Point::operator==(const Point& pt) const {
     return (r == pt.getR()) && (th == pt.getTh()) && (ph == pt.getPh());
 }
 
 bool Point::operator!=(const Point& pt) const {
     return !(*this == pt);
+}
+
+double Point::dist(const Point& pt1, const Point& pt2) {
+    return sqrt(pow(pt1.getR(), 2) + pow(pt2.getR(), 2) - 2 * pt1.getR() * pt2.getR()
+            * (sin(pt1.getTh()) * sin(pt2.getTh()) * cos(pt1.getPh() - pt2.getPh())
+                + cos(pt1.getTh()) * cos(pt2.getTh())));
 }
 
 

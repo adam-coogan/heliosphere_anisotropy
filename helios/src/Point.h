@@ -53,16 +53,23 @@ class Point {
         Point& operator-=(const Point& pt);
         template<typename T>
         Point& operator*=(const T& scalar);
+        template<typename T>
+        Point& operator/=(const T& scalar);
         //! Binary arithmetic operators
         Point operator+(const Point& pt) const;
-        // TODO: implement this
+        // TODO: implement this.  It'll (very slightly) clean up the increments in the simulation.
         //Point operator+(const std::tuple<double, double, double>& pt) const;
         Point operator-(const Point& pt) const;
         template<typename T>
         Point operator*(const T& scalar) const;
+        template<typename T>
+        Point operator/(const T& scalar) const;
         //! Comparison operators
         bool operator==(const Point& pt) const;
         bool operator!=(const Point& pt) const;
+
+        //! Gets distance between two points
+        static double dist(const Point& pt1, const Point& pt2);
 
     private:
         double r;
