@@ -57,7 +57,7 @@ Cell[BoxData[{
  CellChangeTimes->{{3.631896123403154*^9, 3.6318961605630007`*^9}, {
   3.6319031977417297`*^9, 3.631903230765733*^9}, {3.6319033276997347`*^9, 
   3.6319033334763947`*^9}}]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -208,7 +208,7 @@ Cell[BoxData[
  CellGroupingRules->{GroupTogetherGrouping, 10001.},
  CellChangeTimes->{{3.631648554988867*^9, 3.631648596804173*^9}, {
   3.6316486506024523`*^9, 3.63164865769837*^9}}]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -401,7 +401,7 @@ Cell[BoxData[
    3.6316423665926037`*^9, {3.631651127879848*^9, 3.631651144742494*^9}, {
    3.6316512127828407`*^9, 3.6316512136718607`*^9}, {3.6316539683823967`*^9, 
    3.631653969246009*^9}}]
-}, Closed]]
+}, Open  ]]
 },
 Evaluator->"heliosphere",
 WindowSize->{740, 552},
@@ -427,9 +427,9 @@ Cell[774, 29, 399, 9, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
 Cell[1176, 40, 670, 18, 57, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}]
-}, Closed]],
+}, Open  ]],
 Cell[CellGroupData[{
-Cell[1883, 63, 286, 7, 22, "Input",
+Cell[1883, 63, 286, 7, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10003.}],
 Cell[2172, 72, 4934, 112, 353, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10003.}]
@@ -439,9 +439,9 @@ Cell[7143, 189, 252, 5, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}],
 Cell[7398, 196, 440, 13, 70, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10001.}]
-}, Closed]],
+}, Open  ]],
 Cell[CellGroupData[{
-Cell[7875, 214, 236, 4, 22, "Input",
+Cell[7875, 214, 236, 4, 28, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}],
 Cell[8114, 220, 644, 17, 48, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}],
@@ -451,7 +451,7 @@ Cell[9635, 265, 3241, 79, 204, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}],
 Cell[12879, 346, 2068, 56, 127, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10004.}]
-}, Closed]]
+}, Open  ]]
 }
 ]
 *)

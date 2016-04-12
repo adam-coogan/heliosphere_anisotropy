@@ -38,7 +38,7 @@ def pairwise(iterable):
 if __name__ == "__main__":
     # E^LIS bins
     #ekLISBins = list(pairwise([a * 1e0 for a in range(1, 3)]))
-    ekLISBins = [(0.05, 0.06), (0.1, 0.2), (0.5, 0.6), (1.0, 2.0)]
+    ekLISBins = [(0.02975, 0.03025), (0.2975, 0.3025), (0.9975, 1.0025)]
     # Store e0s, js and sigmas for each bin
     binE0s = []
     binJs = []
@@ -59,18 +59,21 @@ if __name__ == "__main__":
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
 
+    # Store bin centers as strings
+    labels = ['%s' % float('%.1g' % ((a + b) / 2.0)) for (a, b) in ekLISBins]
+
     # Plot each bins spectrum at Earth
-    for e0s, js, sigmas, ekb in zip(binE0s, binJs, binSigmas, ekLISBins):
-        ax.errorbar(e0s, js, yerr = sigmas, fmt = '.', label = '(' + str(ekb[0]) + ', ' + str(ekb[1]) + ')')
+    for e0s, js, sigmas, ekb, lab in zip(binE0s, binJs, binSigmas, ekLISBins, labels):
+        ax.errorbar(e0s, js, yerr = sigmas, fmt = '.', label = lab + ' GeV')
 
     ax.set_xscale('log')
     ax.set_yscale('log')
-    ax.set_xlim(1e-3, 1e1)
-    ax.set_ylim(1e-6, 1e0)
+    ax.set_xlim(1e-2, 3e0)
+    ax.set_ylim(1e-4, 1e0)
     ax.set_xlabel(r'T (GeV)')
     ax.set_ylabel(r'Intensity ($\mathrm{MeV}^{-1}\ \mathrm{s}^{-1}\ \mathrm{sr}^{-2}\ \mathrm{m}^{-2}$)')
     ax.set_title(r'Modulation of injection at LIS ($A_c < 0$, $\alpha = 0$)')
-    plt.legend(loc='lower right')
+    plt.legend(loc='upper left')
 
     plt.show()
 

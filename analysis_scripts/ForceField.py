@@ -56,10 +56,25 @@ def getJNewFF(ek, jLIS):
     return  R**2 / Rism**2 * jLIS(ekIS)
 
 if __name__ == "__main__":
-    print('Computing modulated spectrum (SDE)')
-    meE0s, meJs, meSigmas = map(list, zip(*[getJ('me/alt0/' + os.path.splitext(f)[0]) \
-            for f in listdir(rundataPath + 'me/alt0/')]))
-    meE0s = [x0['e0'] for x0 in meE0s]
+    # Save result of modulation to save a lot of time
+    myModulationFile = 'myModulatedLIS.csv'
+    meE0s = []
+    meJs = []
+    meSigmas = []
+
+    if os.path.isfile(myModulationFile):
+        print('Loading modulated spectrum (SDE)')
+        myRaw = np.loadtxt(myModulationFile, delimiter = ',')
+        meE0s = myRaw[:,0]
+        meJs = myRaw[:,1]
+        meSigmas = myRaw[:,2]
+    else: # Modulate the LIS and save
+        print('Computing modulated spectrum (SDE)')
+        meE0s, meJs, meSigmas = map(list, zip(*[getJ('me/alt0/' + os.path.splitext(f)[0]) \
+                for f in listdir(rundataPath + 'me/alt0/')]))
+        meE0s = [x0['e0'] for x0 in meE0s]
+
+        np.savetxt(myModulationFile, zip(*[meE0s, meJs, meSigmas]), delimiter = ',')
 
     # Plot spectra
     fig = plt.figure()
@@ -73,17 +88,18 @@ if __name__ == "__main__":
     ax.plot(eksLangner, [jLISLangner(ek) for ek in eksLangner], label = r'$j^\mathrm{LIS}$')
 
     print('Computing modulated spectrum (force field)')
-    ax.plot(eksLangner, [getJFF(ek, jLISLangner, 200) for ek in eksLangner], '--', \
-            label = '$\phi_F = 200$ MV')
-    ax.plot(eksLangner, [getJFF(ek, jLISLangner, 300) for ek in eksLangner], '--', \
-            label = '$\phi_F = 300$ MV')
+    phiF = 260
+    ax.plot(eksLangner, [getJFF(ek, jLISLangner, phiF) for ek in eksLangner], '--', \
+            label = '$\phi_F = ' + str(phiF) + '$ MV')
+    #ax.plot(eksLangner, [getJFF(ek, jLISLangner, 300) for ek in eksLangner], '--', \
+    #        label = '$\phi_F = 300$ MV')
 
-    print('Computing modulated spectrum (force field)')
-    ax.plot(eksLangner, [getJNewFF(ek, jLISLangner) for ek in eksLangner], '--', label = r'New method')
+    #print('Computing modulated spectrum (force field)')
+    #ax.plot(eksLangner, [getJNewFF(ek, jLISLangner) for ek in eksLangner], '--', label = r'New method')
 
     ax.set_xscale('log')
     ax.set_yscale('log')
-    ax.set_xlim(1e-3, 1e1)
+    ax.set_xlim(1e-2, 1e1)
     ax.set_ylim(1e-4, 1e4)
     ax.set_xlabel(r'T (GeV)')
     ax.set_ylabel(r'Intensity ($\mathrm{MeV}^{-1}\ \mathrm{s}^{-1}\ \mathrm{sr}^{-2}\ \mathrm{m}^{-2}$)')
