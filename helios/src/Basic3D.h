@@ -194,6 +194,7 @@ Status Basic3D<Par>::step() {
 #endif
 
         // Move the particle.  Point class handles renormalizing the angles and radius.
+        // TODO: implement and use some operator overload here
         pos.incrR(dr_ds * params.getDs() + dr_dWr * dWr + dr_dWph * dWph);
         pos.incrTh(dth_ds * params.getDs() + dth_dWth * dWth);
         pos.incrPh(dph_ds * params.getDs() + dph_dWph * dWph);
