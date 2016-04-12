@@ -85,17 +85,23 @@ we compute $L$ using the Nelder-Mead simplex algorithm.  Here are the steps for 
     \item
         Compute $\vec{x}_O = \frac{1}{2} (\vec{x}_1 + \vec{x}_2)$.
     \item
-        Compute reflected point $\vec{x}_R = \vec{x}_O + \alpha (\vec{x}_O - \vec{x}_3)$.  If $L(\vec{x}_1) \leq L(\vec{x}_R) < L(\vec{x}_2)$, replace $\vec{x}_3$ with $\vec{x}_R$ and go to step 1.
+        Compute reflected point $\vec{x}_R = \vec{x}_O + \alpha (\vec{x}_O - \vec{x}_3)$.
+        
+        If $L(\vec{x}_1) \leq L(\vec{x}_R) < L(\vec{x}_2)$, replace $\vec{x}_3$ with $\vec{x}_R$ and go to step 1.
     \item
         If $L(\vec{x}_R) < L(\vec{x}_1)$, compute expanded point $\vec{x}_E = \vec{x}_O + \gamma (\vec{x}_R - \vec{x}_O)$.  
 
-        If $L(\vec{x}_E) < L(\vec{x}_R)$, replace $\vec{x}_3$ with $\vec{x}_E$ and go to step 1.
+        \quad If $L(\vec{x}_E) < L(\vec{x}_R)$, replace $\vec{x}_3$ with $\vec{x}_E$ and go to step 1.
 
-        Else, replace $\vec{x}_3$ with $\vec{x}_R$ and go to step 1.
+        \quad Else, replace $\vec{x}_3$ with $\vec{x}_R$ and go to step 1.
+
+        Else, go to step 5.
     \item
         Compute contracted point $\vec{x}_C = \vec{x}_O + \rho (\vec{x}_3 - \vec{x}_O)$.
 
         If $L(\vec{x}_C) < L(\vec{x}_3)$, replace $\vec{x}_3$ with $\vec{x}_C$ and go to step 1.
+
+        Else, go to step 6.
     \item
         For all but the $\vec{x}_1$, replace $\vec{x}_i$ with $\vec{x}_1 + \sigma (\vec{x}_i - \vec{x}_1)$.  Go to step 1.
 \end{enumerate}
