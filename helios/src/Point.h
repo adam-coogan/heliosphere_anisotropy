@@ -7,60 +7,62 @@
 class Point {
     public:
         //! Default constructor
-        Point() { set(0, 0, 0); };
+        Point();
 
-        Point(double rn, double thn, double phn) {
-            set(rn, thn, phn);
-        };
+        //! Copy constructor
+        Point(const Point& pt);
 
-        double getR() const { return r; };
-        double getTh() const { return th; };
-        double getPh() const { return ph; };
+        Point(double rn, double thn, double phn);
+
+        // Getters
+        double getR() const;
+        double getTh() const;
+        double getPh() const;
 
         /*!
          * \arg rn new radial coordinate for the point
          * \return this point with r set to rn.  If rn < 0, th is set to pi + th.
          */
-        void setR(double rn) {
-            if (rn < 0) {
-                r = std::abs(rn);
-                setTh(M_PI + th);
-            } else {
-                r = rn;
-            }
-        };
-
-        //! Increments r
-        void incrR(double deltaR) { setR(r + deltaR); };
+        void setR(double rn);
 
         /*!
          * \arg thn new polar angle for the point
-         * \return this point with th set to thn
+         * \return this point with th set to thn.  Ensures th and ph lie in [0, pi] and [0, 2 pi].
          */
-        void setTh(double thn) {
-            th = thn;
-        };
-
-        //! Increments th
-        void incrTh(double deltaTh) { setTh(r + deltaTh); };
+        void setTh(double thn);
 
         /*!
          * \arg phn new azimuthal angle for the point
-         * \return this point with ph set to phn
+         * \return this point with ph set to phn.  Ensures ph lies in [0, 2 pi].
          */
-        void setPh(double phn) {
-            ph = phn;
-        };
-
-        //! Increments ph
-        void incrPh(double deltaPh) { setPh(r + deltaPh); };
+        void setPh(double phn);
 
         //! Resets all coordinates, renormalizing if necessary
-        void set(double rn, double thn, double phn) {
-            setR(rn);
-            ph = phn; // Ok since setTh() calls renormalizePh
-            setTh(thn);
-        };
+        // TODO: replace with =
+        void set(double rn, double thn, double phn);
+
+        //! Incrementers
+        void incrR(double deltaR);
+        void incrTh(double deltaTh);
+        void incrPh(double deltaPh);
+        
+        //! Assignment operator
+        Point& operator=(const Point& pt);
+        //! Compound assignment operators
+        Point& operator+=(const Point& pt);
+        Point& operator-=(const Point& pt);
+        template<typename T>
+        Point& operator*=(const T& scalar);
+        //! Binary arithmetic operators
+        Point operator+(const Point& pt) const;
+        // TODO: implement this
+        //Point operator+(const std::tuple<double, double, double>& pt) const;
+        Point operator-(const Point& pt) const;
+        template<typename T>
+        Point operator*(const T& scalar) const;
+        //! Comparison operators
+        bool operator==(const Point& pt) const;
+        bool operator!=(const Point& pt) const;
 
     private:
         double r;
@@ -68,33 +70,16 @@ class Point {
         double ph;
 
         /*!
-         * \return this point with th and ph renormalized to lie within [0, pi] and [0, 2 pi]
-         */
-        void renormalizeTh() {
-            while (th > M_PI) {
-                th = 2 * M_PI - th;
-                ph = ph - M_PI;
-            }
-
-            while (th < 0) {
-                th = -th;
-                ph += M_PI;
-            }
-        };
-
-        /*!
          * \return this point with ph renormalized to lie within [0, 2 pi]
          */
-        void renormalizePh() {
-            while (ph > 2 * M_PI) {
-                ph -= 2 * M_PI;
-            }
-
-            while (ph < 0) {
-                ph += 2 * M_PI;
-            }
-        };
+        void renormalizePh();
 };
+
+// Can't be a member function since the scalar is on the LHS
+template<typename T>
+Point operator*(const T& scalar, const Point& pt) {
+    return Point(pt) *= scalar;
+}
 
 #endif
 
