@@ -107,4 +107,10 @@ we compute $L$ using the Nelder-Mead simplex algorithm.  Here are the steps for 
 \end{enumerate}
 Standard values for the constants are $\alpha = 1$, $\gamma = 2$, $\rho = 1/2$, $\sigma = 1/2$.  
 
+The only tough part of this is choosing the initial set of points.  Since $\theta'$ is ``periodic'' in $r \to r + 4 \frac{\Omega}{V_{sw}}$,
+\begin{align*}
+    \left\{ \left( r - 2 \frac{\Omega}{V_{sw}}, \phi \right), \left( r + 2 \frac{\Omega}{V_{sw}}, \phi \right), \left( r, \phi + \frac{\pi}{6} \right) \right\}
+\end{align*}
+seem like good guesses.  \textbf{This will need to be tested, though.}
+
 \end{document}
