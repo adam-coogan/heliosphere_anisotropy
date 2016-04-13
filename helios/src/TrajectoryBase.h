@@ -38,6 +38,16 @@ class TrajectoryBase {
         Status initialize(const std::string& paramFileName);
 
         /*!
+         * Reinitializes the simulation.
+         * \param r0 new starting radius
+         * \param th0 new starting polar angle
+         * \param ph0 new starting azimuthal angle
+         * \param ek0 new starting energy
+         * \return the status of the reinitialized simulation.
+         */
+        Status initialize(double r0, double th0, double ph0, double ek0);
+
+        /*!
          * Returns a string containing the trajectory's current coordinates.
          * \return string containing "r,th,ph,ek,s".
          */
@@ -113,16 +123,22 @@ TrajectoryBase<T>::TrajectoryBase(const std::string& paramFileName) : params() {
 }
 
 template<class T>
-Status TrajectoryBase<T>::initialize() {
+Status TrajectoryBase<T>::initialize(double r0, double th0, double ph0, double ek0) {
     // Set initial phase space coordinates
-    pos.set(params.getR0(), params.getTh0(), params.getPh0());
-    ek = params.getEk0();
+    pos.set(r0, th0, ph0);
+    ek = ek0;
     s = 0;
 
     updateVars();
 
     // Check status
     return getStatus();
+}
+
+template<class T>
+Status TrajectoryBase<T>::initialize() {
+    // Set initial phase space coordinates
+    return initialize(params.getR0(), params.getTh0(), params.getPh0(), params.getEk0());
 }
 
 template<class T>
