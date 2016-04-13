@@ -11,7 +11,7 @@ namespace HeliosCLParser {
      * Parses command line arguments.
      * \return an object containing the number of runs, configuration path and output file path for a simulation.
      */
-    po::variables_map parseCLArgs(int argc, char *argv[]);
+    boost::program_options::variables_map parseCLArgs(int argc, char *argv[]);
 }
 
 #endif
