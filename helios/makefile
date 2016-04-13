@@ -7,7 +7,8 @@ else
 endif
 
 CFLAGS=-c -O2
-OBJS=$(BUILDDIR)/Parameters.o $(BUILDDIR)/Basic3DParams.o $(BUILDDIR)/Point.o
+OBJS=$(BUILDDIR)/Parameters.o $(BUILDDIR)/Basic3DParams.o $(BUILDDIR)/Point.o $(BUILDDIR)/HeliosCLParser.o \
+	 $(BUILDDIR)/Wavy3DParams.o
 BINDIR=bin
 BUILDDIR=build
 SRCDIR=src
@@ -24,7 +25,7 @@ $(BUILDDIR)/StraussUnitsModified.o: $(SRCDIR)/StraussUnitsModified.cpp
 
 # Test program
 
-HeliosTest: $(OBJS) $(BUILDDIR)/HeliosTest.o $(SRCDIR)/Basic3D.h
+HeliosTest: $(OBJS) $(BUILDDIR)/HeliosTest.o $(SRCDIR)/Basic3D.h $(SRCDIR)/Wavy3D.h
 	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/HeliosTest.o -o $(BINDIR)/HeliosTest
 
 $(BUILDDIR)/HeliosTest.o: $(SRCDIR)/HeliosTest.cpp $(SRCDIR)/Basic3D.h
@@ -35,10 +36,17 @@ $(BUILDDIR)/HeliosTest.o: $(SRCDIR)/HeliosTest.cpp $(SRCDIR)/Basic3D.h
 Helios: $(OBJS) $(BUILDDIR)/Helios.o
 	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/Helios.o -o $(BINDIR)/Helios
 
-$(BUILDDIR)/Helios.o: $(SRCDIR)/Helios.cpp $(SRCDIR)/Basic3D.h $(SRCDIR)/Simulation.h $(SRCDIR)/Wavy3D.h
+$(BUILDDIR)/Helios.o: $(SRCDIR)/Helios.cpp $(SRCDIR)/Basic3D.h $(SRCDIR)/Simulation.h $(SRCDIR)/Wavy3D.h \
+	$(SRCDIR)/Wavy3D.h
 	$(CC) $(CFLAGS) $< -o $@
 
 # Objects
+
+$(BUILDDIR)/HeliosCLParser.o: $(SRCDIR)/HeliosCLParser.h $(SRCDIR)/HeliosCLParser.cpp
+	$(CC) $(CFLAGS) $(SRCDIR)/HeliosCLParser.cpp -o $@
+
+$(BUILDDIR)/Wavy3DParams.o: $(SRCDIR)/Basic3DParams.h $(SRCDIR)/Wavy3DParams.h $(SRCDIR)/Wavy3DParams.cpp
+	$(CC) $(CFLAGS) $(SRCDIR)/Wavy3DParams.cpp -o $@
 
 $(BUILDDIR)/Basic3DParams.o: $(SRCDIR)/Parameters.h $(SRCDIR)/Basic3DParams.h $(SRCDIR)/Basic3DParams.cpp
 	$(CC) $(CFLAGS) $(SRCDIR)/Basic3DParams.cpp -o $@

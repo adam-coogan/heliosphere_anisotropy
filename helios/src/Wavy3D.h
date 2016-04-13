@@ -63,6 +63,22 @@ class Wavy3D : public Basic3D<Par> {
         const double gammaNM = 2; //!Used for expanded point
         const double rhoNM = 1/2; //!Used for contracted point
         const double sigmaNM = 1/2; //!Used for reducing the simplex
+        int itersNM = 10; // TODO: maybe set a precision goal instead?
+
+        /*!
+         * Sets up simplex used in getLHCS().
+         * \return three distinct points in the HCS near the particle.  Note these are NOT sorted by distance
+         * from the particle's current location.
+         */
+        std::array<std::tuple<Point, double>, 3> initializeSimplex() const;
+
+        /*!
+         * Helper method for getLHCS().
+         * \arg pts a list of three points.  The points MUST be in the HCS (ie, they MUST have already had
+         * setHCSTheta() called on them)!  pts is modified: each point's distance from the particle is
+         * calculated and recorder.  These distances are then used to sort pts in ascending order.
+         */
+        void sortSimplexPts(std::array<std::tuple<Point, double>, 3>& pts) const;
 
         /*! Convenience method use to put a point in the HCS
          * \arg pt the point to put in the HCS
@@ -83,30 +99,35 @@ Point& Wavy3D<Par>::setHCSTheta(Point& pt) const {
     return pt;
 }
 
-// TODO: write this
-// TODO: return closest point's coordinates
-// by TrajectoryBase.
+template<class Par>
+std::array<std::tuple<Point, double>, 3> Wavy3D<Par>::initializeSimplex() const {
+    // Using this tuple saves time on calculating distances and arguably makes more sense.  Too bad C++'s
+    // tuple syntax is kind of poopy.  Note that clang's warning here is a bug.
+    // TODO: test these guesses
+    std::array<std::tuple<Point, double>, 3> pts = {
+        std::make_tuple(Point(pos.getR() - 2 * params.Omega()/params.getVsw(), pos.getTh(), pos.getPh()), 0),
+        std::make_tuple(Point(pos.getR() + 2 * params.Omega()/params.getVsw(), pos.getTh(), pos.getPh()), 0),
+        std::make_tuple(Point(pos.getR(), pos.getTh(), pos.getPh() + M_PI / 6), 0)
+    };
+    
+    // Put points in the HCS.  CRUCIAL!
+    for (auto& p : pts) {
+        setHCSTheta(std::get<0>(p));
+    }
+
+    return pts;
+}
+
+// TODO: make initial point parameters member variables.  Make method to intialize the simplex.
 template<class Par>
 std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
-    // TODO: figure out how to make reasonable initial guesses!!!  Initialize points with default constructor
-    // for now.
-    // Using this tuple saves time on calculating distances and arguably makes more sense.  Too bad C++'s
-    // tuple syntax is kind of poopy.
-    std::array<std::tuple<Point, double>, 3> pts;
-
-    // TODO: make this a member variable.  Should be precision goal rather than number of iterations
-    int nIter = 10;
+    // Generate initial guesses
+    std::array<std::tuple<Point, double>, 3> pts = initializeSimplex();
 
     // Loop until the simplex has converged to a satisfactory level of precision
-    for (int i = 0; i < nIter; ++i) {
-        // Find distances from each point to the particle
-        for (auto& p : pts) {
-            std::get<1>(p) = Point::dist(pos, std::get<0>(p));
-        }
-
-        // 1. Use a lambda expression to sort pts
-        std::sort(pts.begin(), pts.end(), [this](const std::tuple<Point, double>& a,
-                    const std::tuple<Point, double>& b){ return std::get<1>(a) < std::get<1>(b); });
+    for (int i = 0; i < itersNM; ++i) {
+        // 1. Sort the simplex points
+        sortSimplexPts(pts);
 
         // 2. Compute centroid (origin) of points 1 and 2.  Note that its theta value does not matter!
         Point ptO = (std::get<0>(pts[0]) + std::get<0>(pts[1])) / 2;
@@ -151,7 +172,20 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
         }
     }
 
-    return std::tuple<Point, double>(Point(), 0); // placeholder
+    // Return the best point
+    return pts[0];
+}
+
+template<class Par>
+void Wavy3D<Par>::sortSimplexPts(std::array<std::tuple<Point, double>, 3>& pts) const {
+    // Find distances from each point to the particle
+    for (auto& p : pts) {
+        std::get<1>(p) = Point::dist(pos, std::get<0>(p));
+    }
+
+    // 1. Use a lambda expression to sort pts
+    std::sort(pts.begin(), pts.end(), [this](const std::tuple<Point, double>& a,
+                const std::tuple<Point, double>& b){ return std::get<1>(a) < std::get<1>(b); });
 }
 
 template<class Par>
@@ -164,6 +198,7 @@ double Wavy3D<Par>::getXi(const Point& hcsPt) const {
     return sgnXi * atan(tanXi);
 }
 
+// TODO: break into helper for computing HCS drift velocity?
 template<class Par>
 void Wavy3D<Par>::updateVdr() {
     // Sign of drift velocity.  Changes as the particle passes through the HCS.

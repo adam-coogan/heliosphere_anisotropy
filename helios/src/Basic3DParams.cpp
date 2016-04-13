@@ -1,6 +1,5 @@
 #include "Basic3DParams.h"
 
-
 Basic3DParams::Basic3DParams() : Parameters() {
     desc.add_options()
         // Strauss' model's parameters
