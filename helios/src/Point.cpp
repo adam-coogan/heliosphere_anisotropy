@@ -32,7 +32,8 @@ double Point::getPh() const {
 void Point::setR(double rn) {
     if (rn < 0) {
         r = std::abs(rn);
-        setTh(M_PI + th);
+        ph = ph + M_PI; // Ok since setTh() calls renormalizePh()
+        setTh(M_PI - th);
     } else {
         r = rn;
     }
@@ -64,9 +65,9 @@ void Point::setPh(double phn) {
 }
 
 void Point::set(double rn, double thn, double phn) {
-    setR(rn);
     ph = phn; // Ok since setTh() calls renormalizePh()
     setTh(thn);
+    setR(rn);
 }
 
 // Incrementers
@@ -98,7 +99,7 @@ void Point::renormalizePh() {
 Point& Point::operator=(const Point& pt) {
     // Check for self assignment, though it doesn't matter for this simple class
     if (this != &pt) {
-        set(pt.getR(), pt.getPh(), pt.getPh());
+        set(pt.getR(), pt.getTh(), pt.getPh());
     }
 
     return *this;
@@ -116,22 +117,6 @@ Point& Point::operator-=(const Point& pt) {
     return *this;
 }
 
-template<typename T>
-Point& Point::operator*=(const T& scalar) {
-    set(scalar * r, scalar * th, scalar * ph);
-
-    return *this;
-}
-
-template<typename T>
-Point& Point::operator/=(const T& scalar) {
-    if (scalar != 0) {
-        return *this *= 1.0 / scalar;
-    } else {
-        throw std::domain_error("Point::operator/=: cannot divide by zero.");
-    }
-}
-
 Point Point::operator+(const Point& pt) const {
     return Point(*this) += pt;
 }
@@ -140,22 +125,16 @@ Point Point::operator-(const Point& pt) const {
     return Point(*this) -= pt;
 }
 
-template<typename T>
-Point Point::operator*(const T& scalar) const {
-    return Point(*this) *= scalar;
-}
-
-template<typename T>
-Point Point::operator/(const T& scalar) const {
-    return Point(*this) /= scalar;
-}
-
 bool Point::operator==(const Point& pt) const {
     return (r == pt.getR()) && (th == pt.getTh()) && (ph == pt.getPh());
 }
 
 bool Point::operator!=(const Point& pt) const {
     return !(*this == pt);
+}
+
+std::ostream& operator<<(std::ostream& os, const Point& pt) {
+    return os << "(" << pt.getR() << ", " << pt.getTh() << ", " << pt.getPh() << ")";
 }
 
 double Point::dist(const Point& pt1, const Point& pt2) {

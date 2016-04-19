@@ -2,6 +2,7 @@
 #define POINT 
 
 #include <cmath>
+#include <ostream>
 #include <stdexcept>
 
 class Point {
@@ -81,6 +82,35 @@ class Point {
          */
         void renormalizePh();
 };
+
+//! Function for printing a point
+std::ostream& operator<<(std::ostream& os, const Point& pt);
+
+template<typename T>
+Point& Point::operator*=(const T& scalar) {
+    set(scalar * r, scalar * th, scalar * ph);
+
+    return *this;
+}
+
+template<typename T>
+Point& Point::operator/=(const T& scalar) {
+    if (scalar != 0) {
+        return *this *= 1.0 / scalar;
+    } else {
+        throw std::domain_error("Point::operator/=: cannot divide by zero.");
+    }
+}
+
+template<typename T>
+Point Point::operator*(const T& scalar) const {
+    return Point(*this) *= scalar;
+}
+
+template<typename T>
+Point Point::operator/(const T& scalar) const {
+    return Point(*this) /= scalar;
+}
 
 // Can't be a member function since the scalar is on the LHS
 template<typename T>

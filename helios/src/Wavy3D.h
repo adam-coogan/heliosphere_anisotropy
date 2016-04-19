@@ -5,7 +5,11 @@
 #include "Point.h"
 #include <algorithm>
 #include <array>
+#include <fstream>
+#include <iterator>
 #include <tuple>
+
+#define DEBUGNM true
 
 /*!
  * Adds a wavy HCS into the basic heliosphere model.  See doi:10.1007/s10509-012-1003-z (Strauss et al 2012)
@@ -20,6 +24,14 @@ class Wavy3D : public Basic3D<Par> {
          */
         Wavy3D(std::string paramFileName) : Basic3D<Par>(paramFileName) { };
 
+        /*!
+         * Gets distance to closest point on HCS.
+         * \return tuple containing the point in the HCS closest to the particle and the distance between the
+         * particle and point in AU.
+         * TODO: MAKE PROTECTED AFTER DONE TESTING!
+         */
+        std::tuple<Point, double> getLHCS() const;
+
     protected:
         // Needs to be totally rewritten
         virtual void updateVdr();
@@ -30,13 +42,6 @@ class Wavy3D : public Basic3D<Par> {
          * TODO: should this take a Point instead?  Probably not.
          */
         virtual double hcsExtent(double rS, double phS) const;
-
-        /*!
-         * Gets distance to closest point on HCS.
-         * \return tuple containing the point in the HCS closest to the particle and the distance between the
-         * particle and point in AU.
-         */
-        std::tuple<Point, double> getLHCS() const;
 
         /*! 
          * \return xi, the angle between tangent to HCS and radial line.  The correct sign is also determined.
@@ -85,7 +90,32 @@ class Wavy3D : public Basic3D<Par> {
          * \return pt with the same r and ph, but with th updated to be the polar angle for the HCS
          */
         Point& setHCSTheta(Point& pt) const;
+
+#if DEBUGNM
+        /*!
+         * Used to debug NM algorithm.  Produces a data file containing simplex at each step.  Format is:
+         *  r1a,th1a,ph1a,d1a
+         *  r1b,th1b,ph1b,d1b
+         *  r1c,th1c,ph1c,d1c
+         * where the number indicates the timestep and d is the distance to the HCS
+         * \arg outPath data file name
+         */
+        void writeNM(const std::string& outPath, const std::string& data) const;
+#endif
 };
+
+#if DEBUGNM
+template<class Par>
+void Wavy3D<Par>::writeNM(const std::string& outPath, const std::string& data) const {
+    // Write run data to a CSV
+    std::ofstream writer(outPath);
+
+    if (writer.is_open()) {
+        writer << data;
+        writer.close();
+    }
+}
+#endif
 
 template<class Par>
 double Wavy3D<Par>::hcsExtent(double rS, double phS) const {
@@ -105,8 +135,10 @@ std::array<std::tuple<Point, double>, 3> Wavy3D<Par>::initializeSimplex() const 
     // tuple syntax is kind of poopy.  Note that clang's warning here is a bug.
     // TODO: test these guesses
     std::array<std::tuple<Point, double>, 3> pts = {
-        std::make_tuple(Point(pos.getR() - 2 * params.Omega()/params.getVsw(), pos.getTh(), pos.getPh()), 0),
-        std::make_tuple(Point(pos.getR() + 2 * params.Omega()/params.getVsw(), pos.getTh(), pos.getPh()), 0),
+        std::make_tuple(Point(std::max(pos.getR() - 2 * params.getOmega()/params.getVsw(), params.getRSun()),
+                    pos.getTh(), pos.getPh() - M_PI / 12), 0),
+        std::make_tuple(Point(std::min(pos.getR() + 2 * params.getOmega()/params.getVsw(), params.getRHP()),
+                    pos.getTh(), pos.getPh() - M_PI / 12), 0),
         std::make_tuple(Point(pos.getR(), pos.getTh(), pos.getPh() + M_PI / 6), 0)
     };
     
@@ -121,13 +153,27 @@ std::array<std::tuple<Point, double>, 3> Wavy3D<Par>::initializeSimplex() const 
 // TODO: make initial point parameters member variables.  Make method to intialize the simplex.
 template<class Par>
 std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
+    /*if (params.getAlpha() != 0) {*/
     // Generate initial guesses
     std::array<std::tuple<Point, double>, 3> pts = initializeSimplex();
 
+#if DEBUGNM
+    std::string nmStr;
+#endif
+
     // Loop until the simplex has converged to a satisfactory level of precision
-    for (int i = 0; i < itersNM; ++i) {
+    for (int i = 0; i < itersNM; i++) {
         // 1. Sort the simplex points
         sortSimplexPts(pts);
+
+        // DEBUG
+#if DEBUGNM
+        for (auto pt : pts) {
+            const Point& p = std::get<0>(pt);
+            nmStr.append(std::to_string(p.getR()) + "," + std::to_string(p.getTh()) + ","
+                    + std::to_string(p.getPh()) + "," + std::to_string(std::get<1>(pt)) + "\n");
+        }
+#endif
 
         // 2. Compute centroid (origin) of points 1 and 2.  Note that its theta value does not matter!
         Point ptO = (std::get<0>(pts[0]) + std::get<0>(pts[1])) / 2;
@@ -138,6 +184,7 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
         double ptRDist = Point::dist(pos, ptR);
 
         if (ptRDist >= std::get<1>(pts[0]) && ptRDist < std::get<1>(pts[1])) {
+            //std::cout << "Exit @ step 3" << std::endl;
             pts[2] = std::tuple<Point, double>(ptR, ptRDist);
         } else {
             if (ptRDist < std::get<1>(pts[0])) {
@@ -146,9 +193,13 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
                 setHCSTheta(ptE); // put point in the HCS.  CRUCIAL!
                 double ptEDist = Point::dist(pos, ptE);
 
+                //std::cout << "ptE distance = " << ptEDist << std::endl;
+
                 if (ptEDist < ptRDist) {
+                    //std::cout << "Exit @ step 4a" << std::endl;
                     pts[2] = std::tuple<Point, double>(ptE, ptEDist);
                 } else {
+                    //std::cout << "Exit @ step 4b" << std::endl;
                     pts[2] = std::tuple<Point, double>(ptR, ptRDist);
                 }
             } else {
@@ -157,23 +208,38 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
                 setHCSTheta(ptC); // put point in the HCS.  CRUCIAL!
                 double ptCDist = Point::dist(pos, ptC);
 
+                //std::cout << "ptC distance = " << ptCDist << std::endl;
+
                 // If contracted point is better, replace worst one with it
                 if (ptCDist < std::get<1>(pts[2])) {
+                    //std::cout << "Exit @ step 5" << std::endl;
                     pts[2] = std::tuple<Point, double>(ptC, ptCDist);
                 } else {
+                    //std::cout << "Exit @ step 6" << std::endl;
                     // Nothing worked very well.  Reduce the simplex.
-                    for (auto& p : {pts[1], pts[2]}) { // ok to hard code this!
-                        std::get<0>(p) = std::get<0>(pts[0]) + sigmaNM * (std::get<0>(p)
+                    for (int i = 1; i <= 2; i++) { // ok to hard code this!
+                        std::get<0>(pts[i]) = std::get<0>(pts[0]) + sigmaNM * (std::get<0>(pts[i])
                                 - std::get<0>(pts[0]));
-                        setHCSTheta(std::get<0>(p)); // put point in the HCS.  CRUCIAL!
+                        setHCSTheta(std::get<0>(pts[i])); // put point in the HCS.  CRUCIAL!
                     }
                 }
             }
         }
+        //std::cout << std::endl;
     }
+
+#if DEBUGNM
+    writeNM("/Users/acoogan/Dropbox/heliosphere_anisotropy/nmdata/nmdata.csv", nmStr);
+#endif
 
     // Return the best point
     return pts[0];
+    /*
+    } else {
+        return std::make_tuple(Point(pos.getR() * sin(pos.getTh()), M_PI / 2, pos.getPh()),
+                std::abs(pos.getR() * cos(pos.getTh())));
+    }
+    */
 }
 
 template<class Par>
@@ -184,13 +250,13 @@ void Wavy3D<Par>::sortSimplexPts(std::array<std::tuple<Point, double>, 3>& pts) 
     }
 
     // 1. Use a lambda expression to sort pts
-    std::sort(pts.begin(), pts.end(), [this](const std::tuple<Point, double>& a,
+    std::sort(std::begin(pts), std::end(pts), [](const std::tuple<Point, double>& a,
                 const std::tuple<Point, double>& b){ return std::get<1>(a) < std::get<1>(b); });
 }
 
 template<class Par>
 double Wavy3D<Par>::getXi(const Point& hcsPt) const {
-    double tanXi = params.Omega() * hcsPt.getR() / (params.getVsw() * sinPsi * sin(hcsPt.getTh()))
+    double tanXi = params.getOmega() * hcsPt.getR() / (params.getVsw() * sinPsi * sin(hcsPt.getTh()))
         * sqrt(pow(sin(params.getAlpha()), 2) - pow(cos(hcsPt.getTh()), 2));
     double sgnXi = sgn(cos(hcsPt.getPh() - params.getPhPhase()
                 + params.getOmega() * hcsPt.getR() / params.getVsw()));
@@ -223,7 +289,7 @@ void Wavy3D<Par>::updateVdr() {
     double rL = P / bMag * 0.0223; // (1 GV/c) / (1 nT) = 0.0223 au
 
     // Check whether it's even possible for L < 2 r_L to be true
-    if (abs(pos.getTh() - M_PI / 2) <= params.getAlpha()
+    if (std::abs(pos.getTh() - M_PI / 2) <= params.getAlpha()
             || (pos.getTh() < M_PI / 2 - params.getAlpha()
                 && pos.getR() * cos(params.getAlpha() + pos.getTh()) <= 2 * rL)
             || (pos.getTh() > M_PI / 2 + params.getAlpha()

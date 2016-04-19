@@ -13,7 +13,9 @@ BINDIR=bin
 BUILDDIR=build
 SRCDIR=src
 
-all: Helios
+# TODO: CHANGE BACK!
+#all: Helios
+all: NMTest
 
 # Messy program using Strauss' units
 
@@ -29,6 +31,14 @@ HeliosTest: $(OBJS) $(BUILDDIR)/HeliosTest.o $(SRCDIR)/Basic3D.h $(SRCDIR)/Wavy3
 	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/HeliosTest.o -o $(BINDIR)/HeliosTest
 
 $(BUILDDIR)/HeliosTest.o: $(SRCDIR)/HeliosTest.cpp $(SRCDIR)/Basic3D.h
+	$(CC) $(CFLAGS) $< -o $@
+
+# Test program for Nelder-Mead algorithm
+
+NMTest: $(OBJS) $(BUILDDIR)/NMTest.o $(SRCDIR)/Wavy3D.h
+	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/NMTest.o -o $(BINDIR)/NMTest
+
+$(BUILDDIR)/NMTest.o: $(SRCDIR)/NMTest.cpp $(SRCDIR)/Wavy3D.h $(SRCDIR)/Wavy3DParams.h
 	$(CC) $(CFLAGS) $< -o $@
 
 # Main program
