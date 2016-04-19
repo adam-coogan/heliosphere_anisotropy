@@ -88,7 +88,7 @@ std::ostream& operator<<(std::ostream& os, const Point& pt);
 
 template<typename T>
 Point& Point::operator*=(const T& scalar) {
-    set(scalar * r, scalar * th, scalar * ph);
+    setR(scalar * r);
 
     return *this;
 }

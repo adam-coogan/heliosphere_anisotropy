@@ -106,15 +106,21 @@ Point& Point::operator=(const Point& pt) {
 }
 
 Point& Point::operator+=(const Point& pt) {
-    set(r + pt.getR(), th + pt.getTh(), ph + pt.getPh());
+    // Do this in cartesian coordinates
+    double newX = r * sin(th) * cos(ph) + pt.getR() * sin(pt.getTh()) * cos(pt.getPh());
+    double newY = r * sin(th) * sin(ph) + pt.getR() * sin(pt.getTh()) * sin(pt.getPh());
+    double newZ = r * cos(th) + pt.getR() * cos(pt.getTh());
+
+    r = sqrt(newX*newX + newY*newY + newZ*newZ);
+    th = acos(newZ / r);
+    ph = atan(newY / newX); // The image of atan is [-pi/2, pi/2], so must renormalize ph
+    renormalizePh();
 
     return *this;
 }
 
 Point& Point::operator-=(const Point& pt) {
-    set(r - pt.getR(), th - pt.getTh(), ph - pt.getPh());
-
-    return *this;
+    return (*this) += (-1 * pt);
 }
 
 Point Point::operator+(const Point& pt) const {
