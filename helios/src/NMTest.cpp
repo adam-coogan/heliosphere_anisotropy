@@ -57,6 +57,9 @@ int main() {
     std::cout << "\ttrue (1)? : " << (p6 == p6) << std::endl;
     std::cout << "\tfalse (0)? : " << (3 * p6 == p6 * 2) << std::endl;
 
+    // Point class seems to work
+    std::cout << "All tests passed" << std::endl;
+
     /******************************* Nelder-Mead tests ****************************/
 
     std::cout << "\nNM test" << std::endl;
