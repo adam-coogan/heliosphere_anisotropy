@@ -113,7 +113,7 @@ Point& Point::operator+=(const Point& pt) {
 
     r = sqrt(newX*newX + newY*newY + newZ*newZ);
     th = acos(newZ / r);
-    ph = atan(newY / newX); // The image of atan is [-pi/2, pi/2], so must renormalize ph
+    ph = atan2(newY, newX); // The image of atan2 is [-pi, pi], so must renormalize ph
     renormalizePh();
 
     return *this;

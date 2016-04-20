@@ -22,24 +22,40 @@ int main() {
     Point p6 = Point(2, M_PI / 3, - 3 * M_PI / 10);
 
     std::cout << "Constructor tests" << std::endl;
-    std::cout << "(0, 0, 0)? : " << p1 << std::endl;
-    std::cout << "(1, " << M_PI / 4 << ", " << M_PI / 3 << ")? : " << p2 << std::endl;
-    std::cout << "(3, " << M_PI * 2/3 << ", " << M_PI * 11/10 << ")? : " << p3 << std::endl;
-    std::cout << "(4, " << M_PI * 1/3 << ", " << M_PI * 11 / 10 << ")? : " << p4 << std::endl;
-    std::cout << "(5, " << M_PI * 2/3 << ", " << M_PI / 10 << ")? : " << p5 << std::endl;
-    std::cout << "(2, " << M_PI * 1/3 << ", " << M_PI * 17 / 10 << ")? : " << p6 << std::endl;
-    std::cout << "\tAll tests passed!" << std::endl;
+    std::cout << "\t(0, 0, 0)? : " << p1 << std::endl;
+    std::cout << "\t(1, " << M_PI / 4 << ", " << M_PI << ")? : " << p2 << std::endl;
+    std::cout << "\t(3, " << M_PI * 2/3 << ", " << M_PI * 11/10 << ")? : " << p3 << std::endl;
+    std::cout << "\t(4, " << M_PI * 1/3 << ", " << M_PI * 11 / 10 << ")? : " << p4 << std::endl;
+    std::cout << "\t(5, " << M_PI * 2/3 << ", " << M_PI / 10 << ")? : " << p5 << std::endl;
+    std::cout << "\t(2, " << M_PI * 1/3 << ", " << M_PI * 17 / 10 << ")? : " << p6 << std::endl;
+    std::cout << "All tests passed!" << std::endl;
 
     std::cout << "\nOperator overload tests" << std::endl;
-    std::cout << p1 << "? : " << p1 + p2 << std::endl;
-    std::cout << p1 << "? : " << p1 - p2 << std::endl;
-    std::cout << "(4, " << M_PI * 2/3 << ", " << M_PI * 14 / 10 << ")? : " << 2 * p6 << std::endl;
-    std::cout << "(4, " << M_PI * 2/3 << ", " << M_PI * 14 / 10 << ")? : " << p6 * 2 << std::endl;
-    std::cout << "true? : " << (p6 == p6) << std::endl;
-    std::cout << "false? : " << (3 * p6 == p6 * 2) << std::endl;
-    std::cout << "(2, " << M_PI * 1/6 << ", " << M_PI * 11 / 20 << ")? : " << p4 / 2 << std::endl;
-    std::cout << p1 << "? : " << p4 + p5 << std::endl;
-    std::cout << p1 << "? : " << p4 - p3 << std::endl;
+    std::cout << "\t" << p2 << "? : " << p1 + p2 << std::endl;
+    std::cout << "\t(1, " << 3.0/4 * M_PI << ", " << 2*M_PI << ")? : " << p1 - p2 << std::endl;
+    std::cout << "\t(4, " << M_PI * 1/3 << ", " << M_PI * 17 / 10 << ")? : " << 2 * p6 << std::endl;
+    std::cout << "\t(4, " << M_PI * 1/3 << ", " << M_PI * 17 / 10 << ")? : " << p6 * 2 << std::endl;
+    std::cout << "\t(2, " << M_PI * 1/3 << ", " << M_PI * 11 / 10 << ")? : " << p4 / 2 << std::endl;
+
+    std::cout << "Addition" << std::endl;
+    double newX4p5 = 4 * sin(M_PI / 3) * cos(11 * M_PI / 10) + 5 * sin(M_PI * 2/3) * cos(M_PI / 10);
+    double newY4p5 = 4 * sin(M_PI / 3) * sin(11 * M_PI / 10) + 5 * sin(M_PI * 2/3) * sin(M_PI / 10);
+    double newZ4p5 = 4 * cos(M_PI / 3) + 5 * cos(M_PI * 2/3);
+    double newR4p5 = sqrt(newX4p5*newX4p5 + newY4p5*newY4p5 + newZ4p5*newZ4p5);
+    std::cout << "\t(" << newR4p5 << ", " << acos(newZ4p5 / newR4p5) << ", " << atan(newY4p5 / newX4p5)
+                << ")? : " << p4 + p5 << std::endl;
+
+    std::cout << "Subtraction" << std::endl;
+    double newX4m3 = 4 * sin(M_PI / 3) * cos(11 * M_PI / 10) - 3 * sin(M_PI * 2/3) * cos(M_PI * 11 / 10);
+    double newY4m3 = 4 * sin(M_PI / 3) * sin(11 * M_PI / 10) - 3 * sin(M_PI * 2/3) * sin(M_PI * 11 / 10);
+    double newZ4m3 = 4 * cos(M_PI / 3) - 3 * cos(M_PI * 2/3);
+    double newR4m3 = sqrt(newX4m3*newX4m3 + newY4m3*newY4m3 + newZ4m3*newZ4m3);
+    std::cout << "\t(" << newR4m3 << ", " << acos(newZ4m3 / newR4m3) << ", "
+        << 2*M_PI + atan2(newY4m3, newX4m3) << ")? : " << p4 - p3 << std::endl;
+
+    std::cout << "Equality" << std::endl;
+    std::cout << "\ttrue (1)? : " << (p6 == p6) << std::endl;
+    std::cout << "\tfalse (0)? : " << (3 * p6 == p6 * 2) << std::endl;
 
     /******************************* Nelder-Mead tests ****************************/
 
