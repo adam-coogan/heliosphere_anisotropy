@@ -1,0 +1,391 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     11767,        382]
+NotebookOptionsPosition[     10578,        336]
+NotebookOutlinePosition[     10932,        352]
+CellTagsIndexPosition[     10889,        349]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\[CapitalOmega]", "=", "2.86*^-6"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Vsw", "=", "2.674*^-6"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"alpha", "=", "1"}], ";", " ", 
+  RowBox[{"(*", " ", "deg", " ", "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.669491279198704*^9, 3.669491339102325*^9}, {
+  3.669491442203393*^9, 3.669491448547143*^9}, {3.6694915182007933`*^9, 
+  3.669491530232888*^9}, {3.669491661183092*^9, 3.669491665988961*^9}, {
+  3.6694917867216997`*^9, 3.669491797113495*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"rC", "=", 
+  RowBox[{"\[CapitalOmega]", "/", "Vsw"}]}]], "Input",
+ CellChangeTimes->{{3.669491680484717*^9, 3.669491704659647*^9}, {
+  3.670005377176066*^9, 3.670005391621542*^9}}],
+
+Cell[BoxData[
+ FormBox["1.069558713537771`", TraditionalForm]], "Output",
+ CellChangeTimes->{{3.669491667370718*^9, 3.6694917050610647`*^9}, 
+   3.669491804040882*^9, {3.6700053779639893`*^9, 3.670005392132766*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"2", "*", "rC"}], "+", "1"}]], "Input",
+ CellChangeTimes->{{3.6700053931472054`*^9, 3.670005395837369*^9}}],
+
+Cell[BoxData[
+ FormBox["3.139117427075542`", TraditionalForm]], "Output",
+ CellChangeTimes->{3.670005396333115*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"(*", "**", "******)"}]], "Input",
+ CellChangeTimes->{{3.67043656588922*^9, 3.670436568573555*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"StandardForm", "[", 
+  RowBox[{"Simplify", "[", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"ArcSin", "[", 
+      RowBox[{
+       RowBox[{"Sin", "[", "A", "]"}], 
+       RowBox[{"Sin", "[", 
+        RowBox[{"\[Phi]", "-", "\[Phi]0", "+", 
+         FractionBox[
+          RowBox[{"\[CapitalOmega]", " ", "r"}], "Vsw"]}], "]"}]}], "]"}], 
+     ",", "r"}], "]"}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.668795790077034*^9, 3.668795851686512*^9}, {
+  3.668795910951144*^9, 3.668795920730986*^9}}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{"\[CapitalOmega]", " ", 
+   RowBox[{"Cos", "[", 
+    RowBox[{"\[Phi]", "-", "\[Phi]0", "+", 
+     FractionBox[
+      RowBox[{"r", " ", "\[CapitalOmega]"}], "Vsw"]}], "]"}], " ", 
+   RowBox[{"Sin", "[", "A", "]"}]}], 
+  RowBox[{"Vsw", " ", 
+   SqrtBox[
+    RowBox[{"1", "-", 
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"Sin", "[", "A", "]"}], "2"], " ", 
+      SuperscriptBox[
+       RowBox[{"Sin", "[", 
+        RowBox[{"\[Phi]", "-", "\[Phi]0", "+", 
+         FractionBox[
+          RowBox[{"r", " ", "\[CapitalOmega]"}], "Vsw"]}], "]"}], 
+       "2"]}]}]]}]]], "Output",
+ CellChangeTimes->{{3.6687958129958887`*^9, 3.668795824022903*^9}, 
+   3.668795921332358*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Cos", "[", 
+  RowBox[{"ArcSin", "[", 
+   RowBox[{
+    RowBox[{"Sin", "[", "A", "]"}], 
+    RowBox[{"Cos", "[", 
+     RowBox[{"\[Phi]", "-", "\[Phi]0", "+", 
+      FractionBox[
+       RowBox[{"r", " ", "\[CapitalOmega]"}], "Vsw"]}], "]"}]}], "]"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.668958740361689*^9, 3.668958761826597*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  SqrtBox[
+   RowBox[{"1", "-", 
+    RowBox[{
+     RowBox[{
+      SuperscriptBox["sin", "2"], "(", "A", ")"}], " ", 
+     RowBox[{
+      SuperscriptBox["cos", "2"], "(", 
+      RowBox[{
+       FractionBox[
+        RowBox[{"r", " ", "\[CapitalOmega]"}], "Vsw"], "+", "\[Phi]", "-", 
+       "\[Phi]0"}], ")"}]}]}]], TraditionalForm]], "Output",
+ CellChangeTimes->{3.668958763568494*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"l2", "[", 
+   RowBox[{
+   "r_", ",", "\[Theta]_", ",", "\[Phi]_", ",", "rs_", ",", "\[Phi]s_"}], 
+   "]"}], ":=", 
+  RowBox[{
+   SuperscriptBox["r", "2"], "+", 
+   SuperscriptBox["rs", "2"], "-", 
+   RowBox[{"2", " ", "r", " ", "rs", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Sin", "[", "\[Theta]", "]"}], 
+       SqrtBox[
+        RowBox[{"1", "-", 
+         RowBox[{
+          SuperscriptBox[
+           RowBox[{"Sin", "[", "A", "]"}], "2"], 
+          SuperscriptBox[
+           RowBox[{"Cos", "[", 
+            RowBox[{"\[Phi]s", "-", "\[Phi]0", "+", 
+             FractionBox[
+              RowBox[{"rs", " ", "\[CapitalOmega]"}], "Vsw"]}], "]"}], 
+           "2"]}]}]], 
+       RowBox[{"Cos", "[", 
+        RowBox[{"\[Phi]", "-", "\[Phi]s"}], "]"}]}], "-", 
+      RowBox[{
+       RowBox[{"Cos", "[", "\[Theta]", "]"}], 
+       RowBox[{"Sin", "[", "A", "]"}], 
+       RowBox[{"Sin", "[", 
+        RowBox[{"\[Phi]s", "-", "\[Phi]0", "+", 
+         FractionBox[
+          RowBox[{"\[CapitalOmega]", " ", "rs"}], "Vsw"]}], "]"}]}]}], 
+     ")"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.668958873163014*^9, 3.668958963328444*^9}, {
+  3.668959006688644*^9, 3.668959045008407*^9}, {3.668959087083845*^9, 
+  3.6689590915776157`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{"D", "[", 
+   RowBox[{
+    RowBox[{"l2", "[", 
+     RowBox[{"r", ",", "\[Theta]", ",", "\[Phi]", ",", "rs", ",", "\[Phi]s"}],
+      "]"}], ",", "rs"}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.668959048055107*^9, 3.66895906022233*^9}, {
+  3.6689591011895523`*^9, 3.668959103300982*^9}, {3.668959145707613*^9, 
+  3.668959146411026*^9}, {3.668959183358831*^9, 3.668959186439286*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{"2", " ", 
+   RowBox[{"(", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"r", " ", 
+       RowBox[{"sin", "(", "\[Theta]", ")"}], " ", 
+       RowBox[{"cos", "(", 
+        RowBox[{"\[Phi]", "-", "\[Phi]s"}], ")"}], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"rs", " ", "\[CapitalOmega]", " ", 
+          RowBox[{
+           SuperscriptBox["sin", "2"], "(", "A", ")"}], " ", 
+          RowBox[{"sin", "(", 
+           RowBox[{
+            RowBox[{"-", 
+             FractionBox[
+              RowBox[{"2", " ", "rs", " ", "\[CapitalOmega]"}], "Vsw"]}], "+", 
+            RowBox[{"2", " ", "\[Phi]0"}], "-", 
+            RowBox[{"2", " ", "\[Phi]s"}]}], ")"}]}], "+", 
+         RowBox[{"2", " ", "Vsw", " ", 
+          RowBox[{
+           SuperscriptBox["sin", "2"], "(", "A", ")"}], " ", 
+          RowBox[{
+           SuperscriptBox["cos", "2"], "(", 
+           RowBox[{
+            RowBox[{"-", 
+             FractionBox[
+              RowBox[{"rs", " ", "\[CapitalOmega]"}], "Vsw"]}], "+", 
+            "\[Phi]0", "-", "\[Phi]s"}], ")"}]}], "-", 
+         RowBox[{"2", " ", "Vsw"}]}], ")"}]}], 
+      RowBox[{"2", " ", "Vsw", " ", 
+       SqrtBox[
+        RowBox[{"1", "-", 
+         RowBox[{
+          RowBox[{
+           SuperscriptBox["sin", "2"], "(", "A", ")"}], " ", 
+          RowBox[{
+           SuperscriptBox["cos", "2"], "(", 
+           RowBox[{
+            RowBox[{"-", 
+             FractionBox[
+              RowBox[{"rs", " ", "\[CapitalOmega]"}], "Vsw"]}], "+", 
+            "\[Phi]0", "-", "\[Phi]s"}], ")"}]}]}]]}]], "+", 
+     FractionBox[
+      RowBox[{"r", " ", 
+       RowBox[{"sin", "(", "A", ")"}], " ", 
+       RowBox[{"cos", "(", "\[Theta]", ")"}], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"rs", " ", "\[CapitalOmega]", " ", 
+          RowBox[{"cos", "(", 
+           RowBox[{
+            RowBox[{"-", 
+             FractionBox[
+              RowBox[{"rs", " ", "\[CapitalOmega]"}], "Vsw"]}], "+", 
+            "\[Phi]0", "-", "\[Phi]s"}], ")"}]}], "-", 
+         RowBox[{"Vsw", " ", 
+          RowBox[{"sin", "(", 
+           RowBox[{
+            RowBox[{"-", 
+             FractionBox[
+              RowBox[{"rs", " ", "\[CapitalOmega]"}], "Vsw"]}], "+", 
+            "\[Phi]0", "-", "\[Phi]s"}], ")"}]}]}], ")"}]}], "Vsw"], "+", 
+     "rs"}], ")"}]}], TraditionalForm]], "Output",
+ CellChangeTimes->{
+  3.668959060638362*^9, {3.668959098521121*^9, 3.668959110787909*^9}, 
+   3.668959146777461*^9, 3.668959201365037*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"l2", "[", 
+         RowBox[{
+         "r", ",", "\[Theta]", ",", "\[Phi]", ",", "rs", ",", "\[Phi]s"}], 
+         "]"}], ",", "\[Phi]s"}], "]"}], "\[Equal]", "0"}], ",", 
+     RowBox[{
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"l2", "[", 
+         RowBox[{
+         "r", ",", "\[Theta]", ",", "\[Phi]", ",", "rs", ",", "\[Phi]s"}], 
+         "]"}], ",", "rs"}], "]"}], "\[Equal]", "0"}]}], "}"}], ",", 
+   RowBox[{"{", "rs", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6689590726000967`*^9, 3.6689590732882032`*^9}, {
+  3.668959110021584*^9, 3.668959117924897*^9}, {3.668966686871277*^9, 
+  3.668966713924782*^9}}],
+
+Cell[BoxData[
+ FormBox["$Aborted", TraditionalForm]], "Output",
+ CellChangeTimes->{
+  3.668959073928421*^9, {3.668959114196946*^9, 3.668959118306425*^9}, 
+   3.66896670900451*^9, 3.6689668799845448`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{"Sin", "[", 
+   RowBox[{"\[Theta]", "-", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"\[Pi]", "/", "2"}], "+", "A"}], ")"}]}], "]"}], "]"}]], "Input",\
+
+ CellChangeTimes->{{3.66896934366107*^9, 3.668969361247591*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{"-", 
+   RowBox[{"cos", "(", 
+    RowBox[{"A", "-", "\[Theta]"}], ")"}]}], TraditionalForm]], "Output",
+ CellChangeTimes->{3.668969361665289*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"ArcSin", "[", 
+    RowBox[{
+     RowBox[{"Sin", "[", "A", "]"}], 
+     RowBox[{"Sin", "[", 
+      RowBox[{"\[Phi]s", "-", "\[Phi]0", "+", 
+       FractionBox[
+        RowBox[{"\[CapitalOmega]", " ", "rs"}], "Vsw"]}], "]"}]}], "]"}], ",",
+    "rs"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6689615715640087`*^9, 3.6689615763674097`*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{" ", 
+   RowBox[{"cos", "(", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"rs", " ", "\[CapitalOmega]"}], "Vsw"], "-", "\[Phi]0", "+", 
+     "\[Phi]s"}], ")"}]}], TraditionalForm]], "Input",
+ CellChangeTimes->{{3.6689615842235518`*^9, 3.668961603270401*^9}}]
+},
+WindowSize->{720, 851},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 553, 12, 63, "Input"],
+Cell[CellGroupData[{
+Cell[1135, 36, 204, 4, 28, "Input"],
+Cell[1342, 42, 215, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1594, 50, 141, 3, 28, "Input"],
+Cell[1738, 55, 115, 2, 28, "Output"]
+}, Open  ]],
+Cell[1868, 60, 122, 2, 28, "Input"],
+Cell[CellGroupData[{
+Cell[2015, 66, 528, 14, 48, "Input"],
+Cell[2546, 82, 712, 21, 97, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3295, 108, 357, 10, 48, "Input"],
+Cell[3655, 120, 408, 13, 56, "Output"]
+}, Open  ]],
+Cell[4078, 136, 1286, 37, 150, "Input"],
+Cell[CellGroupData[{
+Cell[5389, 177, 437, 9, 28, "Input"],
+Cell[5829, 188, 2524, 69, 199, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8390, 262, 784, 22, 46, "Input"],
+Cell[9177, 286, 203, 4, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9417, 295, 271, 8, 28, "Input"],
+Cell[9691, 305, 179, 5, 28, "Output"]
+}, Open  ]],
+Cell[9885, 313, 393, 11, 48, "Input"],
+Cell[10281, 326, 293, 8, 51, InheritFromParent]
+}
+]
+*)
+
+(* End of internal cache information *)
