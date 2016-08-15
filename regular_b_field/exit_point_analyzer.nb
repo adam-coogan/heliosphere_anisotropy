@@ -1,0 +1,115 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3823,        106]
+NotebookOptionsPosition[      3203,         82]
+NotebookOutlinePosition[      3583,         99]
+CellTagsIndexPosition[      3540,         96]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+  "Run", " ", "setup", " ", "and", " ", "trajectories_mc", "_setup", " ", 
+   "first"}], " ", "*)"}]], "Input",
+ CellChangeTimes->{{3.670620907160734*^9, 3.670620917670982*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+   RowBox[{"**", "**"}], "*", "*", " ", "RUN", " ", "THE", " ", "MC", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"GENERATOR", "!!"}], "!"}], " ", "**"}]}], "*****)"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.670620848769306*^9, 3.670620872848185*^9}, {
+  3.6707057856863117`*^9, 3.6707057898539762`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"exitPts", "=", 
+   RowBox[{"exitPointMC", "[", 
+    RowBox[{"800", ",", "4000"}], "]"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.670620926031039*^9, 3.67062093250263*^9}, 
+   3.6706211752171297`*^9, {3.670621234665825*^9, 3.670621235983369*^9}, 
+   3.670621653952072*^9, 3.670705650341384*^9, {3.6707057830906563`*^9, 
+   3.6707057898540897`*^9}, {3.670720010946938*^9, 3.6707200126426077`*^9}, 
+   3.670720281741744*^9, 3.670721224429172*^9}],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{
+  "\"\</Users/acoogan/Dropbox/heliosphere_anisotropy/regular_b_field/mc_data/\
+exit_point_analyzer/800GeV_alpha15deg_4.csv\>\"", ",", 
+   RowBox[{"Join", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "{", "\"\<# Format: pObs, pObsTheta, pObsPhi, pExit, thetaExit, \
+phiExit.  Units: GeV and radians.\>\"", "}"}], "}"}], ",", "exitPts"}], "]"}],
+    ",", "\"\<csv\>\""}], "]"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.6706207024004793`*^9, 3.670620729634655*^9}, {
+   3.6706207876910763`*^9, 3.670620788851737*^9}, {3.670620878408723*^9, 
+   3.6706208846407347`*^9}, {3.670620924954105*^9, 3.670620946534335*^9}, {
+   3.6706209831469297`*^9, 3.6706209834092913`*^9}, {3.670621014700851*^9, 
+   3.6706210469852123`*^9}, {3.670621171652144*^9, 3.670621191449851*^9}, {
+   3.6706212845108*^9, 3.670621290852829*^9}, 3.6706214655507927`*^9, 
+   3.670621651048905*^9, 3.670686500887368*^9, {3.670705655996738*^9, 
+   3.670705664628797*^9}, {3.670705741760075*^9, 3.670705743744061*^9}, 
+   3.670705783090741*^9, {3.670720008860917*^9, 3.67072000942756*^9}, 
+   3.670720283678769*^9, {3.670720530003799*^9, 3.670720530715534*^9}, 
+   3.670721227924234*^9}]
+}, Open  ]],
+
+Cell[BoxData["\<\"/Users/acoogan/Dropbox/heliosphere_anisotropy/regular_b_\
+field/mc_data/exit_point_analyzer/800GeV_alpha15deg_4.csv\"\>"], "Output",
+ CellChangeTimes->{3.670721669798991*^9}]
+},
+Evaluator->"heliosphere",
+WindowSize->{696, 486},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 223, 5, 28, "Input"],
+Cell[CellGroupData[{
+Cell[805, 29, 391, 9, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[1199, 40, 532, 10, 28, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[1734, 52, 1258, 23, 114, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}]
+}, Open  ]],
+Cell[3007, 78, 192, 2, 46, "Output"]
+}
+]
+*)
+
+(* End of internal cache information *)
