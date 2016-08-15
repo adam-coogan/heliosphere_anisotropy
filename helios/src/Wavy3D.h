@@ -8,8 +8,20 @@
 #include <fstream>
 #include <iterator>
 #include <tuple>
+#include <sstream>
 
 #define DEBUGNM true
+
+#if DEBUGNM
+    //! Useful function for debugging Nelder-Mead algorithm
+    std::string printPointXY(const Point& pt) {
+        auto ptXYZ = pt.getXYZ();
+        std::stringstream ss;
+        ss << "" << std::get<0>(ptXYZ) << ", " << std::get<1>(ptXYZ) << "" << std::endl;
+        
+        return ss.str();
+    }
+#endif
 
 /*!
  * Adds a wavy HCS into the basic heliosphere model.  See doi:10.1007/s10509-012-1003-z (Strauss et al 2012)
@@ -105,16 +117,16 @@ class Wavy3D : public Basic3D<Par> {
 };
 
 #if DEBUGNM
-template<class Par>
-void Wavy3D<Par>::writeNM(const std::string& outPath, const std::string& data) const {
-    // Write run data to a CSV
-    std::ofstream writer(outPath);
+    template<class Par>
+    void Wavy3D<Par>::writeNM(const std::string& outPath, const std::string& data) const {
+        // Write run data to a CSV
+        std::ofstream writer(outPath);
 
-    if (writer.is_open()) {
-        writer << data;
-        writer.close();
+        if (writer.is_open()) {
+            writer << data;
+            writer.close();
+        }
     }
-}
 #endif
 
 template<class Par>
@@ -163,11 +175,15 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
 
     // Loop until the simplex has converged to a satisfactory level of precision
     for (int i = 0; i < itersNM; i++) {
+#if DEBUGNM
+        std::cout << "Iteration " << i << std::endl;
+#endif
+
         // 1. Sort the simplex points
         sortSimplexPts(pts);
 
-        // DEBUG
 #if DEBUGNM
+        // Append simplex to the debug string
         for (auto pt : pts) {
             const Point& p = std::get<0>(pt);
             nmStr.append(std::to_string(p.getR()) + "," + std::to_string(p.getTh()) + ","
@@ -177,14 +193,28 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
 
         // 2. Compute centroid (origin) of points 1 and 2.  Note that its theta value does not matter!
         Point ptO = (std::get<0>(pts[0]) + std::get<0>(pts[1])) / 2;
+#if DEBUGNM
+        std::cout << "\tpt1 = " << printPointXY(std::get<0>(pts[0])) << "\t\t" << std::get<1>(pts[0])
+            << std::endl;
+        std::cout << "\tpt2 = " << printPointXY(std::get<0>(pts[1])) << "\t\t" << std::get<1>(pts[1])
+            << std::endl;
+        std::cout << "\tpt3 = " << printPointXY(std::get<0>(pts[2])) << "\t\t" << std::get<1>(pts[2])
+            << std::endl;
+        std::cout << "\tptO = " << printPointXY(ptO) << std::endl;
+#endif
 
         // 3. Compute reflected point, BEING CAREFUL TO CALCULATE ITS THETA VALUE!
         Point ptR = ptO + alphaNM * (ptO - std::get<0>(pts[2]));
         setHCSTheta(ptR); // put point in the HCS.  CRUCIAL!
         double ptRDist = Point::dist(pos, ptR);
+#if DEBUGNM
+        std::cout << "\tptR = " << printPointXY(ptR) << "\t\t" << ptRDist << std::endl;
+#endif
 
         if (ptRDist >= std::get<1>(pts[0]) && ptRDist < std::get<1>(pts[1])) {
-            //std::cout << "Exit @ step 3" << std::endl;
+#if DEBUGNM
+                    std::cout << "\t\t\tExit @ step 3" << std::endl;
+#endif
             pts[2] = std::tuple<Point, double>(ptR, ptRDist);
         } else {
             if (ptRDist < std::get<1>(pts[0])) {
@@ -192,14 +222,19 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
                 Point ptE = ptO + gammaNM * (ptR - ptO);
                 setHCSTheta(ptE); // put point in the HCS.  CRUCIAL!
                 double ptEDist = Point::dist(pos, ptE);
-
-                //std::cout << "ptE distance = " << ptEDist << std::endl;
+#if DEBUGNM
+                std::cout << "\tptE = " << printPointXY(ptE) << "\t\t" << ptEDist << std::endl;
+#endif
 
                 if (ptEDist < ptRDist) {
-                    //std::cout << "Exit @ step 4a" << std::endl;
+#if DEBUGNM
+                    std::cout << "\t\t\tExit @ step 4a" << std::endl;
+#endif
                     pts[2] = std::tuple<Point, double>(ptE, ptEDist);
                 } else {
-                    //std::cout << "Exit @ step 4b" << std::endl;
+#if DEBUGNM
+                    std::cout << "\t\t\tExit @ step 4b" << std::endl;
+#endif
                     pts[2] = std::tuple<Point, double>(ptR, ptRDist);
                 }
             } else {
@@ -207,15 +242,20 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
                 Point ptC = ptO + rhoNM * (std::get<0>(pts[2]) - ptO);
                 setHCSTheta(ptC); // put point in the HCS.  CRUCIAL!
                 double ptCDist = Point::dist(pos, ptC);
-
-                //std::cout << "ptC distance = " << ptCDist << std::endl;
+#if DEBUGNM
+                std::cout << "\tptC = " << printPointXY(ptC) << "\t\t" << ptCDist << std::endl;
+#endif
 
                 // If contracted point is better, replace worst one with it
                 if (ptCDist < std::get<1>(pts[2])) {
-                    //std::cout << "Exit @ step 5" << std::endl;
+#if DEBUGNM
+                    std::cout << "\t\t\tExit @ step 5" << std::endl;
+#endif
                     pts[2] = std::tuple<Point, double>(ptC, ptCDist);
                 } else {
-                    //std::cout << "Exit @ step 6" << std::endl;
+#if DEBUGNM
+                    std::cout << "\t\t\tExit @ step 6" << std::endl;
+#endif
                     // Nothing worked very well.  Reduce the simplex.
                     for (int i = 1; i <= 2; i++) { // ok to hard code this!
                         std::get<0>(pts[i]) = std::get<0>(pts[0]) + sigmaNM * (std::get<0>(pts[i])
@@ -229,7 +269,7 @@ std::tuple<Point, double> Wavy3D<Par>::getLHCS() const {
     }
 
 #if DEBUGNM
-    writeNM("/Users/acoogan/Dropbox/heliosphere_anisotropy/nmdata/nmdata.csv", nmStr);
+    writeNM("/Users/acoogan/Dropbox/heliosphere_anisotropy/nmdata/nmdata1.csv", nmStr);
 #endif
 
     // Return the best point

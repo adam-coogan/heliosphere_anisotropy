@@ -15,6 +15,10 @@ Point::Point(double rn, double thn, double phn) {
 
 // Getters
 
+std::tuple<double, double, double> Point::getXYZ() const {
+    return std::make_tuple(r * sin(th) * cos(ph), r * sin(th) * sin(ph), r * cos(th));
+}
+
 double Point::getR() const {
     return r;
 }
@@ -116,11 +120,23 @@ Point& Point::operator+=(const Point& pt) {
     ph = atan2(newY, newX); // The image of atan2 is [-pi, pi], so must renormalize ph
     renormalizePh();
 
+    /*
+    // NM addition
+    set(r + pt.getR(), th + pt.getTh(), ph + pt.getPh());
+    */
+
     return *this;
 }
 
 Point& Point::operator-=(const Point& pt) {
     return (*this) += (-1 * pt);
+
+    /*
+    // NM addition
+    set(r - pt.getR(), th - pt.getTh(), ph - pt.getPh());
+
+    return *this;
+    */
 }
 
 Point Point::operator+(const Point& pt) const {

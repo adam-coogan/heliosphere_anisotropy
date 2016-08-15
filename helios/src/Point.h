@@ -15,6 +15,8 @@ class Point {
 
         Point(double rn, double thn, double phn);
 
+        std::tuple<double, double, double> getXYZ() const;
+
         // Getters
         double getR() const;
         double getTh() const;
@@ -89,6 +91,11 @@ std::ostream& operator<<(std::ostream& os, const Point& pt);
 template<typename T>
 Point& Point::operator*=(const T& scalar) {
     setR(scalar * r);
+    
+    /*
+    // NM multiplication
+    set(scalar * r, scalar * th, scalar * ph);
+    */
 
     return *this;
 }
