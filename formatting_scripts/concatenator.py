@@ -26,8 +26,6 @@ runfiles = [re.search('(.*)_run.*csv', rf) for rf in runfiles]
 uniqueNames = set([rf.group(1) for rf in runfiles if rf != None])
 runfiles = [rf.group(0) for rf in runfiles if rf != None]
 
-print uniqueNames
-
 # Concatenate the files
 for un in uniqueNames:
     # Find items which have the correct base name
@@ -37,8 +35,6 @@ for un in uniqueNames:
     # Store first lines, which contain comments and initial point
     firstLines = ''
     with open(unFiles[0], 'r') as f:
-        print unFiles[0]
-
         for i in range(1, sharedLines + 1):
             firstLines = firstLines + f.readline()
 
