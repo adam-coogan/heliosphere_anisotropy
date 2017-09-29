@@ -1,15 +1,10 @@
 #!/bin/bash
 
-#PBS -N helios0.1GeV
+#PBS -N 0.794GeV
 
 #PBS -t 1-5
-#PBS -l walltime=1:00:00
-#PBS -q hyper
+#PBS -l walltime=0:30:00
 
 cd $PBS_O_WORKDIR
 
-# Ensures proper dynamic linking to boost libraries
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/pfs/sw/serial/gcc/boost-1.57.0/lib/
-export LD_LIBRARY_PATH
-
-./Helios -c config/params.config -o rundata/alt0/0.1GeV_run$PBS_ARRAYID\.csv -n 2000
+./Helios -c config/params.config -o rundata/alt0/${PBS_JOBNAME%-$PBS_ARRAYID}\_run$PBS_ARRAYID\.csv -n 4000
