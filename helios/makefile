@@ -14,8 +14,8 @@ BUILDDIR=build
 SRCDIR=src
 
 # TODO: CHANGE BACK!
-#all: Helios
-all: NMTest
+all: Helios
+#all: NMTest
 
 # Messy program using Strauss' units
 

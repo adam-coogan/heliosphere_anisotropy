@@ -1793,16 +1793,16 @@ sPmGNn4eBxW26+hyoeg8zvwoqK4G98TTQVWU0PNoH/zf7+x8gdVS0gOmNf/5
      FormBox["\"x\"", TraditionalForm], 
      FormBox["\"y\"", TraditionalForm], 
      FormBox["\"z\"", TraditionalForm]},
-   ImageSize->{972.8312580228132, 474.},
+   ImageSize->{1183.2609455228132`, 578.},
    Method->{},
    PlotRange->{{-40, 40}, {-100, 40}, {-30, 30}},
    PlotRangePadding->{
      Scaled[0.02], 
      Scaled[0.02], 
      Scaled[0.02]},
-   ViewPoint->{3.2343702726883716`, 0.24866839643461613`, 0.962815126472569},
-   ViewVertical->{1.5615720028584015`, 0.07143705347484965, 
-    1.0399693745689265`}],
+   ViewPoint->{2.819919509810644, 1.406415739382949, 1.2329025615210707`},
+   ViewVertical->{1.3195926996446756`, 0.40392126369458736`, 
+    1.2085038839060769`}],
   FontSize->9]], "Input",
  CellChangeTimes->{{3.670792359209393*^9, 3.670792412318124*^9}}],
 
@@ -3344,7 +3344,7 @@ sPmGNn4eBxW26+hyoeg8zvwoqK4G98TTQVWU0PNoH/zf7+x8gdVS0gOmNf/5
     FormBox["\"x\"", TraditionalForm], 
     FormBox["\"y\"", TraditionalForm], 
     FormBox["\"z\"", TraditionalForm]},
-  ImageSize->{1238.8115206201915`, 1059.},
+  ImageSize->{1361.6982393701915`, 1165.},
   Method->{},
   PlotRange->{{-100, 100}, {-100, 100}, {-30, 30}},
   PlotRangePadding->{
@@ -5933,7 +5933,7 @@ sPmGNn4eBxW26+hyoeg8zvwoqK4G98TTQVWU0PNoH/zf7+x8gdVS0gOmNf/5
 }, Open  ]]
 },
 Evaluator->"heliosphere",
-WindowSize->{1440, 852},
+WindowSize->{1440, 851},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
 2013)",
@@ -5963,8 +5963,8 @@ Cell[9489, 227, 7562, 185, 148, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10005.}]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[17088, 417, 83400, 1389, 489, "Input"],
-Cell[100491, 1808, 93362, 1554, 1074, "Output"]
+Cell[17088, 417, 83400, 1389, 593, "Input"],
+Cell[100491, 1808, 93362, 1554, 1180, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[193890, 3367, 76795, 1281, 565, "Input"],
