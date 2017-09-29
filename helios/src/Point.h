@@ -4,6 +4,7 @@
 #include <cmath>
 #include <ostream>
 #include <stdexcept>
+#include <tuple>
 
 class Point {
     public:
