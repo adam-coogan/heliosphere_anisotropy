@@ -5,6 +5,7 @@ NewSolarProp/figures/
 NewSolarProp/rundata/macbookpro/
 .ipynb_checkpoints/
 NewSolarProp/scripts/.ipynb_checkpoints/
+NewSolarProp/pbs/
 
 SolarProp/
 
@@ -25,5 +26,6 @@ solarprop_rolf_kappl/
 
 helios/build/
 helios/bin/
-helios/rundata
+helios/rundata/
+helios/pbs/
 
