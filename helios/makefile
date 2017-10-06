@@ -1,8 +1,8 @@
 ifeq ($(shell hostname),hyades.ucsc.edu)
-	CC=icpc -std=c++11 -I/pfs/sw/serial/gcc/boost-1.57.0/include
+	CC=icpc -std=c++11 -I/pfs/sw/serial/gcc/boost-1.57.0/include -Wall
 	LFLAGS=/pfs/sw/serial/gcc/boost-1.57.0/lib/libboost_program_options.so.1.57.0
 else
-	CC=clang++ -std=c++11 -I /usr/local/opt/boost/include
+	CC=clang++ -std=c++11 -I /usr/local/opt/boost/include -Wall
 	LFLAGS=-lboost_program_options
 endif
 
@@ -13,20 +13,9 @@ BINDIR=bin
 BUILDDIR=build
 SRCDIR=src
 
-# TODO: CHANGE BACK!
 all: Helios
-#all: NMTest
-
-# Messy program using Strauss' units
-
-StraussUnitsModified: $(BUILDDIR)/StraussUnitsModified.o
-	$(CC) $(LFLAGS) $(BUILDDIR)/StraussUnitsModified.o -o $(BINDIR)/StraussUnitsModified
-
-$(BUILDDIR)/StraussUnitsModified.o: $(SRCDIR)/StraussUnitsModified.cpp
-	$(CC) $(CFLAGS) $< -o $@
 
 # Test program
-
 HeliosTest: $(OBJS) $(BUILDDIR)/HeliosTest.o $(SRCDIR)/Basic3D.h $(SRCDIR)/Wavy3D.h
 	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/HeliosTest.o -o $(BINDIR)/HeliosTest
 
@@ -34,7 +23,6 @@ $(BUILDDIR)/HeliosTest.o: $(SRCDIR)/HeliosTest.cpp $(SRCDIR)/Basic3D.h
 	$(CC) $(CFLAGS) $< -o $@
 
 # Test program for Nelder-Mead algorithm
-
 NMTest: $(OBJS) $(BUILDDIR)/NMTest.o $(SRCDIR)/Wavy3D.h
 	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/NMTest.o -o $(BINDIR)/NMTest
 
@@ -42,7 +30,6 @@ $(BUILDDIR)/NMTest.o: $(SRCDIR)/NMTest.cpp $(SRCDIR)/Wavy3D.h $(SRCDIR)/Wavy3DPa
 	$(CC) $(CFLAGS) $< -o $@
 
 # Main program
-
 Helios: $(OBJS) $(BUILDDIR)/Helios.o
 	$(CC) $(LFLAGS) $(OBJS) $(BUILDDIR)/Helios.o -o $(BINDIR)/Helios
 
@@ -51,7 +38,6 @@ $(BUILDDIR)/Helios.o: $(SRCDIR)/Helios.cpp $(SRCDIR)/Basic3D.h $(SRCDIR)/Simulat
 	$(CC) $(CFLAGS) $< -o $@
 
 # Objects
-
 $(BUILDDIR)/HeliosCLParser.o: $(SRCDIR)/HeliosCLParser.h $(SRCDIR)/HeliosCLParser.cpp
 	$(CC) $(CFLAGS) $(SRCDIR)/HeliosCLParser.cpp -o $@
 
