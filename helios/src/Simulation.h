@@ -4,6 +4,7 @@
 #include "TrajectoryBase.h"
 #include <fstream>
 #include <iostream>
+#include <boost/progress.hpp>
 
 /*!
  * Manages a Helios simulation.
@@ -72,12 +73,10 @@ void Simulation<T>::run() {
             << traj.getParams().getParamFileName() << " GeV at Earth back to the heliopause..." << std::endl;
     }
 
-    // Variable for tracking what percent of the simulation has finished
-    int percentDone = 0;
-    int runsTo1Percent = numRuns / 100;
-
     // Measure how long the simulation takes.  Store time since program started.
     std::clock_t start = std::clock();
+    // Progress bar
+    boost::progress_display show_progress(numRuns);
 
     // Variable for storing current simulation's status
     Status stepStatus;
@@ -109,21 +108,12 @@ void Simulation<T>::run() {
                 successes++;
                 runsString += "\n" + traj.stateToString();
 
-                // Print percent indicator
-                runsTo1Percent--;
-
-                if (runsTo1Percent <= 0) {
-                    percentDone += 1;
-                    runsTo1Percent = numRuns / 100;
-
-                    if (verbose) {
-                        std::cout << percentDone << "% of runs complete" << std::endl;
-                    }
-                }
-
                 break;
             }
         }
+
+        // Increment progress bar
+        ++show_progress;
 
         // Reinitialize simulation variables
         traj.initialize();
