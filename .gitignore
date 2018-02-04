@@ -1,17 +1,12 @@
 # Ignore build directory
-NewSolarProp/build/
 NewSolarProp/bin/
+NewSolarProp/build/
 NewSolarProp/figures/
 NewSolarProp/rundata/macbookpro/
-.ipynb_checkpoints/
 NewSolarProp/scripts/.ipynb_checkpoints/
 NewSolarProp/pbs/
 
-SolarProp/
-
-Strauss_code/pbs/
-Strauss_code/SDE
-
+.ipynb_checkpoints/
 */.ipynb_checkpoints
 plots/*
 
@@ -21,8 +16,6 @@ plots/*
 *.aux
 *.log
 *.out
-
-solarprop_rolf_kappl/
 
 helios/build/
 helios/bin/
