@@ -1,11 +1,3 @@
-# Ignore build directory
-NewSolarProp/bin/
-NewSolarProp/build/
-NewSolarProp/figures/
-NewSolarProp/rundata/macbookpro/
-NewSolarProp/scripts/.ipynb_checkpoints/
-NewSolarProp/pbs/
-
 .ipynb_checkpoints/
 */.ipynb_checkpoints
 plots/*
