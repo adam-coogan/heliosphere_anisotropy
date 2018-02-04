@@ -2,6 +2,8 @@
 */.ipynb_checkpoints
 plots/*
 
+full_orbit/mc_data/*
+
 *.DS_Store
 *.swp
 *.pyc
