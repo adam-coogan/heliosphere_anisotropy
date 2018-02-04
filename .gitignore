@@ -2,8 +2,6 @@
 */.ipynb_checkpoints
 plots/*
 
-full_orbit/mc_data/*
-
 *.DS_Store
 *.swp
 *.pyc
@@ -15,3 +13,6 @@ helios/build/
 helios/bin/
 helios/rundata/
 helios/pbs/
+
+full_orbit/mc_data/
+full_orbit/plots/
