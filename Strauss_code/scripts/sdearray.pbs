@@ -1,9 +1,0 @@
-#!/bin/bash
-
-#PBS -N sdearray3GeV
-#PBS -t 1-5
-#PBS -q hyper
-#PBS -l walltime=1:00:00
- 
-cd $PBS_O_WORKDIR
-./SDE 3.0 10000 hyades/strauss/alt0_3.0GeV_run$PBS_ARRAYID
