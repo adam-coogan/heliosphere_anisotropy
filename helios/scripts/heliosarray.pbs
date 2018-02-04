@@ -1,10 +1,14 @@
 #!/bin/bash
 
+# -N: job name
+# -t: task ids
+# -l: amount of time to wait before killing jobs
+
 #PBS -N 0.794GeV
 
-#PBS -t 1-5
-#PBS -l walltime=0:30:00
+#PBS -t 1-2
+#PBS -l walltime=1:00:00
 
 cd $PBS_O_WORKDIR
 
-./Helios -c config/params.config -o rundata/alt0/${PBS_JOBNAME%-$PBS_ARRAYID}\_run$PBS_ARRAYID\.csv -n 4000
+./Helios -c config/params.config -o rundata/test/${PBS_JOBNAME%-$PBS_ARRAYID}\_run$PBS_ARRAYID\.csv -n 30

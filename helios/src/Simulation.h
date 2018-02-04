@@ -145,6 +145,8 @@ void Simulation<T>::write(const std::string& outPath) const {
     // Write run data to a CSV
     std::ofstream writer(outPath);
 
+    std::cout << "Output file path: " << outPath << std::endl;
+
     if (writer.is_open()) {
         writer << runsString;
         writer.close();
