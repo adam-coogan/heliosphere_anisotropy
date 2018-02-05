@@ -2,11 +2,12 @@
 */.ipynb_checkpoints
 
 *.DS_Store
-*.swp
-*.pyc
 *.aux
 *.log
 *.out
+*.pyc
+*.swp
+*.vimrc
 
 helios/build/
 helios/bin/
